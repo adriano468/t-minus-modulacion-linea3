@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Adriano Nuñez Soriano">
+<meta name="application-version" content="2.0">
+<title>Modulación Envasado — Línea 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#0e141d;--panel:#161f2c;--panel-alt:#1c2735;--border:#2a3a4f;
+  --border-soft:#22303f;--text:#e7edf5;--muted:#8798ad;--amber:#e8a33d;
+  --amber-dim:#8a6428;--teal:#4fd1c5;--green:#34d399;--green-dim:#12351f;
+  --red:#f0525c;--red-dim:#3a1518;--yellow:#f5c451;--yellow-dim:#3a2f10;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--border);padding-bottom:18px}
+.brand-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--amber);text-transform:uppercase;margin:0 0 4px}
+h1{font-family:Oswald,sans-serif;font-weight:700;font-size:28px;letter-spacing:.01em;margin:0;text-transform:uppercase}
+.tabs{display:flex;gap:4px;background:var(--panel);padding:4px;border-radius:10px;border:1px solid var(--border)}
+.tab-btn{font-family:Oswald,sans-serif;font-size:13px;letter-spacing:.04em;text-transform:uppercase;padding:9px 16px;border-radius:7px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:.15s}
+.tab-btn.active{background:var(--amber);color:#1a1305}.tab-btn:not(.active):hover{color:var(--text)}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.panel-title{font-family:Oswald,sans-serif;text-transform:uppercase;font-size:13px;letter-spacing:.08em;color:var(--muted);margin:0 0 16px;display:flex;align-items:center;gap:8px}
+.panel-title .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block}
+.input-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.field input,.field select{background:var(--panel-alt);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:15px;min-width:150px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--amber)}
+.btn{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:13px;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--amber);color:#1a1305;font-weight:600}.btn-primary:hover{background:#f3b455}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+.btn-danger{background:transparent;border:1px solid var(--red);color:var(--red)}.btn-danger:hover{background:var(--red-dim)}
+.timeline-block{margin-bottom:18px;overflow-x:auto;padding-bottom:4px}.timeline-label{font-family:Oswald,sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);margin-bottom:14px}
+.timeline{position:relative;height:108px;margin:0 8px;min-width:760px}
+.timeline-axis{position:absolute;top:46px;left:0;right:0;height:2px;background:var(--border)}
+.timeline-ref{position:absolute;top:20px;bottom:14px;width:2px;background:var(--amber)}
+.timeline-ref-label{position:absolute;top:0;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);white-space:nowrap;transform:translateX(-50%)}
+.tl-dot{position:absolute;top:40px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bg);transform:translateX(-50%)}
+.tl-dot.pending{background:var(--muted)}.tl-dot.ok{background:var(--green)}.tl-dot.nok{background:var(--red)}
+.tl-name{position:absolute;top:61px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);white-space:nowrap;transform:translateX(-50%);text-align:center}
+.tl-time{position:absolute;top:77px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);white-space:nowrap;transform:translateX(-50%)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;letter-spacing:.05em;color:var(--muted);text-align:center;padding:8px 6px;border-bottom:1px solid var(--border)}
+th.left,td.left{text-align:left}
+td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--border-soft);font-family:'JetBrains Mono',monospace}
+tr.section-llenadora td{background:rgba(232,163,61,.06)}.equipo-name{font-family:Inter,sans-serif;font-weight:600}
+input.time-input{background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:13px;width:92px;text-align:center}
+input.time-input:focus{outline:none;border-color:var(--teal)}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.03em}
+.badge.pending{background:var(--yellow-dim);color:var(--yellow)}.badge.ok{background:var(--green-dim);color:var(--green)}.badge.nok{background:var(--red-dim);color:var(--red)}
+.prog-time{color:var(--muted)}.desv{font-weight:700}.desv.pos{color:var(--red)}.desv.neg{color:var(--teal)}.desv.zero{color:var(--green)}
+.hist-item{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--panel-alt)}
+.hist-item:hover{border-color:var(--amber)}.hist-date{font-family:'JetBrains Mono',monospace;font-weight:700}.hist-meta{font-size:12px;color:var(--muted);margin-top:2px}.hist-actions{display:flex;gap:8px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}.empty-state .big{font-family:Oswald,sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:.05em;color:var(--text);margin-bottom:6px}
+.evt-form{display:grid;grid-template-columns:1.4fr 1fr 1fr 2fr auto;gap:10px;align-items:end}
+.evt-form select,.evt-form input[type=text]{background:var(--panel-alt);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 10px;font-size:13px;width:100%;font-family:Inter,sans-serif}
+.evt-row{display:grid;grid-template-columns:120px 110px 110px 1fr 90px 32px;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--border-soft);font-size:13px}
+.evt-row .ts{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:12px}
+.tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;text-transform:uppercase}
+.tag.corte{background:var(--red-dim);color:var(--red)}.tag.arranque{background:var(--green-dim);color:var(--green)}.tag.evento{background:var(--yellow-dim);color:var(--yellow)}
+.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}.del-btn:hover{color:var(--red)}
+.save-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-left:8px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;font-family:'JetBrains Mono',monospace}.kpi-value{font-family:Oswald,sans-serif;font-size:24px;margin-top:3px}.kpi-value.green{color:var(--green)}.kpi-value.red{color:var(--red)}.kpi-value.amber{color:var(--amber)}
+
+.check-grid{display:grid;grid-template-columns:1.2fr .9fr 1.25fr 2fr;gap:0;border:1px solid var(--border);border-radius:9px;overflow:hidden}.check-grid>div{padding:8px;border-bottom:1px solid var(--border-soft)}.check-head{font:10px Oswald;text-transform:uppercase;color:var(--muted);background:var(--panel-alt)}.check-grid select,.check-grid input{width:100%;padding:6px;background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:11px}.check-summary{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--panel-alt);font:11px 'JetBrains Mono';color:var(--muted)}
+.analytics-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.chart-card{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.chart-title{font:12px Oswald;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}.bar-row{display:grid;grid-template-columns:145px 1fr 58px;gap:8px;align-items:center;margin:8px 0;font-size:11px}.bar-bg{height:13px;background:#111923;border-radius:4px;overflow:hidden}.bar{height:100%;background:var(--amber);border-radius:4px}.bar.red{background:var(--red)}.bar.teal{background:var(--teal)}.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar-value{text-align:right;font:10px 'JetBrains Mono';color:var(--muted)}.trend-wrap{height:210px;position:relative}.trend-svg{width:100%;height:100%}.matrix{width:100%;border-collapse:collapse;font-size:10px}.matrix th,.matrix td{padding:6px 5px;border:1px solid var(--border-soft);text-align:center}.matrix th{font-size:9px}.heat1{background:rgba(232,163,61,.18)}.heat2{background:rgba(232,163,61,.38)}.heat3{background:rgba(240,82,92,.55)}.insight{border-left:3px solid var(--amber);padding:10px 12px;background:rgba(232,163,61,.05);border-radius:7px;margin-top:10px;font-size:12px}.evt-form{grid-template-columns:1.15fr .8fr .8fr 1.1fr 1.6fr .7fr auto}.analytics-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.analytics-filters select{background:var(--panel-alt);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:7px;font-size:11px}.analysis-note{padding:10px 12px;margin-bottom:12px;border-left:3px solid var(--teal);background:rgba(79,209,197,.05);border-radius:7px;color:var(--muted);font-size:12px;line-height:1.45}
+@media(max-width:800px){.summary{grid-template-columns:1fr 1fr}.evt-form{grid-template-columns:1fr 1fr}.evt-row{grid-template-columns:1fr 1fr;row-gap:4px}}
+@media(max-width:520px){.summary{grid-template-columns:1fr}.wrap{padding:18px 10px}.panel{padding:14px}.timeline{min-width:920px}.tl-name{font-size:8px}.tl-time{font-size:9px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><p class="brand-eyebrow">Packaging · Línea 3</p><h1>Torre de Tiempos</h1></div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="plan">Plan del día</button>
+    <button class="tab-btn" data-tab="eventos">Análisis</button>
+    <button class="tab-btn" data-tab="historial">Historial</button>
+  </div>
+</header>
+
+<section id="tab-plan">
+  <div class="panel">
+    <p class="panel-title"><span class="dot"></span>Hora de referencia — Llenadora</p>
+    <div class="input-row">
+      <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div>
+      <div class="field"><label>Ref. Corte</label><input type="time" id="inpRefCorte"></div>
+      <div class="field"><label>Ref. Arranque</label><input type="time" id="inpRefArranque"></div>
+      <button class="btn btn-primary" id="btnGuardar">Guardar plan</button>
+      <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales</button>
+      <span class="save-status" id="saveStatus"></span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="summary">
+      <div class="kpi"><div class="kpi-label">Referencia arranque</div><div class="kpi-value amber" id="kpiArr">—</div></div>
+      <div class="kpi"><div class="kpi-label">Referencia corte</div><div class="kpi-value amber" id="kpiCor">—</div></div>
+      <div class="kpi"><div class="kpi-label">Equipos OK</div><div class="kpi-value green" id="kpiOk">0</div></div>
+      <div class="kpi"><div class="kpi-label">Equipos NOK</div><div class="kpi-value red" id="kpiNok">0</div></div>
+    </div>
+    <p class="panel-title"><span class="dot" style="background:var(--red)"></span>Cascada — Corte</p>
+    <div class="timeline-block"><div class="timeline" id="tlCorte"></div></div>
+    <p class="panel-title" style="margin-top:6px"><span class="dot"></span>Cascada — Arranque</p>
+    <div class="timeline-block"><div class="timeline" id="tlArranque"></div></div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-title"><span class="dot" style="background:var(--yellow)"></span>Checklist de arranque — cumplimiento y causa</p>
+    <div class="check-grid">
+      <div class="check-head">Hito / equipo</div><div class="check-head">Cumplimiento</div><div class="check-head">Causa principal</div><div class="check-head">Qué pasó / acción</div>
+      <div id="checklistRows" style="display:contents"></div>
+    </div>
+    <div class="check-summary" id="checkSummary">Sin incumplimientos registrados.</div>
+  </div>
+
+  <div class="panel">
+    <p class="panel-title"><span class="dot"></span>Detalle por equipo</p>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th class="left">Equipo</th><th>Prog. Corte</th><th>Real Corte</th><th>Desv.</th><th>Prog. Arranque</th><th>Real Arranque</th><th>Desv.</th><th>Estado</th></tr></thead>
+        <tbody id="tablaEquipos"></tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<section id="tab-eventos" style="display:none">
+  <div class="panel">
+    <p class="panel-title"><span class="dot"></span>Análisis histórico de retrasos</p>
+    <div class="analytics-filters">
+      <select id="anaPeriodo2" title="Periodo de análisis">
+        <option value="all">Todo el histórico</option>
+        <option value="30">Últimos 30 días</option>
+        <option value="7">Últimos 7 días</option>
+        <option value="single">Un solo plan / evento</option>
+      </select>
+      <select id="anaPlan2" title="Seleccionar plan / evento" style="display:none;min-width:210px"></select>
+      <select id="anaEquipo2"><option value="all">Todos los equipos</option></select>
+    </div>
+    <div id="anaSelectionNote" class="analysis-note" style="display:none"></div>
+    <div class="analysis-note">Fuente única: <strong>Checklist de arranque + T-Minus</strong>. Elimina el doble registro y permite analizar frecuencia, impacto y equipos recurrentes.</div>
+    <div id="analytics2"></div>
+  </div>
+</section>
+
+<section id="tab-historial" style="display:none">
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <p class="panel-title" style="margin-bottom:0"><span class="dot"></span>Planes guardados en este navegador</p>
+      <button class="btn btn-primary" id="btnExportExcel">Descargar Excel</button>
+    </div>
+    <div class="save-status" style="display:block;margin:10px 0 0" id="exportStatus"></div>
+    <div class="section-spacer"></div>
+    <div id="historialList"></div>
+  </div>
+</section>
+
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · AUTOR: ADRIANO NUÑEZ SORIANO · V2.0</footer>
+</div>
+
+<script>
+const EQUIPOS=[
+  {id:"depaletizadora",nombre:"Depaletizadora",tArr:-90,tCorte:-90},
+  {id:"desencajonadora",nombre:"Desencajonadora",tArr:-80,tCorte:-80},
+  {id:"lavadora",nombre:"Lavadora de Botellas",tArr:-60,tCorte:-60},
+  {id:"llenadora",nombre:"Llenadora",tArr:0,tCorte:0},
+  {id:"pasteurizador",nombre:"Pasteurizador Túnel",tArr:15,tCorte:75},
+  {id:"etiquetadora30",nombre:"Etiquetadora 30",tArr:90,tCorte:95},
+  {id:"etiquetadora31",nombre:"Etiquetadora 31",tArr:90,tCorte:95},
+  {id:"encajonadora",nombre:"Encajonadora",tArr:100,tCorte:110},
+  {id:"paletizadora",nombre:"Paletizadora",tArr:110,tCorte:125}
+];
+const UMBRAL_MIN=5;
+const CAUSAS=[
+  ["SERVICIOS","Servicios"],["MANTENIMIENTO","Mantenimiento"],["PRUEBAS","Pruebas"],
+  ["OPERACION","Operación / Personal"],["MATERIALES","Materiales / Repuestos"],["EQUIPO","Equipo / Automatización"],
+  ["SEGURIDAD","Seguridad / Permisos"],["CHECKLIST","Checklist de arranque"],["OTRO","Otro"]
+];
+let state={fecha:todayStr(),refArranque:"",refCorte:"",real:{},check:{}};
+let eventos=[];
+
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function timeToMin(t){if(!t)return null;const [h,m]=t.split(":").map(Number);return h*60+m}
+function minToTime(min){min=((min%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,"0")+":"+String(min%60).padStart(2,"0")}
+function shortestDiff(a,b){let d=a-b;while(d>720)d-=1440;while(d<-720)d+=1440;return d}
+function keyDay(){return "tminus_plan_"+state.fecha}
+function keyEvents(){return "tminus_events_"+state.fecha}
+
+function render(){
+  const refArr=timeToMin(state.refArranque),refCorte=timeToMin(state.refCorte);
+  document.getElementById("kpiArr").textContent=state.refArranque||"—";
+  document.getElementById("kpiCor").textContent=state.refCorte||"—";
+  const tbody=document.getElementById("tablaEquipos");tbody.innerHTML="";
+  let ok=0,nok=0;
+  EQUIPOS.forEach(eq=>{
+    const real=state.real[eq.id]||{};
+    const progArr=refArr!==null?minToTime(refArr+eq.tArr):null;
+    const progCorte=refCorte!==null?minToTime(refCorte+eq.tCorte):null;
+    const ra=timeToMin(real.arranque),rc=timeToMin(real.corte);
+    const pa=refArr!==null?refArr+eq.tArr:null,pc=refCorte!==null?refCorte+eq.tCorte:null;
+    const da=ra!==null&&pa!==null?shortestDiff(ra,pa):null;
+    const dc=rc!==null&&pc!==null?shortestDiff(rc,pc):null;
+    let estado="pending";
+    if(da!==null||dc!==null){estado=(da!==null&&Math.abs(da)>UMBRAL_MIN)||(dc!==null&&Math.abs(dc)>UMBRAL_MIN)?"nok":"ok"}
+    if(estado==="ok")ok++;if(estado==="nok")nok++;
+    const tr=document.createElement("tr");if(eq.id==="llenadora")tr.classList.add("section-llenadora");
+    tr.innerHTML=`<td class="left equipo-name">${eq.nombre}</td>
+      <td class="prog-time">${progCorte??"—"}</td>
+      <td><input type="time" class="time-input" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}"></td>
+      <td>${desvClass(dc)}</td>
+      <td class="prog-time">${progArr??"—"}</td>
+      <td><input type="time" class="time-input" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}"></td>
+      <td>${desvClass(da)}</td><td><span class="badge ${estado}">${estado==="pending"?"PENDIENTE":estado.toUpperCase()}</span></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("kpiOk").textContent=ok;
+  document.getElementById("kpiNok").textContent=nok;
+  tbody.querySelectorAll("input.time-input").forEach(inp=>inp.addEventListener("change",e=>{
+    const id=e.target.dataset.eq,f=e.target.dataset.field;
+    if(!state.real[id])state.real[id]={};state.real[id][f]=e.target.value;render();queueSave();
+  }));
+  renderChecklist();
+  renderTimelines();
+}
+function renderChecklist(){
+  const el=document.getElementById("checklistRows"); if(!el)return; el.innerHTML="";
+  EQUIPOS.forEach(eq=>{
+    const c=state.check[eq.id]||{cum:"PENDIENTE",causa:"",detalle:""};
+    const causeOptions=CAUSAS.map(x=>`<option value="${x[0]}" ${c.causa===x[0]?"selected":""}>${x[1]}</option>`).join("");
+    el.innerHTML+=`<div class="check-cell checkeq">${eq.nombre}</div><div><select data-check-eq="${eq.id}" data-check-field="cum"><option ${c.cum==="PENDIENTE"?"selected":""}>PENDIENTE</option><option ${c.cum==="CUMPLIÓ"?"selected":""}>CUMPLIÓ</option><option ${c.cum==="NO CUMPLIÓ"?"selected":""}>NO CUMPLIÓ</option><option ${c.cum==="N/A"?"selected":""}>N/A</option></select></div><div><select data-check-eq="${eq.id}" data-check-field="causa"><option value="">Seleccionar…</option>${causeOptions}</select></div><div><input data-check-eq="${eq.id}" data-check-field="detalle" value="${(c.detalle||"").replace(/"/g,"&quot;")}" placeholder="Qué no se cumplió, por qué y acción tomada"></div>`;
+  });
+  el.querySelectorAll("[data-check-eq]").forEach(x=>x.addEventListener(x.tagName==="INPUT"?"input":"change",()=>{
+    const id=x.dataset.checkEq;if(!state.check[id])state.check[id]={cum:"PENDIENTE",causa:"",detalle:""};state.check[id][x.dataset.checkField]=x.value;renderCheckSummary();queueSave();
+  })); renderCheckSummary();
+}
+function renderCheckSummary(){
+  const el=document.getElementById("checkSummary");if(!el)return;const bad=Object.entries(state.check).filter(([id,c])=>c.cum==="NO CUMPLIÓ");
+  if(!bad.length){el.innerHTML="<strong>Sin incumplimientos registrados.</strong>";return}
+  const map={};bad.forEach(([id,c])=>{const label=(CAUSAS.find(x=>x[0]===c.causa)||["","Sin causa"])[1];map[label]=(map[label]||0)+1});
+  el.innerHTML=`<strong>${bad.length} incumplimiento(s):</strong> `+Object.entries(map).map(x=>x[0]+" ("+x[1]+")").join(" · ");
+}
+function allHistoricalRecords(){
+  const plans=[];
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("tminus_plan_")){try{const p=JSON.parse(localStorage.getItem(k));if(p&&p.fecha)plans.push(p)}catch(e){}}}
+  return plans;
+}
+function populateAnalysisFilters(){
+  const equipEl=document.getElementById("anaEquipo2");
+  if(equipEl){
+    equipEl.innerHTML='<option value="all">Todos los equipos</option>'+EQUIPOS.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join('');
+  }
+  refreshPlanAnalysisOptions();
+}
+function refreshPlanAnalysisOptions(){
+  const el=document.getElementById("anaPlan2");
+  if(!el)return;
+  const plans=allHistoricalRecords().sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+  el.innerHTML='<option value="">Seleccionar plan / evento…</option>'+plans.map(p=>`<option value="${p.fecha}">${p.fecha} · Corte ${p.refCorte||'—'} · Arranque ${p.refArranque||'—'}</option>`).join('');
+}
+function updateAnalysisControls(){
+  const period=document.getElementById("anaPeriodo2"), plan=document.getElementById("anaPlan2"), note=document.getElementById("anaSelectionNote");
+  if(!period||!plan)return;
+  const single=period.value==='single';
+  plan.style.display=single?'block':'none';
+  if(single){
+    refreshPlanAnalysisOptions();
+    note.style.display='block';
+    note.innerHTML='<strong>Análisis individual:</strong> selecciona un plan/evento para analizar únicamente sus retrasos e incumplimientos del checklist.';
+  }else{
+    note.style.display='none';
+    note.textContent='';
+  }
+}
+function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipmentId='anaEquipo'){
+  const el=document.getElementById(targetId);if(!el)return;
+  const periodEl=document.getElementById(periodId),equipEl=document.getElementById(equipmentId);
+  const planEl=document.getElementById('anaPlan2');
+  const period=periodEl?periodEl.value:'all',selectedEq=equipEl?equipEl.value:'all',selectedPlan=planEl?planEl.value:'';
+  const cutoff=(period==='all'||period==='single')?null:new Date(Date.now()-Number(period)*86400000);
+  const causeFreq={},causeImpact={},matrix={},trend={};let totalDelay=0,totalRecords=0,totalFailures=0;
+  let plans=allHistoricalRecords();
+  if(period==='single'){
+    plans=selectedPlan?plans.filter(p=>p.fecha===selectedPlan):[];
+  }else if(cutoff){
+    plans=plans.filter(p=>new Date(p.fecha+'T23:59:59')>=cutoff);
+  }
+  plans.forEach(p=>{
+    EQUIPOS.forEach(eq=>{
+      if(selectedEq!=='all'&&eq.id!==selectedEq)return;
+      const r=(p.real||{})[eq.id]||{};
+      const rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
+      const delays=[];
+      if(rc!==null&&pc!==null)delays.push(Math.max(0,shortestDiff(rc,pc+eq.tCorte)));
+      if(ra!==null&&pa!==null)delays.push(Math.max(0,shortestDiff(ra,pa+eq.tArr)));
+      const impact=delays.length?Math.max(...delays):0;
+      if(impact>0){totalDelay+=impact;trend[p.fecha]=(trend[p.fecha]||0)+impact;}
+    });
+    Object.entries(p.check||{}).forEach(([id,c])=>{
+      if(c.cum!=='NO CUMPLIÓ')return;
+      if(selectedEq!=='all'&&id!==selectedEq)return;
+      const cause=c.causa||'OTRO';
+      const label=(CAUSAS.find(x=>x[0]===cause)||[cause,cause])[1];
+      causeFreq[label]=(causeFreq[label]||0)+1;
+      totalFailures++;
+      const eq=EQUIPOS.find(x=>x.id===id);if(!eq)return;
+      const r=(p.real||{})[id]||{};let impact=0;
+      const rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
+      if(rc!==null&&pc!==null)impact=Math.max(impact,Math.max(0,shortestDiff(rc,pc+eq.tCorte)));
+      if(ra!==null&&pa!==null)impact=Math.max(impact,Math.max(0,shortestDiff(ra,pa+eq.tArr)));
+      causeImpact[label]=(causeImpact[label]||0)+impact;
+      totalRecords++;
+      if(!matrix[eq.nombre])matrix[eq.nombre]={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
+    });
+  });
+  const freq=Object.entries(causeFreq).sort((a,b)=>b[1]-a[1]);
+  const imp=Object.entries(causeImpact).sort((a,b)=>b[1]-a[1]);
+  const maxF=Math.max(1,...freq.map(x=>x[1])),maxI=Math.max(1,...imp.map(x=>x[1]));
+  const bars=(arr,max,cls,suffix)=>arr.slice(0,7).map(x=>`<div class="bar-row"><div class="bar-label">${x[0]}</div><div class="bar-bg"><div class="bar ${cls}" style="width:${x[1]/max*100}%"></div></div><div class="bar-value">${x[1]}${suffix}</div></div>`).join('')||'<div class="empty-state">Sin datos suficientes.</div>';
+  const labels=[...new Set(imp.slice(0,6).map(x=>x[0]))];
+  const eqs=Object.keys(matrix).sort((a,b)=>{const sa=Object.values(matrix[a]).reduce((x,y)=>x+y,0),sb=Object.values(matrix[b]).reduce((x,y)=>x+y,0);return sb-sa}).slice(0,9);
+  const matrixHtml=labels.length?`<table class="matrix"><thead><tr><th>Equipo</th>${labels.map(x=>`<th>${x.slice(0,12)}</th>`).join('')}</tr></thead><tbody>${eqs.map(eq=>`<tr><td class="left">${eq}</td>${labels.map(c=>{const v=(matrix[eq]||{})[c]||0;return `<td class="${v>=3?'heat3':v===2?'heat2':v===1?'heat1':''}">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin incumplimientos de checklist en el periodo.</div>';
+  const topCause=imp[0],topEq=eqs[0];
+  const trendEntries=Object.entries(trend).sort((a,b)=>a[0].localeCompare(b[0])).slice(-14),maxT=Math.max(1,...trendEntries.map(x=>x[1]));
+  let points='';trendEntries.forEach((x,i)=>{const xx=5+(i/(Math.max(1,trendEntries.length-1)))*90,yy=90-(x[1]/maxT*70);points+=(i?' ':'')+`${xx},${yy}`});
+  const noDelay=totalDelay===0?' <span style="color:var(--green)">Sin retrasos acumulados.</span>':'';
+  el.innerHTML=`<div class="summary"><div class="kpi"><div class="kpi-label">Minutos de retraso</div><div class="kpi-value red">${totalDelay}</div></div><div class="kpi"><div class="kpi-label">Incumplimientos checklist</div><div class="kpi-value amber">${totalFailures}</div></div><div class="kpi"><div class="kpi-label">Causa #1 por impacto</div><div class="kpi-value" style="font-size:16px">${topCause?topCause[0]:'—'}</div></div><div class="kpi"><div class="kpi-label">Equipo más recurrente</div><div class="kpi-value" style="font-size:16px">${topEq||'—'}</div></div></div>
+    <div class="analytics-grid"><div class="chart-card"><div class="chart-title">Pareto — frecuencia de causas del checklist</div>${bars(freq,maxF,'','')}</div><div class="chart-card"><div class="chart-title">Impacto — minutos de retraso por causa</div>${bars(imp,maxI,'red',' min')}</div></div>
+    <div class="chart-card" style="margin-top:14px"><div class="chart-title">Tendencia — minutos de retraso por día</div><div class="trend-wrap"><svg class="trend-svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="5" y1="90" x2="95" y2="90" stroke="#2a3a4f" stroke-width="0.6"/>${trendEntries.map((x,i)=>`<text x="${5+(i/(Math.max(1,trendEntries.length-1)))*90}" y="98" text-anchor="middle" fill="#8798ad" font-size="3">${x[0].slice(5)}</text>`).join('')}<polyline points="${points}" fill="none" stroke="#4fd1c5" stroke-width="1.3" vector-effect="non-scaling-stroke"/>${trendEntries.map((x,i)=>{const xx=5+(i/(Math.max(1,trendEntries.length-1)))*90,yy=90-(x[1]/maxT*70);return `<circle cx="${xx}" cy="${yy}" r="1.5" fill="#4fd1c5"/>`}).join('')}</svg></div></div>
+    <div class="chart-card" style="margin-top:14px"><div class="chart-title">Matriz equipo × causa — frecuencia de incumplimientos</div>${matrixHtml}</div>
+    <div class="insight"><strong>Lectura operacional:</strong> ${topCause?`la causa con mayor impacto acumulado es <b>${topCause[0]}</b> (${topCause[1]} min).`:'aún no hay incumplimientos con causa registrada.'} ${topEq?`El equipo con mayor recurrencia es <b>${topEq}</b>.`:''}${noDelay}</div>`;
+}
+function desvClass(v){
+  if(v===null)return `<span style="color:var(--muted)">—</span>`;
+  const cls=v===0?"zero":v>0?"pos":"neg",sign=v>0?"+":"";
+  return `<span class="desv ${cls}">${sign}${v} min</span>`;
+}
+function renderTimelines(){buildTimeline("tlArranque","tArr","arranque",state.refArranque);buildTimeline("tlCorte","tCorte","corte",state.refCorte)}
+function buildTimeline(id,offsetKey,realKey,refTime){
+  const el=document.getElementById(id);el.innerHTML="";
+  const min=Math.min(...EQUIPOS.map(e=>e[offsetKey]))-15,max=Math.max(...EQUIPOS.map(e=>e[offsetKey]))+15,span=max-min;
+  const axis=document.createElement("div");axis.className="timeline-axis";el.appendChild(axis);
+  const refPct=(0-min)/span*100;
+  const line=document.createElement("div");line.className="timeline-ref";line.style.left=refPct+"%";el.appendChild(line);
+  const refLabel=document.createElement("div");refLabel.className="timeline-ref-label";refLabel.style.left=refPct+"%";refLabel.textContent=refTime||"sin hora";el.appendChild(refLabel);
+  EQUIPOS.forEach(eq=>{
+    const pct=(eq[offsetKey]-min)/span*100,real=state.real[eq.id]||{},r=timeToMin(real[realKey]),rm=timeToMin(refTime),prog=rm!==null?rm+eq[offsetKey]:null;
+    let status="pending";if(r!==null&&prog!==null)status=Math.abs(shortestDiff(r,prog))>UMBRAL_MIN?"nok":"ok";
+    const dot=document.createElement("div");dot.className="tl-dot "+status;dot.style.left=pct+"%";dot.title=eq.nombre+" · "+(prog!==null?minToTime(prog):"sin programación");el.appendChild(dot);
+    const label=document.createElement("div");label.className="tl-name";label.style.left=pct+"%";label.textContent=eq.nombre.length>14?eq.nombre.slice(0,13)+"…":eq.nombre;el.appendChild(label);
+    const tm=document.createElement("div");tm.className="tl-time";tm.style.left=pct+"%";tm.textContent=prog!==null?minToTime(prog):"—";el.appendChild(tm);
+  });
+}
+
+async function saveDay(){
+  const payload={...state};
+  localStorage.setItem(keyDay(),JSON.stringify(payload));
+  const s=document.getElementById("saveStatus");s.textContent="Guardado ✓ "+new Date().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"});
+  setTimeout(()=>s.textContent="",3000);
+}
+let autosaveTimer=null;
+function queueSave(){
+  clearTimeout(autosaveTimer);
+  autosaveTimer=setTimeout(()=>saveDay(),450);
+}
+function loadDay(){
+  const raw=localStorage.getItem(keyDay());
+  if(raw){try{const x=JSON.parse(raw);state={...state,...x,fecha:state.fecha};}catch(e){}}
+  else{state.refArranque="";state.refCorte="";state.real={};state.check={}}
+  document.getElementById("inpFecha").value=state.fecha;
+  document.getElementById("inpRefArranque").value=state.refArranque;
+  document.getElementById("inpRefCorte").value=state.refCorte;
+  render();
+}
+function clearReal(){
+  if(confirm("¿Limpiar todas las horas reales de este plan?")){state.real={};render();queueSave()}
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+  ["plan","eventos","historial"].forEach(t=>document.getElementById("tab-"+t).style.display=t===btn.dataset.tab?"block":"none");
+  if(btn.dataset.tab==="historial")loadHistorial();
+  if(btn.dataset.tab==="eventos"){refreshPlanAnalysisOptions();updateAnalysisControls();buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");}
+}));
+document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;loadDay()});
+document.getElementById("inpRefArranque").addEventListener("change",e=>{state.refArranque=e.target.value;render();queueSave()});
+document.getElementById("inpRefCorte").addEventListener("change",e=>{state.refCorte=e.target.value;render();queueSave()});
+document.getElementById("btnGuardar").addEventListener("click",saveDay);
+document.getElementById("btnLimpiar").addEventListener("click",clearReal);
+
+
+function collectSavedPlans(){
+  const plans=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("tminus_plan_")){
+      try{
+        const p=JSON.parse(localStorage.getItem(k));
+        if(p&&p.fecha) plans.push(p);
+      }catch(e){}
+    }
+  }
+  return plans.sort((a,b)=>String(a.fecha).localeCompare(String(b.fecha)));
+}
+
+function exportExcel(){
+  const status=document.getElementById("exportStatus");
+  const plans=collectSavedPlans();
+  if(!plans.length){
+    status.textContent="No hay planes guardados para exportar.";
+    return;
+  }
+  if(typeof XLSX==="undefined"){
+    status.textContent="No se pudo cargar el módulo Excel. Verifica tu conexión a internet y vuelve a intentar.";
+    return;
+  }
+
+  const resumen=[];
+  const detalle=[];
+  const checklistData=[];
+
+  plans.forEach(p=>{
+    resumen.push({
+      Fecha:p.fecha,
+      "Ref. Corte":p.refCorte||"",
+      "Ref. Arranque":p.refArranque||"",
+      "Equipos registrados":Object.keys(p.real||{}).length,
+      "Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length
+    });
+
+    const refC=timeToMin(p.refCorte), refA=timeToMin(p.refArranque);
+    EQUIPOS.forEach(eq=>{
+      const real=(p.real||{})[eq.id]||{};
+      const progC=refC!==null?minToTime(refC+eq.tCorte):"";
+      const progA=refA!==null?minToTime(refA+eq.tArr):"";
+      const dc=(timeToMin(real.corte)!==null&&refC!==null)?shortestDiff(timeToMin(real.corte),refC+eq.tCorte):null;
+      const da=(timeToMin(real.arranque)!==null&&refA!==null)?shortestDiff(timeToMin(real.arranque),refA+eq.tArr):null;
+      let estado="PENDIENTE";
+      if(dc!==null||da!==null) estado=((dc!==null&&Math.abs(dc)>UMBRAL_MIN)||(da!==null&&Math.abs(da)>UMBRAL_MIN))?"NOK":"OK";
+      detalle.push({
+        Fecha:p.fecha,
+        Equipo:eq.nombre,
+        "Offset Corte (min)":eq.tCorte,
+        "Programado Corte":progC,
+        "Real Corte":real.corte||"",
+        "Desviación Corte (min)":dc===null?"":dc,
+        "Offset Arranque (min)":eq.tArr,
+        "Programado Arranque":progA,
+        "Real Arranque":real.arranque||"",
+        "Desviación Arranque (min)":da===null?"":da,
+        Estado:estado
+      });
+    });
+
+  });
+
+  plans.forEach(p=>{Object.entries(p.check||{}).forEach(([id,c])=>{const eq=EQUIPOS.find(x=>x.id===id);if(eq&&c&&(c.cum||c.causa||c.detalle))checklistData.push({Fecha:p.fecha,Equipo:eq.nombre,Cumplimiento:c.cum||"",Causa:c.causa||"",Detalle:c.detalle||""})})});
+
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.json_to_sheet(resumen);
+  const ws2=XLSX.utils.json_to_sheet(detalle);
+  const ws4=XLSX.utils.json_to_sheet(checklistData);
+  ws1['!cols']=[{wch:14},{wch:14},{wch:16},{wch:20},{wch:12}];
+  ws2['!cols']=[{wch:14},{wch:25},{wch:18},{wch:20},{wch:16},{wch:24},{wch:20},{wch:22},{wch:18},{wch:26},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws1,"Resumen");
+  XLSX.utils.book_append_sheet(wb,ws2,"Detalle Equipos");
+  XLSX.utils.book_append_sheet(wb,ws4,"Checklist Arranque");
+  const analysisRows=[];
+  const causeMap={};
+  plans.forEach(p=>Object.values(p.check||{}).forEach(c=>{if(c&&c.cum==="NO CUMPLIÓ"){const label=(CAUSAS.find(x=>x[0]===c.causa)||[c.causa||"OTRO",c.causa||"Otro"])[1];causeMap[label]=(causeMap[label]||0)+1;}}));
+  Object.entries(causeMap).sort((a,b)=>b[1]-a[1]).forEach(([Causa,Frecuencia])=>analysisRows.push({Causa,Frecuencia}));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(analysisRows),"Analisis Causas");
+  const fecha=new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb,`T_MINUS_Modulacion_Linea3_${fecha}.xlsx`);
+  status.textContent=`Excel generado ✓ ${plans.length} plan(es), ${detalle.length} registros de equipo y ${checklistData.length} registros de checklist.`;
+  setTimeout(()=>status.textContent="",5000);
+}
+
+document.getElementById("anaPeriodo2").addEventListener("change",()=>{
+  updateAnalysisControls();
+  buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");
+});
+document.getElementById("anaPlan2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
+document.getElementById("anaEquipo2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
+
+function loadHistorial(){
+  const el=document.getElementById("historialList"),plans=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);if(k&&k.startsWith("tminus_plan_")){
+      try{const p=JSON.parse(localStorage.getItem(k));plans.push(p)}catch(e){}
+    }
+  }
+  plans.sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));el.innerHTML="";
+  if(!plans.length){el.innerHTML='<div class="empty-state"><div class="big">No hay planes guardados</div>Guarda el primer plan para verlo aquí.</div>';return}
+  plans.forEach(p=>{
+    const div=document.createElement("div");div.className="hist-item";
+    const count=Object.keys(p.real||{}).length;
+    div.innerHTML=`<div><div class="hist-date">${p.fecha}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"} · Corte: ${p.refCorte||"—"} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
+      <div class="hist-actions"><button class="btn btn-ghost" data-load>Ver</button><button class="btn btn-danger" data-del>Eliminar</button></div>`;
+    div.querySelector("[data-load]").onclick=()=>{state={...state,...p,fecha:p.fecha};eventos=p.eventos||[];document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.querySelector('[data-tab="plan"]').click();render()};
+    div.querySelector("[data-del]").onclick=()=>{if(confirm("¿Eliminar el plan "+p.fecha+"?")){localStorage.removeItem("tminus_plan_"+p.fecha);localStorage.removeItem("tminus_events_"+p.fecha);loadHistorial()}};
+    el.appendChild(div);
+  });
+}
+
+populateAnalysisFilters();updateAnalysisControls();loadDay();buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");
+</script>
+</body>
+</html>
