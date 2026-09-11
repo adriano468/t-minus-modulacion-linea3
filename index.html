@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Adriano Nuñez Soriano">
-<meta name="application-version" content="5.0">
+<meta name="application-version" content="5.1">
 <title>T-MINUS — Modulación Línea 3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -83,7 +83,7 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
 .tag.corte{background:var(--red-dim);color:var(--red)}.tag.arranque{background:var(--green-dim);color:var(--green)}.tag.evento{background:var(--yellow-dim);color:var(--yellow)}
 .del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}.del-btn:hover{color:var(--red)}
 .save-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-left:8px}
-.locked-time{opacity:.72;background:#111923!important;border-color:#35465b!important;cursor:not-allowed!important}.lock-note{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);margin-top:10px}.close-exercise{margin-top:14px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--panel-alt);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.close-exercise .close-status{font-size:12px;color:var(--muted)}.btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.4)}.closed-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--green-dim);color:var(--green);font:700 10px 'JetBrains Mono',monospace;text-transform:uppercase}
+.locked-time{opacity:.72;background:#111923!important;border-color:#35465b!important;cursor:not-allowed!important}.lock-note{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);margin-top:10px}.close-exercise{margin-top:14px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--panel-alt);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.close-exercise.status-incompleto{border-color:var(--yellow)}.close-exercise.status-retrasado{border-color:var(--red)}.close-exercise.status-completado{border-color:var(--green)}.close-exercise .close-status{font-size:12px;color:var(--muted)}.exercise-status-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font:700 11px 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.04em}.exercise-status-badge.incompleto{background:var(--yellow-dim);color:var(--yellow)}.exercise-status-badge.retrasado{background:var(--red-dim);color:var(--red)}.exercise-status-badge.completado{background:var(--green-dim);color:var(--green)}.exercise-status-dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}.btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.4)}.closed-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--green-dim);color:var(--green);font:700 10px 'JetBrains Mono',monospace;text-transform:uppercase}
 .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .kpi{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;font-family:'JetBrains Mono',monospace}.kpi-value{font-family:Oswald,sans-serif;font-size:24px;margin-top:3px}.kpi-value.green{color:var(--green)}.kpi-value.red{color:var(--red)}.kpi-value.amber{color:var(--amber)}
 
@@ -117,12 +117,12 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
     </div>
   </div>
 
-  <div class="close-exercise">
+  <div class="close-exercise status-incompleto" id="exerciseStatusCard">
     <div>
-      <div style="font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:13px">Cierre del ejercicio <span id="closedBadge" style="display:none" class="closed-badge">✓ Cerrado</span></div>
-      <div class="close-status" id="closeStatus">Completa todos los tiempos reales de Corte y Arranque y el checklist para cerrar.</div>
+      <div style="font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:13px">Estado del ejercicio</div>
+      <div class="close-status" id="closeStatus">Faltan datos obligatorios para completar el ejercicio.</div>
     </div>
-    <button class="btn btn-primary" id="btnCerrar" disabled>Cerrar ejercicio</button>
+    <span class="exercise-status-badge incompleto" id="exerciseStatusBadge"><span class="exercise-status-dot"></span>INCOMPLETO</span>
   </div>
 
   <div class="panel">
@@ -192,7 +192,7 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
   </div>
 </section>
 
-<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.0 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.1 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
 <script>
@@ -227,6 +227,7 @@ const CAUSAS=[
   ["SEGURIDAD","Seguridad / Permisos"],["CHECKLIST","Checklist de arranque"],["OTRO","Otro"]
 ];
 let state={fecha:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+function causeLabel(code){return (CAUSAS.find(x=>x[0]===code)||[code||"OTRO",code||"Otro"])[1]}
 let eventos=[];
 
 function todayStr(){return new Date().toISOString().slice(0,10)}
@@ -253,16 +254,38 @@ function isExerciseComplete(){
   const checklistComplete=EQUIPOS.every(eq=>{const c=state.check[eq.id]||{};return c.cum && c.cum!=="PENDIENTE"});
   return !!state.refCorte && !!state.refArranque && timesComplete && checklistComplete;
 }
+function getExerciseStatus(){
+  if(isExerciseComplete())return {key:"completado",label:"COMPLETADO",detail:"Todos los datos requeridos están completos. El ejercicio queda cerrado y bloqueado automáticamente."};
+  const base=new Date(String(state.fecha)+"T00:00:00");
+  const overdue=!Number.isNaN(base.getTime()) && (Date.now()-base.getTime())>24*60*60*1000;
+  if(overdue)return {key:"retrasado",label:"RETRASADO",detail:"El ejercicio está incompleto y han pasado más de 24 horas desde su fecha."};
+  return {key:"incompleto",label:"INCOMPLETO",detail:"Faltan datos obligatorios de Corte, Arranque, referencias o checklist."};
+}
+function renderExerciseStatus(){
+  const card=document.getElementById("exerciseStatusCard"),badge=document.getElementById("exerciseStatusBadge"),status=document.getElementById("closeStatus");
+  if(!card||!badge||!status)return;
+  const st=getExerciseStatus();
+  card.className=`close-exercise status-${st.key}`;
+  badge.className=`exercise-status-badge ${st.key}`;
+  badge.innerHTML=`<span class="exercise-status-dot"></span>${st.label}`;
+  status.textContent=st.detail;
+}
+async function autoCloseIfComplete(){
+  if(state.cerrado || !isExerciseComplete())return false;
+  state.cerrado=true;
+  state.planSaved=true;
+  ensureLocks();
+  state.updatedAt=new Date().toISOString();
+  localSave();
+  await saveCentral();
+  return true;
+}
 function updateCloseControl(){
-  const btn=document.getElementById("btnCerrar"),status=document.getElementById("closeStatus"),badge=document.getElementById("closedBadge");
-  if(!btn)return;
-  if(state.cerrado){btn.disabled=true;btn.textContent="Ejercicio cerrado";status.textContent="El ejercicio está cerrado. Los tiempos y datos ya no pueden modificarse.";if(badge)badge.style.display="inline-flex";return}
-  if(isExerciseComplete()){btn.disabled=false;btn.textContent="Cerrar ejercicio";status.textContent="Todos los datos requeridos están completos. Ya puedes cerrar el ejercicio.";}
-  else{btn.disabled=true;btn.textContent="Cerrar ejercicio";status.textContent="Completa todos los tiempos reales de Corte y Arranque y el checklist para cerrar.";}
-  if(badge)badge.style.display="none";
+  renderExerciseStatus();
 }
 
 function render(){
+  renderExerciseStatus();
   const refArr=timeToMin(state.refArranque),refCorte=timeToMin(state.refCorte);
   document.getElementById("kpiArr").textContent=state.refArranque||"—";
   document.getElementById("kpiCor").textContent=state.refCorte||"—";
@@ -284,11 +307,11 @@ function render(){
       <td class="prog-time">${progCorte??"—"}</td>
       <td><input type="time" class="time-input ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""}" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
       <td>${desvClass(dc)}</td>
-      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte">${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
+      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td class="prog-time">${progArr??"—"}</td>
       <td><input type="time" class="time-input ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""}" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
       <td>${desvClass(da)}</td>
-      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque">${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
+      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td><span class="badge ${estado}">${estado==="pending"?"PENDIENTE":estado.toUpperCase()}</span></td>`;
     tbody.appendChild(tr);
   });
@@ -444,8 +467,15 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
   if(period==='single_event'&&selectedEvent&&plans.length){
     const [f,id,kind]=selectedEvent.split('|'),p=plans[0],eq=EQUIPOS.find(x=>x.id===id),r=(p.real||{})[id]||{};
     if(eq){
-      if(kind==='check'){const c=(p.check||{})[id]||{};selectedEventData={fecha:f,eq:eq.nombre,tipo:'Checklist',prog:'—',real:'—',desv:0,cause:c.causa||'OTRO',detail:c.detalle||''};}
-      else {const ref=kind==='corte'?timeToMin(p.refCorte):timeToMin(p.refArranque),off=kind==='corte'?eq.tCorte:eq.tArr,real=kind==='corte'?r.corte:r.arranque,rm=timeToMin(real),d=(ref!==null&&rm!==null)?shortestDiff(rm,ref+off):0;selectedEventData={fecha:f,eq:eq.nombre,tipo:kind==='corte'?'Corte':'Arranque',prog:ref!==null?minToTime(ref+off):'—',real:real||'—',desv:d,cause:kind==='corte'?'RETRASO_CORTE':'RETRASO_ARRANQUE',detail:'Desviación respecto al T-Minus programado.'};}
+      if(kind==='check'){
+        const c=(p.check||{})[id]||{};
+        selectedEventData={fecha:f,eq:eq.nombre,tipo:'Checklist',prog:'—',real:'—',desv:0,cause:causeLabel(c.causa||'OTRO'),detail:c.detalle||''};
+      }else{
+        const ref=kind==='corte'?timeToMin(p.refCorte):timeToMin(p.refArranque),off=kind==='corte'?eq.tCorte:eq.tArr;
+        const real=kind==='corte'?r.corte:r.arranque,rm=timeToMin(real),d=(ref!==null&&rm!==null)?shortestDiff(rm,ref+off):0;
+        const cause=kind==='corte'?r.causaCorte:r.causaArranque;
+        selectedEventData={fecha:f,eq:eq.nombre,tipo:kind==='corte'?'Corte':'Arranque',prog:ref!==null?minToTime(ref+off):'—',real:real||'—',desv:d,cause:causeLabel(cause||'OTRO'),detail:`Causa registrada en T-MINUS: ${causeLabel(cause||'OTRO')}.`};
+      }
     }
   }
   plans.forEach(p=>{
@@ -454,10 +484,23 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
       if(selectedEq!=='all'&&eq.id!==selectedEq)return;
       const r=(p.real||{})[eq.id]||{};
       const rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
-      const delays=[];
-      if(rc!==null&&pc!==null)delays.push(Math.max(0,shortestDiff(rc,pc+eq.tCorte)));
-      if(ra!==null&&pa!==null)delays.push(Math.max(0,shortestDiff(ra,pa+eq.tArr)));
-      const impact=delays.length?Math.max(...delays):0;
+      const corteDelay=rc!==null&&pc!==null?Math.max(0,shortestDiff(rc,pc+eq.tCorte)):0;
+      const arranqueDelay=ra!==null&&pa!==null?Math.max(0,shortestDiff(ra,pa+eq.tArr)):0;
+      const impact=Math.max(corteDelay,arranqueDelay);
+      if(corteDelay>0){
+        const label=causeLabel(r.causaCorte||'OTRO');
+        causeFreq[label]=(causeFreq[label]||0)+1;
+        causeImpact[label]=(causeImpact[label]||0)+corteDelay;
+        matrix[eq.nombre]??={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
+        totalRecords++;
+      }
+      if(arranqueDelay>0){
+        const label=causeLabel(r.causaArranque||'OTRO');
+        causeFreq[label]=(causeFreq[label]||0)+1;
+        causeImpact[label]=(causeImpact[label]||0)+arranqueDelay;
+        matrix[eq.nombre]??={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
+        totalRecords++;
+      }
       if(impact>0){totalDelay+=impact;trend[p.fecha]=(trend[p.fecha]||0)+impact;}
     });
     Object.entries(p.check||{}).forEach(([id,c])=>{
@@ -465,8 +508,7 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
       if(period==='single_event'&&selectedEvent&&!selectedEvent.endsWith('|check'))return;
       if(period==='single_event'&&selectedEvent!==`${p.fecha}|${id}|check`)return;
       if(selectedEq!=='all'&&id!==selectedEq)return;
-      const cause=c.causa||'OTRO';
-      const label=(CAUSAS.find(x=>x[0]===cause)||[cause,cause])[1];
+      const label=causeLabel(c.causa||'OTRO');
       causeFreq[label]=(causeFreq[label]||0)+1;
       totalFailures++;
       const eq=EQUIPOS.find(x=>x.id===id);if(!eq)return;
@@ -476,7 +518,7 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
       if(ra!==null&&pa!==null)impact=Math.max(impact,Math.max(0,shortestDiff(ra,pa+eq.tArr)));
       causeImpact[label]=(causeImpact[label]||0)+impact;
       totalRecords++;
-      if(!matrix[eq.nombre])matrix[eq.nombre]={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
+      matrix[eq.nombre]??={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
     });
   });
   const freq=Object.entries(causeFreq).sort((a,b)=>b[1]-a[1]);
@@ -485,17 +527,18 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
   const bars=(arr,max,cls,suffix)=>arr.slice(0,7).map(x=>`<div class="bar-row"><div class="bar-label">${x[0]}</div><div class="bar-bg"><div class="bar ${cls}" style="width:${x[1]/max*100}%"></div></div><div class="bar-value">${x[1]}${suffix}</div></div>`).join('')||'<div class="empty-state">Sin datos suficientes.</div>';
   const labels=[...new Set(imp.slice(0,6).map(x=>x[0]))];
   const eqs=Object.keys(matrix).sort((a,b)=>{const sa=Object.values(matrix[a]).reduce((x,y)=>x+y,0),sb=Object.values(matrix[b]).reduce((x,y)=>x+y,0);return sb-sa}).slice(0,9);
-  const matrixHtml=labels.length?`<table class="matrix"><thead><tr><th>Equipo</th>${labels.map(x=>`<th>${x.slice(0,12)}</th>`).join('')}</tr></thead><tbody>${eqs.map(eq=>`<tr><td class="left">${eq}</td>${labels.map(c=>{const v=(matrix[eq]||{})[c]||0;return `<td class="${v>=3?'heat3':v===2?'heat2':v===1?'heat1':''}">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin incumplimientos de checklist en el periodo.</div>';
+  const matrixHtml=labels.length?`<table class="matrix"><thead><tr><th>Equipo</th>${labels.map(x=>`<th>${x.slice(0,12)}</th>`).join('')}</tr></thead><tbody>${eqs.map(eq=>`<tr><td class="left">${eq}</td>${labels.map(c=>{const v=(matrix[eq]||{})[c]||0;return `<td class="${v>=3?'heat3':v===2?'heat2':v===1?'heat1':''}">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin eventos con causa en el periodo.</div>';
   const topCause=imp[0],topEq=eqs[0];
   const trendEntries=Object.entries(trend).sort((a,b)=>a[0].localeCompare(b[0])).slice(-14),maxT=Math.max(1,...trendEntries.map(x=>x[1]));
   let points='';trendEntries.forEach((x,i)=>{const xx=5+(i/(Math.max(1,trendEntries.length-1)))*90,yy=90-(x[1]/maxT*70);points+=(i?' ':'')+`${xx},${yy}`});
   const noDelay=totalDelay===0?' <span style="color:var(--green)">Sin retrasos acumulados.</span>':'';
   const selectedHtml=selectedEventData?`<div class="chart-card" style="margin-bottom:14px"><div class="chart-title">Evento seleccionado</div><div class="insight"><b>${selectedEventData.fecha}</b> · ${selectedEventData.eq} · ${selectedEventData.tipo}<br>Programado: <b>${selectedEventData.prog}</b> · Real: <b>${selectedEventData.real}</b> · Desviación: <b>${selectedEventData.desv>0?'+':''}${selectedEventData.desv} min</b><br>Causa/categoría: <b>${selectedEventData.cause}</b><br>${selectedEventData.detail||''}</div></div>`:'';
   el.innerHTML=selectedHtml+`<div class="summary"><div class="kpi"><div class="kpi-label">Minutos de retraso</div><div class="kpi-value red">${totalDelay}</div></div><div class="kpi"><div class="kpi-label">Incumplimientos checklist</div><div class="kpi-value amber">${totalFailures}</div></div><div class="kpi"><div class="kpi-label">Causa #1 por impacto</div><div class="kpi-value" style="font-size:16px">${topCause?topCause[0]:'—'}</div></div><div class="kpi"><div class="kpi-label">Equipo más recurrente</div><div class="kpi-value" style="font-size:16px">${topEq||'—'}</div></div></div>
-    <div class="analytics-grid"><div class="chart-card"><div class="chart-title">Pareto — frecuencia de causas del checklist</div>${bars(freq,maxF,'','')}</div><div class="chart-card"><div class="chart-title">Impacto — minutos de retraso por causa</div>${bars(imp,maxI,'red',' min')}</div></div>
+    <div class="analysis-note">Las causas de <strong>Corte/Arranque</strong> de la tabla Detalle T-MINUS ya alimentan frecuencia, impacto, matriz, evento individual y Excel. El Checklist sigue aportando sus propias causas.</div>
+    <div class="analytics-grid"><div class="chart-card"><div class="chart-title">Pareto — frecuencia de causas (T-MINUS + checklist)</div>${bars(freq,maxF,'','')}</div><div class="chart-card"><div class="chart-title">Impacto — minutos de retraso por causa</div>${bars(imp,maxI,'red',' min')}</div></div>
     <div class="chart-card" style="margin-top:14px"><div class="chart-title">Tendencia — minutos de retraso por día</div><div class="trend-wrap"><svg class="trend-svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="5" y1="90" x2="95" y2="90" stroke="#2a3a4f" stroke-width="0.6"/>${trendEntries.map((x,i)=>`<text x="${5+(i/(Math.max(1,trendEntries.length-1)))*90}" y="98" text-anchor="middle" fill="#8798ad" font-size="3">${x[0].slice(5)}</text>`).join('')}<polyline points="${points}" fill="none" stroke="#4fd1c5" stroke-width="1.3" vector-effect="non-scaling-stroke"/>${trendEntries.map((x,i)=>{const xx=5+(i/(Math.max(1,trendEntries.length-1)))*90,yy=90-(x[1]/maxT*70);return `<circle cx="${xx}" cy="${yy}" r="1.5" fill="#4fd1c5"/>`}).join('')}</svg></div></div>
-    <div class="chart-card" style="margin-top:14px"><div class="chart-title">Matriz equipo × causa — frecuencia de incumplimientos</div>${matrixHtml}</div>
-    <div class="insight"><strong>Lectura operacional:</strong> ${topCause?`la causa con mayor impacto acumulado es <b>${topCause[0]}</b> (${topCause[1]} min).`:'aún no hay incumplimientos con causa registrada.'} ${topEq?`El equipo con mayor recurrencia es <b>${topEq}</b>.`:''}${noDelay}</div>`;
+    <div class="chart-card" style="margin-top:14px"><div class="chart-title">Matriz equipo × causa — T-MINUS + checklist</div>${matrixHtml}</div>
+    <div class="insight"><strong>Lectura operacional:</strong> ${topCause?`la causa con mayor impacto acumulado es <b>${topCause[0]}</b> (${topCause[1]} min).`:'aún no hay eventos con causa registrada.'} ${topEq?`El equipo con mayor recurrencia es <b>${topEq}</b>.`:''}${noDelay}</div>`;
 }
 function desvClass(v){
   if(v===null)return `<span style="color:var(--muted)">—</span>`;
@@ -640,7 +683,14 @@ async function saveDay(){
 let autosaveTimer=null;
 function queueSave(){
   clearTimeout(autosaveTimer);
-  autosaveTimer=setTimeout(()=>persistDay(),450);
+  autosaveTimer=setTimeout(async()=>{
+    if(isExerciseComplete() && !state.cerrado){
+      await autoCloseIfComplete();
+      render();
+    }else{
+      persistDay();
+    }
+  },450);
 }
 async function loadDay(){
   dbLoading=true;
@@ -659,21 +709,9 @@ async function loadDay(){
   document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("btnGuardar").disabled=!!state.cerrado;
   document.getElementById("btnLimpiar").disabled=!!state.planSaved||!!state.cerrado;
+  await autoCloseIfComplete();
   render();
   dbLoading=false;
-}
-function closeExercise(){
-  if(state.cerrado)return;
-  if(!isExerciseComplete()){updateCloseControl();return}
-  if(confirm("¿Cerrar el ejercicio? Después de cerrarlo no se podrán modificar los tiempos ni los datos.")){
-    state.cerrado=true;
-    ensureLocks();
-    state.updatedAt=new Date().toISOString();
-    localSave();
-    saveCentral();
-    render();
-    const s=document.getElementById("saveStatus");if(s)s.textContent="Ejercicio cerrado ✓";
-  }
 }
 function clearReal(){
   if(state.planSaved||state.cerrado)return;
@@ -687,8 +725,8 @@ document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",
   if(btn.dataset.tab==="eventos"){refreshPlanAnalysisOptions();refreshEventAnalysisOptions();updateAnalysisControls();buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");}
 }));
 document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;loadDay()});
-document.getElementById("inpRefArranque").addEventListener("change",e=>{if(state.planSaved||state.cerrado)return;state.refArranque=e.target.value;render();queueSave()});
-document.getElementById("inpRefCorte").addEventListener("change",e=>{if(state.planSaved||state.cerrado)return;state.refCorte=e.target.value;render();queueSave()});
+document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refArranque=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
+document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refCorte=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("btnGuardar").addEventListener("click",saveDay);
 document.getElementById("btnLimpiar").addEventListener("click",clearReal);
 
@@ -710,76 +748,35 @@ function collectSavedPlans(){
 async function exportExcel(){
   const status=document.getElementById("exportStatus");
   const plans=await fetchAllPlans();
-  if(!plans.length){
-    status.textContent="No hay planes guardados para exportar.";
-    return;
-  }
-  if(typeof XLSX==="undefined"){
-    status.textContent="No se pudo cargar el módulo Excel. Verifica tu conexión a internet y vuelve a intentar.";
-    return;
-  }
-
-  const resumen=[];
-  const detalle=[];
-  const checklistData=[];
-
+  if(!plans.length){status.textContent="No hay planes guardados para exportar.";return;}
+  if(typeof XLSX==="undefined"){status.textContent="No se pudo cargar el módulo Excel. Verifica tu conexión a internet y vuelve a intentar.";return;}
+  const resumen=[],detalle=[],checklistData=[],analysisMap={};
   plans.forEach(p=>{
-    resumen.push({
-      Fecha:p.fecha,
-      "Ref. Corte":p.refCorte||"",
-      "Ref. Arranque":p.refArranque||"",
-      "Equipos registrados":Object.keys(p.real||{}).length,
-      "Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length
-    });
-
-    const refC=timeToMin(p.refCorte), refA=timeToMin(p.refArranque);
+    resumen.push({Fecha:p.fecha,"Ref. Corte":p.refCorte||"","Ref. Arranque":p.refArranque||"","Equipos registrados":Object.keys(p.real||{}).length,"Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length});
+    const refC=timeToMin(p.refCorte),refA=timeToMin(p.refArranque);
     EQUIPOS.forEach(eq=>{
       const real=(p.real||{})[eq.id]||{};
-      const progC=refC!==null?minToTime(refC+eq.tCorte):"";
-      const progA=refA!==null?minToTime(refA+eq.tArr):"";
+      const progC=refC!==null?minToTime(refC+eq.tCorte):"",progA=refA!==null?minToTime(refA+eq.tArr):"";
       const dc=(timeToMin(real.corte)!==null&&refC!==null)?shortestDiff(timeToMin(real.corte),refC+eq.tCorte):null;
       const da=(timeToMin(real.arranque)!==null&&refA!==null)?shortestDiff(timeToMin(real.arranque),refA+eq.tArr):null;
-      let estado="PENDIENTE";
-      if(dc!==null||da!==null) estado=((dc!==null&&Math.abs(dc)>UMBRAL_MIN)||(da!==null&&Math.abs(da)>UMBRAL_MIN))?"NOK":"OK";
-      detalle.push({
-        Fecha:p.fecha,
-        Equipo:eq.nombre,
-        "Offset Corte (min)":eq.tCorte,
-        "Programado Corte":progC,
-        "Real Corte":real.corte||"",
-        "Desviación Corte (min)":dc===null?"":dc,
-        "Offset Arranque (min)":eq.tArr,
-        "Programado Arranque":progA,
-        "Real Arranque":real.arranque||"",
-        "Desviación Arranque (min)":da===null?"":da,
-        Estado:estado
-      });
+      let estado="PENDIENTE";if(dc!==null||da!==null)estado=((dc!==null&&Math.abs(dc)>UMBRAL_MIN)||(da!==null&&Math.abs(da)>UMBRAL_MIN))?"NOK":"OK";
+      const causaCorte=real.causaCorte||"",causaArranque=real.causaArranque||"";
+      if(dc!==null&&dc>0){const l=causeLabel(causaCorte||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"T-MINUS"};analysisMap[l].Frecuencia++;analysisMap[l].ImpactoMin+=dc;}
+      if(da!==null&&da>0){const l=causeLabel(causaArranque||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"T-MINUS"};analysisMap[l].Frecuencia++;analysisMap[l].ImpactoMin+=da;}
+      detalle.push({Fecha:p.fecha,Equipo:eq.nombre,"Offset Corte (min)":eq.tCorte,"Programado Corte":progC,"Real Corte":real.corte||"","Desviación Corte (min)":dc===null?"":dc,"Causa retraso Corte":causeLabel(causaCorte||""),"Offset Arranque (min)":eq.tArr,"Programado Arranque":progA,"Real Arranque":real.arranque||"","Desviación Arranque (min)":da===null?"":da,"Causa retraso Arranque":causeLabel(causaArranque||""),Estado:estado});
     });
-
+    Object.entries(p.check||{}).forEach(([id,c])=>{const eq=EQUIPOS.find(x=>x.id===id);if(eq&&c&&(c.cum||c.causa||c.detalle)){checklistData.push({Fecha:p.fecha,Equipo:eq.nombre,Cumplimiento:c.cum||"",Causa:causeLabel(c.causa||""),Detalle:c.detalle||""});if(c.cum==="NO CUMPLIÓ"){const l=causeLabel(c.causa||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"Checklist"};analysisMap[l].Frecuencia++;}}});
   });
-
-  plans.forEach(p=>{Object.entries(p.check||{}).forEach(([id,c])=>{const eq=EQUIPOS.find(x=>x.id===id);if(eq&&c&&(c.cum||c.causa||c.detalle))checklistData.push({Fecha:p.fecha,Equipo:eq.nombre,Cumplimiento:c.cum||"",Causa:c.causa||"",Detalle:c.detalle||""})})});
-
   const wb=XLSX.utils.book_new();
-  const ws1=XLSX.utils.json_to_sheet(resumen);
-  const ws2=XLSX.utils.json_to_sheet(detalle);
-  const ws4=XLSX.utils.json_to_sheet(checklistData);
-  ws1['!cols']=[{wch:14},{wch:14},{wch:16},{wch:20},{wch:12}];
-  ws2['!cols']=[{wch:14},{wch:25},{wch:18},{wch:20},{wch:16},{wch:24},{wch:20},{wch:22},{wch:18},{wch:26},{wch:12}];
-  XLSX.utils.book_append_sheet(wb,ws1,"Resumen");
-  XLSX.utils.book_append_sheet(wb,ws2,"Detalle Equipos");
-  XLSX.utils.book_append_sheet(wb,ws4,"Checklist Arranque");
-  const analysisRows=[];
-  const causeMap={};
-  plans.forEach(p=>Object.values(p.check||{}).forEach(c=>{if(c&&c.cum==="NO CUMPLIÓ"){const label=(CAUSAS.find(x=>x[0]===c.causa)||[c.causa||"OTRO",c.causa||"Otro"])[1];causeMap[label]=(causeMap[label]||0)+1;}}));
-  Object.entries(causeMap).sort((a,b)=>b[1]-a[1]).forEach(([Causa,Frecuencia])=>analysisRows.push({Causa,Frecuencia}));
+  const ws1=XLSX.utils.json_to_sheet(resumen),ws2=XLSX.utils.json_to_sheet(detalle),ws4=XLSX.utils.json_to_sheet(checklistData);
+  ws1['!cols']=[{wch:14},{wch:14},{wch:16},{wch:20},{wch:22}];
+  ws2['!cols']=[{wch:14},{wch:25},{wch:18},{wch:20},{wch:16},{wch:24},{wch:20},{wch:26},{wch:20},{wch:22},{wch:18},{wch:28},{wch:24},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws1,"Resumen");XLSX.utils.book_append_sheet(wb,ws2,"Detalle Equipos");XLSX.utils.book_append_sheet(wb,ws4,"Checklist Arranque");
+  const analysisRows=Object.entries(analysisMap).sort((a,b)=>b[1].ImpactoMin-a[1].ImpactoMin).map(([Causa,v])=>({Causa,Frecuencia:v.Frecuencia,"Impacto (min)":v.ImpactoMin,"Origen":v.Origen}));
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(analysisRows),"Analisis Causas");
-  const fecha=new Date().toISOString().slice(0,10);
-  XLSX.writeFile(wb,`T_MINUS_Modulacion_Linea3_${fecha}.xlsx`);
-  status.textContent=`Excel generado ✓ ${plans.length} plan(es), ${detalle.length} registros de equipo y ${checklistData.length} registros de checklist.`;
-  setTimeout(()=>status.textContent="",5000);
+  const fecha=new Date().toISOString().slice(0,10);XLSX.writeFile(wb,`T_MINUS_Modulacion_Linea3_${fecha}.xlsx`);
+  status.textContent=`Excel generado ✓ ${plans.length} plan(es), ${detalle.length} registros de equipo, ${checklistData.length} registros de checklist y causas T-MINUS integradas.`;setTimeout(()=>status.textContent="",5000);
 }
-
 document.getElementById("anaPeriodo2").addEventListener("change",()=>{
   updateAnalysisControls();
   buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");
@@ -787,6 +784,21 @@ document.getElementById("anaPeriodo2").addEventListener("change",()=>{
 document.getElementById("anaPlan2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
 document.getElementById("anaEvento2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
 document.getElementById("anaEquipo2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
+
+async function deletePlanFromHistory(p){
+  const confirmation=prompt(`ELIMINAR PLAN\n\nPara borrar ${p.fecha}, escribe exactamente:\nELIMINAR ${p.fecha}`);
+  if(confirmation!==`ELIMINAR ${p.fecha}`)return;
+  if(!confirm(`Esta acción eliminará definitivamente el plan ${p.fecha} del histórico ${centralEnabled?'central y de todos los usuarios':'local'}. ¿Continuar?`))return;
+  if(centralEnabled){
+    const {error}=await sb.from(DB_TABLE).delete().eq("fecha",p.fecha);
+    if(error){alert("No se pudo eliminar el plan desde Supabase: "+error.message+"\n\nVerifica que la política DELETE esté habilitada en Supabase.");return;}
+    localStorage.removeItem("tminus_plan_"+p.fecha);
+    if(state.fecha===p.fecha){state={fecha:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};render();}
+    await loadHistorial();await refreshPlanAnalysisOptions();showDbStatus("Plan eliminado del histórico central ✓",true);
+  }else{
+    localStorage.removeItem("tminus_plan_"+p.fecha);loadHistorial();
+  }
+}
 
 async function loadHistorial(){
   const el=document.getElementById("historialList");
@@ -796,10 +808,11 @@ async function loadHistorial(){
   plans.forEach(p=>{
     const div=document.createElement("div");div.className="hist-item";
     const count=Object.keys(p.real||{}).length;
+    const previousState=state;state=p;const st=getExerciseStatus();state=previousState;
     div.innerHTML=`<div><div class="hist-date">${p.fecha}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"} · Corte: ${p.refCorte||"—"} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
-      <div class="hist-actions"><button class="btn btn-ghost" data-load>Ver</button>${centralEnabled?'':'<button class="btn btn-danger" data-del>Eliminar</button>'}</div>`;
+      <div class="hist-actions"><span class="exercise-status-badge ${st.key}"><span class="exercise-status-dot"></span>${st.label}</span><button class="btn btn-ghost" data-load>Ver</button><button class="btn btn-danger" data-del>Eliminar</button></div>`;
     div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.lockedTimes)state.lockedTimes={};ensureLocks();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.planSaved||!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
-    if(!centralEnabled)div.querySelector("[data-del]").onclick=()=>{if(confirm("¿Eliminar el plan "+p.fecha+"?")){localStorage.removeItem("tminus_plan_"+p.fecha);loadHistorial()}};
+    div.querySelector("[data-del]").onclick=()=>deletePlanFromHistory(p);
     el.appendChild(div);
   });
 }
