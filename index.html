@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Adriano Nuñez Soriano">
-<meta name="application-version" content="5.1">
-<title>T-MINUS — Modulación Línea 3</title>
+<meta name="application-version" content="5.2">
+<title>T-MINUS — Modulación</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -88,15 +88,79 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
 .kpi{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;font-family:'JetBrains Mono',monospace}.kpi-value{font-family:Oswald,sans-serif;font-size:24px;margin-top:3px}.kpi-value.green{color:var(--green)}.kpi-value.red{color:var(--red)}.kpi-value.amber{color:var(--amber)}
 
 .check-grid{display:grid;grid-template-columns:1.2fr .9fr 1.25fr 2fr;gap:0;border:1px solid var(--border);border-radius:9px;overflow:hidden}.check-grid>div{padding:8px;border-bottom:1px solid var(--border-soft)}.check-head{font:10px Oswald;text-transform:uppercase;color:var(--muted);background:var(--panel-alt)}.check-grid select,.check-grid input{width:100%;padding:6px;background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:11px}.check-summary{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--panel-alt);font:11px 'JetBrains Mono';color:var(--muted)}
-.analytics-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.chart-card{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.chart-title{font:12px Oswald;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}.bar-row{display:grid;grid-template-columns:145px 1fr 58px;gap:8px;align-items:center;margin:8px 0;font-size:11px}.bar-bg{height:13px;background:#111923;border-radius:4px;overflow:hidden}.bar{height:100%;background:var(--amber);border-radius:4px}.bar.red{background:var(--red)}.bar.teal{background:var(--teal)}.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar-value{text-align:right;font:10px 'JetBrains Mono';color:var(--muted)}.trend-wrap{height:210px;position:relative}.trend-svg{width:100%;height:100%}.matrix{width:100%;border-collapse:collapse;font-size:10px}.matrix th,.matrix td{padding:6px 5px;border:1px solid var(--border-soft);text-align:center}.matrix th{font-size:9px}.heat1{background:rgba(232,163,61,.18)}.heat2{background:rgba(232,163,61,.38)}.heat3{background:rgba(240,82,92,.55)}.insight{border-left:3px solid var(--amber);padding:10px 12px;background:rgba(232,163,61,.05);border-radius:7px;margin-top:10px;font-size:12px}.evt-form{grid-template-columns:1.15fr .8fr .8fr 1.1fr 1.6fr .7fr auto}.analytics-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.analytics-filters select{background:var(--panel-alt);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:7px;font-size:11px}.analysis-note{padding:10px 12px;margin-bottom:12px;border-left:3px solid var(--teal);background:rgba(79,209,197,.05);border-radius:7px;color:var(--muted);font-size:12px;line-height:1.45}
+.analytics-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.chart-card{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.chart-title{font:12px Oswald;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}.bar-row{display:grid;grid-template-columns:145px 1fr 58px;gap:8px;align-items:center;margin:8px 0;font-size:11px}.bar-bg{height:13px;background:#111923;border-radius:4px;overflow:hidden}.bar{height:100%;background:var(--amber);border-radius:4px}.bar.red{background:var(--red)}.bar.teal{background:var(--teal)}.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar-value{text-align:right;font:10px 'JetBrains Mono';color:var(--muted)}.trend-wrap{height:210px;position:relative}.trend-svg{width:100%;height:100%}.matrix{width:100%;border-collapse:collapse;font-size:10px}.matrix th,.matrix td{padding:6px 5px;border:1px solid var(--border-soft);text-align:center}.matrix th{font-size:9px}.heat1{background:rgba(232,163,61,.18)}.heat2{background:rgba(232,163,61,.38)}.heat3{background:rgba(240,82,92,.55)}.insight{border-left:3px solid var(--amber);padding:10px 12px;background:rgba(232,163,61,.05);border-radius:7px;margin-top:10px;font-size:12px}.evt-form{grid-template-columns:1.15fr .8fr .8fr 1.1fr 1.6fr .7fr auto}.analytics-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.analytics-filters select{background:var(--panel-alt);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:7px;font-size:11px}.analysis-note{padding:10px 12px;margin-bottom:12px;border-left:3px solid var(--teal);background:rgba(79,209,197,.05);border-radius:7px;color:var(--muted);font-size:12px;line-height:1.45}.kpi-sub{font:9px 'JetBrains Mono',monospace;color:var(--muted);margin-top:4px;line-height:1.3}.trend-caption{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.4}.analysis-warning{color:var(--yellow);display:inline-block;margin-left:6px}.impact-table td,.impact-table th{padding:7px 6px}
 @media(max-width:800px){.summary{grid-template-columns:1fr 1fr}.evt-form{grid-template-columns:1fr 1fr}.evt-row{grid-template-columns:1fr 1fr;row-gap:4px}}
 @media(max-width:520px){.summary{grid-template-columns:1fr}.wrap{padding:18px 10px}.panel{padding:14px}.timeline,.gantt-wrap{min-width:900px}.gantt-header,.gantt-row{grid-template-columns:190px 1fr}.gantt-label{font-size:12px}}
+</style>
+<style id="multiline-v52-ui">
+.line-field select{min-width:150px}
+.line-dependent-controls{display:none;gap:14px;flex-wrap:wrap;align-items:flex-end}
+body.line-selected .line-dependent-controls{display:flex}
+body:not(.line-selected) #tab-plan .line-required{display:none!important}
+.line-field{min-width:150px}
+</style>
+
+<style id="v52-polish">
+/* V5.2 — clean multi-line header */
+#tab-plan > .panel:first-child .input-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:12px;
+  align-items:end;
+}
+#tab-plan > .panel:first-child .line-field{grid-column:2}
+#tab-plan > .panel:first-child .line-dependent-controls{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:12px;
+  align-items:end;
+}
+#tab-plan > .panel:first-child .line-dependent-controls .btn{
+  min-height:46px;
+}
+#tab-plan > .panel:first-child .line-dependent-controls .save-status{
+  grid-column:1 / -1;
+}
+#inpLinea{
+  width:100%;
+  min-height:46px;
+  padding:10px 14px;
+  border-radius:11px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  font:inherit;
+  font-weight:700;
+}
+body:not(.line-selected) #tab-plan .line-required{
+  display:none!important;
+}
+body:not(.line-selected) #tab-plan .line-dependent-controls{
+  display:none!important;
+}
+@media(max-width:620px){
+  #tab-plan > .panel:first-child .input-row{grid-template-columns:1fr 1fr}
+  #tab-plan > .panel:first-child .line-field{grid-column:2}
+  #tab-plan > .panel:first-child .line-dependent-controls{
+    grid-template-columns:1fr 1fr;
+  }
+}
+@media(max-width:430px){
+  #tab-plan > .panel:first-child .input-row{gap:10px}
+  #tab-plan > .panel:first-child .line-dependent-controls{gap:10px}
+  #tab-plan > .panel:first-child .line-dependent-controls .btn{
+    font-size:12px;padding:10px 8px;
+  }
+}
+/* Prevent accidental visual duplication of the line selector. */
+.line-selector-card,#lineSelectorWrap{display:none!important}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <div><p class="brand-eyebrow">Packaging · Línea 3</p><h1>T-MINUS</h1></div>
+  <div><p class="brand-eyebrow">Packaging · Multi-Línea</p><h1>T-MINUS</h1></div>
   <div class="tabs">
     <button class="tab-btn active" data-tab="plan">Plan del día</button>
     <button class="tab-btn" data-tab="eventos">Análisis</button>
@@ -108,16 +172,16 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
   <div class="panel">
     <p class="panel-title"><span class="dot"></span>Hora de referencia — Llenadora</p>
     <div class="input-row">
-      <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div>
+      <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div><div class="field line-field"><label>Línea</label><select id="inpLinea" aria-label="Seleccionar línea"><option value="">Seleccionar…</option><option value="L1">Línea 1</option><option value="L3">Línea 3</option></select></div><div class="line-dependent-controls">
       <div class="field"><label>Ref. Corte</label><input type="time" id="inpRefCorte"></div>
       <div class="field"><label>Ref. Arranque</label><input type="time" id="inpRefArranque"></div>
       <button class="btn btn-primary" id="btnGuardar">Guardar plan</button>
-      <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales</button>
+      <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales + referencias</button>
       <span class="save-status" id="saveStatus"></span><span class="save-status" id="dbStatus" style="display:block;width:100%;margin-top:4px"></span>
-    </div>
+    </div></div>
   </div>
 
-  <div class="close-exercise status-incompleto" id="exerciseStatusCard">
+  <div class="close-exercise status-incompleto line-required" id="exerciseStatusCard">
     <div>
       <div style="font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:13px">Estado del ejercicio</div>
       <div class="close-status" id="closeStatus">Faltan datos obligatorios para completar el ejercicio.</div>
@@ -125,7 +189,7 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
     <span class="exercise-status-badge incompleto" id="exerciseStatusBadge"><span class="exercise-status-dot"></span>INCOMPLETO</span>
   </div>
 
-  <div class="panel">
+  <div class="panel line-required">
     <div class="summary">
       <div class="kpi"><div class="kpi-label">Referencia arranque</div><div class="kpi-value amber" id="kpiArr">—</div></div>
       <div class="kpi"><div class="kpi-label">Referencia corte</div><div class="kpi-value amber" id="kpiCor">—</div></div>
@@ -138,7 +202,7 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
     <div class="timeline-block"><div class="timeline" id="tlArranque"></div></div>
   </div>
 
-  <div class="panel">
+  <div class="panel line-required">
     <p class="panel-title"><span class="dot" style="background:var(--yellow)"></span>Checklist de arranque — cumplimiento y causa</p>
     <div class="check-grid">
       <div class="check-head">Hito / equipo</div><div class="check-head">Cumplimiento</div><div class="check-head">Causa principal</div><div class="check-head">Qué pasó / acción</div>
@@ -147,7 +211,7 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
     <div class="check-summary" id="checkSummary">Sin incumplimientos registrados.</div>
   </div>
 
-  <div class="panel">
+  <div class="panel line-required">
     <p class="panel-title"><span class="dot"></span>Detalle por equipo</p>
     <div style="overflow-x:auto">
       <table>
@@ -192,21 +256,41 @@ input.time-input:focus{outline:none;border-color:var(--teal)}
   </div>
 </section>
 
-<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.1 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.2 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
 <script>
-const EQUIPOS=[
-  {id:"depaletizadora",nombre:"Depaletizadora",tArr:-90,tCorte:-90},
-  {id:"desencajonadora",nombre:"Desencajonadora",tArr:-75,tCorte:-75},
-  {id:"lavadora",nombre:"Lavadora de Botellas",tArr:-60,tCorte:-60},
-  {id:"llenadora",nombre:"Llenadora",tArr:0,tCorte:0},
-  {id:"pasteurizador",nombre:"Pasteurizador Túnel",tArr:15,tCorte:75},
-  {id:"etiquetadora30",nombre:"Etiquetadora 30",tArr:90,tCorte:95},
-  {id:"etiquetadora31",nombre:"Etiquetadora 31",tArr:90,tCorte:95},
-  {id:"encajonadora",nombre:"Encajonadora",tArr:100,tCorte:110},
-  {id:"paletizadora",nombre:"Paletizadora",tArr:110,tCorte:125}
-];
+const LINEAS={
+  L1:{id:"L1",nombre:"Línea 1",equipos:[
+    {id:"depaletizadora",nombre:"Depaletizadora",tArr:-70,tCorte:-70},
+    {id:"desencajonadora",nombre:"Desencajonadora",tArr:-65,tCorte:-65},
+    {id:"lavadora",nombre:"Lavadora de Botellas",tArr:-60,tCorte:-60},
+    {id:"llenadora",nombre:"Llenadora",tArr:0,tCorte:0},
+    {id:"warmer",nombre:"Warmer",tArr:5,tCorte:5},
+    {id:"etiquetaA",nombre:"Etiqueta A",tArr:10,tCorte:10},
+    {id:"etiquetaB",nombre:"Etiqueta B",tArr:10,tCorte:10},
+    {id:"encajonadora",nombre:"Encajonadora",tArr:15,tCorte:15},
+    {id:"paletizadora",nombre:"Paletizadora",tArr:25,tCorte:25}
+  ]},
+  L3:{id:"L3",nombre:"Línea 3",equipos:[
+    {id:"depaletizadora",nombre:"Depaletizadora",tArr:-75,tCorte:-75},
+    {id:"desencajonadora",nombre:"Desencajonadora",tArr:-65,tCorte:-65},
+    {id:"lavadora",nombre:"Lavadora de Botellas",tArr:-60,tCorte:-60},
+    {id:"llenadora",nombre:"Llenadora",tArr:0,tCorte:0},
+    {id:"pasteurizador",nombre:"Pasteurizador Túnel",tArr:10,tCorte:10},
+    {id:"etiquetadora30",nombre:"Etiquetadora 30",tArr:75,tCorte:75},
+    {id:"etiquetadora31",nombre:"Etiquetadora 31",tArr:75,tCorte:75},
+    {id:"encajonadora",nombre:"Encajonadora",tArr:80,tCorte:80},
+    {id:"paletizadora",nombre:"Paletizadora",tArr:90,tCorte:90}
+  ]}
+};
+let EQUIPOS=[];
+
+function applyLine(linea){
+  EQUIPOS=LINEAS[linea]?LINEAS[linea].equipos.map(e=>({...e})):[];
+}
+function hasLine(){return !!(state.linea&&LINEAS[state.linea]);}
+
 // ===== ALMACENAMIENTO CENTRAL T-MINUS =====
 // Pega aquí las credenciales públicas (anon/publishable) de tu proyecto Supabase.
 // NO coloques nunca una service_role key en este HTML.
@@ -226,7 +310,7 @@ const CAUSAS=[
   ["OPERACION","Operación / Personal"],["MATERIALES","Materiales / Repuestos"],["EQUIPO","Equipo / Automatización"],
   ["SEGURIDAD","Seguridad / Permisos"],["CHECKLIST","Checklist de arranque"],["OTRO","Otro"]
 ];
-let state={fecha:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+let state={fecha:todayStr(),linea:"",refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
 function causeLabel(code){return (CAUSAS.find(x=>x[0]===code)||[code||"OTRO",code||"Otro"])[1]}
 let eventos=[];
 
@@ -234,14 +318,44 @@ function todayStr(){return new Date().toISOString().slice(0,10)}
 function timeToMin(t){if(!t)return null;const [h,m]=t.split(":").map(Number);return h*60+m}
 function minToTime(min){min=((min%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,"0")+":"+String(min%60).padStart(2,"0")}
 function shortestDiff(a,b){let d=a-b;while(d>720)d-=1440;while(d<-720)d+=1440;return d}
-function keyDay(){return "tminus_plan_"+state.fecha}
+function keyDay(){return "tminus_plan_"+state.fecha+"_"+(state.linea||"L3")}
 function keyEvents(){return "tminus_events_"+state.fecha}
 function localSave(){localStorage.setItem(keyDay(),JSON.stringify({...state}));}
 function localLoad(){const raw=localStorage.getItem(keyDay());return raw?JSON.parse(raw):null}
 function showDbStatus(msg,good=false){const el=document.getElementById("dbStatus")||document.getElementById("saveStatus");if(el){el.textContent=msg;el.style.color=good?"#72f1a8":"";}}
 
+function syncLineUI(){
+  const sel=document.getElementById("inpLinea");
+  if(sel)sel.value=state.linea||"";
+  document.body.classList.toggle("line-selected",hasLine());
+  if(hasLine())applyLine(state.linea);
+}
+async function setLine(linea){
+  if(!LINEAS[linea])return;
+  if(state.linea===linea){syncLineUI();render();return;}
+  const fecha=state.fecha;
+  state.linea=linea;
+  const x=await fetchDay(fecha);
+  if(x && (x.linea||linea)===linea){
+    state={...x,fecha,linea};
+  }else{
+    state={fecha,linea,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+  }
+  applyLine(linea);
+  syncLineUI();
+  document.getElementById("inpRefArranque").value=state.refArranque||"";
+  document.getElementById("inpRefCorte").value=state.refCorte||"";
+  document.getElementById("inpFecha").value=fecha;
+  document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("btnGuardar").disabled=!!state.cerrado;
+  document.getElementById("btnLimpiar").disabled=!!state.cerrado;
+  localSave();
+  render();
+}
 function ensureLocks(){
-  if(!state.lockedTimes)state.lockedTimes={};
+  applyLine(state.linea); if(!state.lockedTimes)state.lockedTimes={};
   EQUIPOS.forEach(eq=>{
     if(!state.lockedTimes[eq.id])state.lockedTimes[eq.id]={};
     const r=state.real[eq.id]||{};
@@ -285,6 +399,8 @@ function updateCloseControl(){
 }
 
 function render(){
+  syncLineUI();
+  const be=document.querySelector(".brand-eyebrow"); if(be)be.textContent=hasLine()?"Packaging · "+LINEAS[state.linea].nombre:"Packaging · Multi-Línea";
   renderExerciseStatus();
   const refArr=timeToMin(state.refArranque),refCorte=timeToMin(state.refCorte);
   document.getElementById("kpiArr").textContent=state.refArranque||"—";
@@ -364,14 +480,14 @@ async function fetchAllPlans(){
 }
 async function fetchDay(fecha){
   if(!centralEnabled)return localLoad();
-  const {data,error}=await sb.from(DB_TABLE).select("payload").eq("fecha",fecha).maybeSingle();
+  const linea=state.linea||"L3"; const {data,error}=await sb.from(DB_TABLE).select("payload").eq("fecha",fecha).eq("linea",linea).maybeSingle();
   if(error){console.error(error);showDbStatus("Error leyendo el plan: "+error.message);return localLoad();}
   return data?.payload||null;
 }
 async function saveCentral(){
   if(!centralEnabled){localSave();return;}
   const payload={...state,dbSchemaVersion:DB_SCHEMA_VERSION,updatedAt:new Date().toISOString()};
-  const {error}=await sb.from(DB_TABLE).upsert({fecha:state.fecha,payload,updated_at:new Date().toISOString()},{onConflict:"fecha"});
+  const {error}=await sb.from(DB_TABLE).upsert({fecha:state.fecha,linea:state.linea||"L3",payload,updated_at:new Date().toISOString()},{onConflict:"fecha,linea"});
   if(error){console.error(error);showDbStatus("No se pudo guardar en la base central: "+error.message);return;}
   localSave();
   showDbStatus("Guardado central ✓",true);
@@ -385,8 +501,8 @@ async function migrateLocalHistory(){
   const localPlans=allHistoricalRecords();
   if(!localPlans.length){alert("No hay históricos locales para subir.");return;}
   if(!confirm(`Se subirán ${localPlans.length} plan(es) local(es) a la base central. Si ya existe la misma fecha, se actualizará ese registro. ¿Continuar?`))return;
-  const rows=localPlans.map(p=>({fecha:p.fecha,payload:{...p,dbSchemaVersion:DB_SCHEMA_VERSION,updatedAt:p.updatedAt||new Date().toISOString()},updated_at:p.updatedAt||new Date().toISOString()}));
-  const {error}=await sb.from(DB_TABLE).upsert(rows,{onConflict:"fecha"});
+  const rows=localPlans.map(p=>({fecha:p.fecha,linea:p.linea||"L3",payload:{...p,linea:p.linea||"L3",dbSchemaVersion:DB_SCHEMA_VERSION,updatedAt:p.updatedAt||new Date().toISOString()},updated_at:p.updatedAt||new Date().toISOString()}));
+  const {error}=await sb.from(DB_TABLE).upsert(rows,{onConflict:"fecha,linea"});
   if(error){alert("Error migrando históricos: "+error.message);return;}
   showDbStatus(`Históricos subidos a la base central ✓ (${rows.length})`,true);
   await loadHistorial();
@@ -425,7 +541,7 @@ function populateAnalysisFilters(){
 async function refreshPlanAnalysisOptions(){
   const el=document.getElementById("anaPlan2");if(!el)return;
   const plans=(await fetchAllPlans()).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
-  el.innerHTML='<option value="">Seleccionar plan…</option>'+plans.map(p=>`<option value="${p.fecha}">${p.fecha} · Corte ${p.refCorte||'—'} · Arranque ${p.refArranque||'—'}</option>`).join('');
+  el.innerHTML='<option value="">Seleccionar plan…</option>'+plans.map(p=>`<option value="${p.fecha}|${p.linea||"L3"}">${p.fecha} · ${p.linea||"L3"} · Corte ${p.refCorte||'—'} · Arranque ${p.refArranque||'—'}</option>`).join('');
 }
 async function refreshEventAnalysisOptions(){
   const el=document.getElementById("anaEvento2");if(!el)return;
@@ -454,92 +570,179 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
   const planEl=document.getElementById('anaPlan2'),eventEl=document.getElementById('anaEvento2');
   const period=periodEl?periodEl.value:'all',selectedEq=equipEl?equipEl.value:'all',selectedPlan=planEl?planEl.value:'',selectedEvent=eventEl?eventEl.value:'';
   const cutoff=(period==='all'||period==='single_plan'||period==='single_event')?null:new Date(Date.now()-Number(period)*86400000);
-  const causeFreq={},causeImpact={},matrix={},trend={};let totalDelay=0,totalRecords=0,totalFailures=0;
   let plans=await fetchAllPlans();
   if(period==='single_plan'){
-    plans=selectedPlan?plans.filter(p=>p.fecha===selectedPlan):[];
+    if(selectedPlan){const [sf,sl]=String(selectedPlan).split('|');plans=plans.filter(p=>p.fecha===sf && (p.linea||'L3')===(sl||'L3'));}else plans=[];
   }else if(period==='single_event'){
     const parts=selectedEvent.split('|');plans=parts.length>=3?plans.filter(p=>p.fecha===parts[0]):[];
   }else if(cutoff){
     plans=plans.filter(p=>new Date(p.fecha+'T23:59:59')>=cutoff);
   }
+
+  /*
+   * Regla analítica V5.2:
+   * - Retraso y checklist son fuentes distintas y NUNCA se mezclan.
+   * - Para evitar doble conteo, un equipo aporta como máximo 1 evento de retraso por día:
+   *   se toma el mayor desvío entre Corte y Arranque y se conserva su causa/tipo.
+   * - El checklist se analiza aparte como cumplimiento, no como minutos perdidos.
+   */
+  const delayByCause={},delayByEquipment={},delayMatrix={},checkByEquipment={},checkByCause={};
+  const arranqueByEquipment={};
+  const dailyDelay={},dailyFillerCorte={},dailyFillerArranque={};
+  let totalDelay=0,totalDelayEvents=0,totalFailures=0;
+  let fillerCorteTotal=0,fillerArranqueTotal=0;
+  let fillerCorteEvents=0,fillerArranqueEvents=0;
   let selectedEventData=null;
+
   if(period==='single_event'&&selectedEvent&&plans.length){
     const [f,id,kind]=selectedEvent.split('|'),p=plans[0],eq=EQUIPOS.find(x=>x.id===id),r=(p.real||{})[id]||{};
     if(eq){
       if(kind==='check'){
         const c=(p.check||{})[id]||{};
-        selectedEventData={fecha:f,eq:eq.nombre,tipo:'Checklist',prog:'—',real:'—',desv:0,cause:causeLabel(c.causa||'OTRO'),detail:c.detalle||''};
+        selectedEventData={fecha:f,eq:eq.nombre,tipo:'Checklist',prog:'—',real:'—',desv:0,cause:causeLabel(c.causa||'OTRO'),detail:c.detalle||'Incumplimiento registrado en el checklist. No se contabiliza como minutos de retraso.'};
       }else{
         const ref=kind==='corte'?timeToMin(p.refCorte):timeToMin(p.refArranque),off=kind==='corte'?eq.tCorte:eq.tArr;
-        const real=kind==='corte'?r.corte:r.arranque,rm=timeToMin(real),d=(ref!==null&&rm!==null)?shortestDiff(rm,ref+off):0;
+        const real=kind==='corte'?r.corte:r.arranque,rm=timeToMin(real),d=(ref!==null&&rm!==null)?Math.max(0,shortestDiff(rm,ref+off)):0;
         const cause=kind==='corte'?r.causaCorte:r.causaArranque;
-        selectedEventData={fecha:f,eq:eq.nombre,tipo:kind==='corte'?'Corte':'Arranque',prog:ref!==null?minToTime(ref+off):'—',real:real||'—',desv:d,cause:causeLabel(cause||'OTRO'),detail:`Causa registrada en T-MINUS: ${causeLabel(cause||'OTRO')}.`};
+        selectedEventData={fecha:f,eq:eq.nombre,tipo:kind==='corte'?'Corte':'Arranque',prog:ref!==null?minToTime(ref+off):'—',real:real||'—',desv:d,cause:causeLabel(cause||'OTRO'),detail:`Evento T-MINUS. Umbral analítico: > ${UMBRAL_MIN} min.`};
       }
     }
   }
+
   plans.forEach(p=>{
-    EQUIPOS.forEach(eq=>{
-      if(period==='single_event'&&selectedEventData&&!selectedEvent.startsWith(p.fecha+'|'+eq.id+'|'))return;
+    // Indicadores principales: el tiempo global se mide en la Llenadora (t=0),
+    // no sumando los desvíos de todas las máquinas. Se conserva el valor real,
+    // incluso si es menor o igual al umbral analítico de 5 min.
+    const planEquipos=(LINEAS[p.linea||"L3"]||LINEAS.L3).equipos; const filler=planEquipos.find(x=>x.id==='llenadora');
+    const fr=(p.real||{}).llenadora||{};
+    const fpc=timeToMin(p.refCorte),fpa=timeToMin(p.refArranque);
+    const frc=timeToMin(fr.corte),fra=timeToMin(fr.arranque);
+    const fdc=fpc!==null&&frc!==null?Math.max(0,shortestDiff(frc,fpc)):0;
+    const fda=fpa!==null&&fra!==null?Math.max(0,shortestDiff(fra,fpa)):0;
+    fillerCorteTotal+=fdc;fillerArranqueTotal+=fda;
+    if(fdc>0)fillerCorteEvents++;
+    if(fda>0)fillerArranqueEvents++;
+    dailyFillerCorte[p.fecha]=(dailyFillerCorte[p.fecha]||0)+fdc;
+    dailyFillerArranque[p.fecha]=(dailyFillerArranque[p.fecha]||0)+fda;
+
+    planEquipos.forEach(eq=>{
       if(selectedEq!=='all'&&eq.id!==selectedEq)return;
-      const r=(p.real||{})[eq.id]||{};
-      const rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
+      if(period==='single_event'&&selectedEventData){
+        const [sf,sid,skind]=selectedEvent.split('|');
+        if(sf!==p.fecha||sid!==eq.id)return;
+        if(skind==='check')return;
+      }
+      const r=(p.real||{})[eq.id]||{},rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
       const corteDelay=rc!==null&&pc!==null?Math.max(0,shortestDiff(rc,pc+eq.tCorte)):0;
       const arranqueDelay=ra!==null&&pa!==null?Math.max(0,shortestDiff(ra,pa+eq.tArr)):0;
-      const impact=Math.max(corteDelay,arranqueDelay);
-      if(corteDelay>0){
-        const label=causeLabel(r.causaCorte||'OTRO');
-        causeFreq[label]=(causeFreq[label]||0)+1;
-        causeImpact[label]=(causeImpact[label]||0)+corteDelay;
-        matrix[eq.nombre]??={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
-        totalRecords++;
+      if(arranqueDelay>UMBRAL_MIN){
+        const rec=arranqueByEquipment[eq.nombre]||(arranqueByEquipment[eq.nombre]={events:0,min:0});
+        rec.events++;rec.min+=arranqueDelay;
       }
-      if(arranqueDelay>0){
-        const label=causeLabel(r.causaArranque||'OTRO');
-        causeFreq[label]=(causeFreq[label]||0)+1;
-        causeImpact[label]=(causeImpact[label]||0)+arranqueDelay;
-        matrix[eq.nombre]??={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
-        totalRecords++;
+      let chosen=corteDelay>=arranqueDelay?{delay:corteDelay,type:'Corte',cause:r.causaCorte}:{delay:arranqueDelay,type:'Arranque',cause:r.causaArranque};
+      if(period==='single_event'&&selectedEventData){
+        const [sf,sid,skind]=selectedEvent.split('|');
+        if(skind==='corte')chosen={delay:corteDelay,type:'Corte',cause:r.causaCorte};
+        if(skind==='arranque')chosen={delay:arranqueDelay,type:'Arranque',cause:r.causaArranque};
       }
-      if(impact>0){totalDelay+=impact;trend[p.fecha]=(trend[p.fecha]||0)+impact;}
+      if(chosen.delay>UMBRAL_MIN){
+        const label=causeLabel(chosen.cause||'OTRO');
+        totalDelay+=chosen.delay;totalDelayEvents++;
+        delayByCause[label]=(delayByCause[label]||{events:0,min:0}) ;delayByCause[label].events++;delayByCause[label].min+=chosen.delay;
+        delayByEquipment[eq.nombre]=(delayByEquipment[eq.nombre]||0)+chosen.delay;
+        delayMatrix[eq.nombre]??={};delayMatrix[eq.nombre][label]=(delayMatrix[eq.nombre][label]||0)+1;
+        dailyDelay[p.fecha]=(dailyDelay[p.fecha]||0)+chosen.delay;
+      }
     });
+
     Object.entries(p.check||{}).forEach(([id,c])=>{
-      if(c.cum!=='NO CUMPLIÓ')return;
-      if(period==='single_event'&&selectedEvent&&!selectedEvent.endsWith('|check'))return;
+      if(c?.cum!=='NO CUMPLIÓ')return;
       if(period==='single_event'&&selectedEvent!==`${p.fecha}|${id}|check`)return;
       if(selectedEq!=='all'&&id!==selectedEq)return;
-      const label=causeLabel(c.causa||'OTRO');
-      causeFreq[label]=(causeFreq[label]||0)+1;
+      const eq=planEquipos.find(x=>x.id===id),eqName=eq?eq.nombre:id,label=causeLabel(c.causa||'OTRO');
       totalFailures++;
-      const eq=EQUIPOS.find(x=>x.id===id);if(!eq)return;
-      const r=(p.real||{})[id]||{};let impact=0;
-      const rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
-      if(rc!==null&&pc!==null)impact=Math.max(impact,Math.max(0,shortestDiff(rc,pc+eq.tCorte)));
-      if(ra!==null&&pa!==null)impact=Math.max(impact,Math.max(0,shortestDiff(ra,pa+eq.tArr)));
-      causeImpact[label]=(causeImpact[label]||0)+impact;
-      totalRecords++;
-      matrix[eq.nombre]??={};matrix[eq.nombre][label]=(matrix[eq.nombre][label]||0)+1;
+      checkByEquipment[eqName]=(checkByEquipment[eqName]||0)+1;
+      checkByCause[label]=(checkByCause[label]||0)+1;
     });
   });
-  const freq=Object.entries(causeFreq).sort((a,b)=>b[1]-a[1]);
-  const imp=Object.entries(causeImpact).sort((a,b)=>b[1]-a[1]);
-  const maxF=Math.max(1,...freq.map(x=>x[1])),maxI=Math.max(1,...imp.map(x=>x[1]));
-  const bars=(arr,max,cls,suffix)=>arr.slice(0,7).map(x=>`<div class="bar-row"><div class="bar-label">${x[0]}</div><div class="bar-bg"><div class="bar ${cls}" style="width:${x[1]/max*100}%"></div></div><div class="bar-value">${x[1]}${suffix}</div></div>`).join('')||'<div class="empty-state">Sin datos suficientes.</div>';
-  const labels=[...new Set(imp.slice(0,6).map(x=>x[0]))];
-  const eqs=Object.keys(matrix).sort((a,b)=>{const sa=Object.values(matrix[a]).reduce((x,y)=>x+y,0),sb=Object.values(matrix[b]).reduce((x,y)=>x+y,0);return sb-sa}).slice(0,9);
-  const matrixHtml=labels.length?`<table class="matrix"><thead><tr><th>Equipo</th>${labels.map(x=>`<th>${x.slice(0,12)}</th>`).join('')}</tr></thead><tbody>${eqs.map(eq=>`<tr><td class="left">${eq}</td>${labels.map(c=>{const v=(matrix[eq]||{})[c]||0;return `<td class="${v>=3?'heat3':v===2?'heat2':v===1?'heat1':''}">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin eventos con causa en el periodo.</div>';
-  const topCause=imp[0],topEq=eqs[0];
-  const trendEntries=Object.entries(trend).sort((a,b)=>a[0].localeCompare(b[0])).slice(-14),maxT=Math.max(1,...trendEntries.map(x=>x[1]));
-  let points='';trendEntries.forEach((x,i)=>{const xx=5+(i/(Math.max(1,trendEntries.length-1)))*90,yy=90-(x[1]/maxT*70);points+=(i?' ':'')+`${xx},${yy}`});
-  const noDelay=totalDelay===0?' <span style="color:var(--green)">Sin retrasos acumulados.</span>':'';
+
+  const delayCauseEntries=Object.entries(delayByCause).sort((a,b)=>b[1].min-a[1].min);
+  const delayFreqEntries=Object.entries(delayByCause).sort((a,b)=>b[1].events-a[1].events);
+  const maxDelayCause=Math.max(1,...delayCauseEntries.map(x=>x[1].min));
+  const maxDelayFreq=Math.max(1,...delayFreqEntries.map(x=>x[1].events));
+  const maxCheckEq=Math.max(1,...Object.values(checkByEquipment));
+  const topCause=delayCauseEntries[0];
+  const eqEntries=Object.entries(delayByEquipment).sort((a,b)=>b[1]-a[1]);
+  const topEq=eqEntries[0]?.[0]||'';
+  const arranqueEqEntries=Object.entries(arranqueByEquipment).sort((a,b)=>b[1].min-a[1].min);
+  const topArranqueEq=arranqueEqEntries[0];
+  const maxArranqueEq=Math.max(1,...arranqueEqEntries.map(x=>x[1].min));
+  const avgImpact=totalDelayEvents?totalDelay/totalDelayEvents:0;
+
+  const bars=(arr,max,cls,suffix,getVal=x=>x[1])=>arr.slice(0,8).map(x=>{
+    const v=getVal(x);return `<div class="bar-row"><div class="bar-label">${x[0]}</div><div class="bar-bg"><div class="bar ${cls||''}" style="width:${v/max*100}%"></div></div><div class="bar-value">${v}${suffix||''}</div></div>`;
+  }).join('')||'<div class="empty-state">Sin datos suficientes.</div>';
+
+  const labels=delayCauseEntries.slice(0,7).map(x=>x[0]);
+  const matrixEqs=Object.keys(delayMatrix).sort((a,b)=>Object.values(delayMatrix[b]).reduce((x,y)=>x+y,0)-Object.values(delayMatrix[a]).reduce((x,y)=>x+y,0)).slice(0,9);
+  const matrixHtml=labels.length?`<table class="matrix"><thead><tr><th>Equipo</th>${labels.map(x=>`<th title="${x}">${x.slice(0,12)}</th>`).join('')}</tr></thead><tbody>${matrixEqs.map(eq=>`<tr><td class="left">${eq}</td>${labels.map(c=>{const v=(delayMatrix[eq]||{})[c]||0;return `<td class="${v>=3?'heat3':v===2?'heat2':v===1?'heat1':''}">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin eventos de retraso con causa en el periodo.</div>';
+
+  const checkEqEntries=Object.entries(checkByEquipment).sort((a,b)=>b[1]-a[1]);
+  const checkBars=checkEqEntries.length?bars(checkEqEntries,maxCheckEq,'amber',''): '<div class="empty-state">Sin incumplimientos de checklist en el periodo.</div>';
+
+  /* Tendencia principal: retraso en Llenadora, separado en Corte y Arranque. */
+  let trendDates=[...new Set(plans.map(p=>p.fecha).filter(Boolean))].sort();
+  const trendLimit=period==='all'?Math.min(60,trendDates.length):Math.min(31,trendDates.length);
+  if(trendDates.length>trendLimit)trendDates=trendDates.slice(-trendLimit);
+  const trendCorte=trendDates.map(d=>dailyFillerCorte[d]||0);
+  const trendArranque=trendDates.map(d=>dailyFillerArranque[d]||0);
+  const maxT=Math.max(5,...trendCorte,...trendArranque);
+  const svgW=100,svgH=100,left=10,right=98,top=8,bottom=78,plotW=right-left,plotH=bottom-top;
+  const tx=i=>trendDates.length===1?left+plotW/2:left+(i/(trendDates.length-1))*plotW;
+  const ty=v=>bottom-(v/maxT)*plotH;
+  const pointsC=trendCorte.map((v,i)=>`${tx(i)},${ty(v)}`).join(' ');
+  const pointsA=trendArranque.map((v,i)=>`${tx(i)},${ty(v)}`).join(' ');
+  const gridTicks=5;
+  const yGrid=Array.from({length:gridTicks+1},(_,i)=>{const v=Math.round((maxT/gridTicks)*i);const y=ty(v);return `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}" stroke="#2a3a4f" stroke-width="0.35"/><text x="1" y="${y+1.3}" fill="#8798ad" font-size="3.1">${v}</text>`}).join('');
+  const xLabels=trendDates.map((d,i)=>{const show=trendDates.length<=12||i===0||i===trendDates.length-1||i%Math.ceil(trendDates.length/8)===0;return show?`<text x="${tx(i)}" y="94" text-anchor="middle" fill="#8798ad" font-size="2.8">${d.slice(5)}</text>`:''}).join('');
+  const circlesC=trendCorte.map((v,i)=>`<circle cx="${tx(i)}" cy="${ty(v)}" r="1.25" fill="#f5b942"><title>${dFmt(trendDates[i])} → Corte Llenadora: ${v} min</title></circle>`).join('');
+  const circlesA=trendArranque.map((v,i)=>`<circle cx="${tx(i)}" cy="${ty(v)}" r="1.25" fill="#4fd1c5"><title>${dFmt(trendDates[i])} → Arranque Llenadora: ${v} min</title></circle>`).join('');
+  const trendSvg=trendDates.length?`<svg class="trend-svg" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Retraso diario en llenadora, Corte y Arranque">${yGrid}<line x1="${left}" y1="${bottom}" x2="${right}" y2="${bottom}" stroke="#2a3a4f" stroke-width="0.6"/><polyline points="${pointsC}" fill="none" stroke="#f5b942" stroke-width="1.2" vector-effect="non-scaling-stroke"/><polyline points="${pointsA}" fill="none" stroke="#4fd1c5" stroke-width="1.2" vector-effect="non-scaling-stroke"/>${circlesC}${circlesA}${xLabels}</svg>`:'<div class="empty-state">Todavía no hay planes para construir la tendencia.</div>';
+
+  const noDelay=fillerCorteTotal===0&&fillerArranqueTotal===0?' <span style="color:var(--green)">Sin retraso registrado en Llenadora.</span>':'';
+  const trendNote=trendDates.length>12?`Mostrando las últimas ${trendDates.length} fechas con plan; las fechas sin retraso aparecen como 0 min.`:'Cada fecha con plan aparece, incluso cuando el retraso es 0 min.';
+  const dataSufficiency=trendDates.length<4?`<span class="analysis-warning">Historial todavía corto (${trendDates.length} fechas); la lectura de tendencia es descriptiva, no concluyente.</span>`:'';
+  const arranqueBars=arranqueEqEntries.length?bars(arranqueEqEntries,maxArranqueEq,'teal',' min',x=>x[1].min):'<div class="empty-state">No hay retrasos de arranque mayores a 5 min en el periodo.</div>';
   const selectedHtml=selectedEventData?`<div class="chart-card" style="margin-bottom:14px"><div class="chart-title">Evento seleccionado</div><div class="insight"><b>${selectedEventData.fecha}</b> · ${selectedEventData.eq} · ${selectedEventData.tipo}<br>Programado: <b>${selectedEventData.prog}</b> · Real: <b>${selectedEventData.real}</b> · Desviación: <b>${selectedEventData.desv>0?'+':''}${selectedEventData.desv} min</b><br>Causa/categoría: <b>${selectedEventData.cause}</b><br>${selectedEventData.detail||''}</div></div>`:'';
-  el.innerHTML=selectedHtml+`<div class="summary"><div class="kpi"><div class="kpi-label">Minutos de retraso</div><div class="kpi-value red">${totalDelay}</div></div><div class="kpi"><div class="kpi-label">Incumplimientos checklist</div><div class="kpi-value amber">${totalFailures}</div></div><div class="kpi"><div class="kpi-label">Causa #1 por impacto</div><div class="kpi-value" style="font-size:16px">${topCause?topCause[0]:'—'}</div></div><div class="kpi"><div class="kpi-label">Equipo más recurrente</div><div class="kpi-value" style="font-size:16px">${topEq||'—'}</div></div></div>
-    <div class="analysis-note">Las causas de <strong>Corte/Arranque</strong> de la tabla Detalle T-MINUS ya alimentan frecuencia, impacto, matriz, evento individual y Excel. El Checklist sigue aportando sus propias causas.</div>
-    <div class="analytics-grid"><div class="chart-card"><div class="chart-title">Pareto — frecuencia de causas (T-MINUS + checklist)</div>${bars(freq,maxF,'','')}</div><div class="chart-card"><div class="chart-title">Impacto — minutos de retraso por causa</div>${bars(imp,maxI,'red',' min')}</div></div>
-    <div class="chart-card" style="margin-top:14px"><div class="chart-title">Tendencia — minutos de retraso por día</div><div class="trend-wrap"><svg class="trend-svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="5" y1="90" x2="95" y2="90" stroke="#2a3a4f" stroke-width="0.6"/>${trendEntries.map((x,i)=>`<text x="${5+(i/(Math.max(1,trendEntries.length-1)))*90}" y="98" text-anchor="middle" fill="#8798ad" font-size="3">${x[0].slice(5)}</text>`).join('')}<polyline points="${points}" fill="none" stroke="#4fd1c5" stroke-width="1.3" vector-effect="non-scaling-stroke"/>${trendEntries.map((x,i)=>{const xx=5+(i/(Math.max(1,trendEntries.length-1)))*90,yy=90-(x[1]/maxT*70);return `<circle cx="${xx}" cy="${yy}" r="1.5" fill="#4fd1c5"/>`}).join('')}</svg></div></div>
-    <div class="chart-card" style="margin-top:14px"><div class="chart-title">Matriz equipo × causa — T-MINUS + checklist</div>${matrixHtml}</div>
-    <div class="insight"><strong>Lectura operacional:</strong> ${topCause?`la causa con mayor impacto acumulado es <b>${topCause[0]}</b> (${topCause[1]} min).`:'aún no hay eventos con causa registrada.'} ${topEq?`El equipo con mayor recurrencia es <b>${topEq}</b>.`:''}${noDelay}</div>`;
+  const causeTable=delayCauseEntries.length?`<table class="matrix impact-table"><thead><tr><th class="left">Causa</th><th>Eventos</th><th>Minutos</th><th>Prom./evento</th></tr></thead><tbody>${delayCauseEntries.slice(0,8).map(([c,v])=>`<tr><td class="left">${c}</td><td>${v.events}</td><td>${v.min}</td><td>${(v.min/v.events).toFixed(1)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin retrasos con causa registrada.</div>';
+
+  el.innerHTML=selectedHtml+`<div class="summary">
+    <div class="kpi"><div class="kpi-label">Retraso Corte · Llenadora</div><div class="kpi-value red">${fillerCorteTotal}</div><div class="kpi-sub">min acumulados · ${fillerCorteEvents} día${fillerCorteEvents===1?'':'s'} con retraso</div></div>
+    <div class="kpi"><div class="kpi-label">Retraso Arranque · Llenadora</div><div class="kpi-value amber">${fillerArranqueTotal}</div><div class="kpi-sub">min acumulados · ${fillerArranqueEvents} día${fillerArranqueEvents===1?'':'s'} con retraso</div></div>
+    <div class="kpi"><div class="kpi-label">Top offender · Arranque</div><div class="kpi-value" style="font-size:16px">${topArranqueEq?topArranqueEq[0]:'—'}</div><div class="kpi-sub">${topArranqueEq?topArranqueEq[1].min+' min · '+topArranqueEq[1].events+' evento'+(topArranqueEq[1].events===1?'':'s'):'sin datos'}</div></div>
+    <div class="kpi"><div class="kpi-label">Incumplimientos checklist</div><div class="kpi-value amber">${totalFailures}</div><div class="kpi-sub">fuente independiente del retraso</div></div>
+  </div>
+  <div class="analysis-note"><strong>Regla de lectura:</strong> los dos KPI principales miden el retraso real <strong>en la Llenadora (t=0)</strong>: Corte y Arranque por separado. El análisis por máquinas se usa para identificar dónde se concentra el retraso de Arranque. Para Pareto y matriz se mantiene la regla de máximo <strong>1 evento analítico por equipo y día</strong>, tomando el mayor desvío entre Corte y Arranque. El Checklist se analiza por separado.</div>
+  <div class="chart-card">
+    <div class="chart-title">Arranque — retraso acumulado por máquina · Top offender</div>
+    ${arranqueBars}
+    ${topArranqueEq?`<div class="trend-caption"><strong>Top offender:</strong> ${topArranqueEq[0]} · ${topArranqueEq[1].min} min acumulados · ${topArranqueEq[1].events} evento${topArranqueEq[1].events===1?'':'s'} (&gt; ${UMBRAL_MIN} min).</div>`:''}
+  </div>
+  <div class="analytics-grid" style="margin-top:14px">
+    <div class="chart-card"><div class="chart-title">Pareto — frecuencia de causas de retraso</div>${bars(delayFreqEntries,maxDelayFreq,'',' eventos')}</div>
+    <div class="chart-card"><div class="chart-title">Pareto — impacto de retraso por causa</div>${bars(delayCauseEntries,maxDelayCause,'red',' min',x=>x[1].min)}</div>
+  </div>
+  <div class="chart-card" style="margin-top:14px"><div class="chart-title">Causas de retraso — impacto y severidad</div>${causeTable}</div>
+  <div class="chart-card" style="margin-top:14px"><div class="chart-title">Tendencia — retraso en Llenadora · Corte vs Arranque</div><div class="trend-wrap trend-axis">${trendSvg}</div><div class="trend-caption"><span style="color:#f5b942">● Corte</span> · <span style="color:#4fd1c5">● Arranque</span> · ${trendNote} ${dataSufficiency}</div></div>
+  <div class="chart-card" style="margin-top:14px"><div class="chart-title">Dónde ocurre — equipo × causa de retraso</div>${matrixHtml}</div>
+  <div class="analytics-grid" style="margin-top:14px">
+    <div class="chart-card"><div class="chart-title">Checklist — incumplimientos por equipo</div>${checkBars}</div>
+    <div class="chart-card"><div class="chart-title">Checklist — causas registradas</div>${bars(Object.entries(checkByCause).sort((a,b)=>b[1]-a[1]),Math.max(1,...Object.values(checkByCause)),'teal','')}</div>
+  </div>
+  <div class="insight"><strong>Lectura operacional:</strong> ${topArranqueEq?`En Arranque, <b>${topArranqueEq[0]}</b> es el top offender con <b>${topArranqueEq[1].min} min</b> acumulados en ${topArranqueEq[1].events} evento${topArranqueEq[1].events===1?'':'s'}.`: 'aún no hay retrasos de Arranque mayores al umbral analítico.'} ${topCause?`La causa con mayor impacto analítico es <b>${topCause[0]}</b> (${topCause[1].min} min; ${topCause[1].events} evento${topCause[1].events===1?'':'s'}).`:''} ${topEq?`Por impacto combinado de eventos analíticos, <b>${topEq}</b> concentra ${eqEntries[0][1]} min.`:''} ${totalFailures?`El checklist registra <b>${totalFailures}</b> incumplimiento${totalFailures===1?'':'s'}, analizados aparte del tiempo perdido.`:'No hay incumplimientos de checklist en el periodo.'}${noDelay}</div>`;
 }
+function dFmt(iso){const [y,m,d]=String(iso).split('-');return d&&m?`${d}/${m}/${y}`:iso;}
+
 function desvClass(v){
   if(v===null)return `<span style="color:var(--muted)">—</span>`;
   const cls=v===0?"zero":v>0?"pos":"neg",sign=v>0?"+":"";
@@ -667,6 +870,7 @@ function persistDay(){
 }
 async function saveDay(){
   if(state.cerrado)return;
+  if(!hasLine()){alert("Selecciona Línea 1 o Línea 3 antes de guardar.");return;}
   ensureLocks();
   state.planSaved=true;
   state.updatedAt=new Date().toISOString();
@@ -675,7 +879,7 @@ async function saveDay(){
   document.getElementById("inpRefArranque").disabled=true;
   document.getElementById("inpRefCorte").disabled=true;
   document.getElementById("inpFecha").disabled=true;
-  document.getElementById("btnLimpiar").disabled=true;
+  document.getElementById("btnLimpiar").disabled=!!state.cerrado;
   const s=document.getElementById("saveStatus");s.textContent="Plan guardado y referencias bloqueadas ✓";
   setTimeout(()=>s.textContent="",3000);
   render();
@@ -695,8 +899,8 @@ function queueSave(){
 async function loadDay(){
   dbLoading=true;
   const x=await fetchDay(state.fecha);
-  if(x){state={...state,...x,fecha:state.fecha};}
-  else{state.refArranque="";state.refCorte="";state.real={};state.check={};state.cerrado=false;state.lockedTimes={};state.planSaved=false;}
+  if(x){state={...state,...x,fecha:state.fecha}; if(!state.linea)state.linea="L3";}
+  else{state.linea="";state.refArranque="";state.refCorte="";state.real={};state.check={};state.cerrado=false;state.lockedTimes={};state.planSaved=false;}
   if(!state.lockedTimes)state.lockedTimes={};
   if(x && !Object.prototype.hasOwnProperty.call(state,"planSaved"))state.planSaved=true;
   ensureLocks();
@@ -708,14 +912,23 @@ async function loadDay(){
   document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("btnGuardar").disabled=!!state.cerrado;
-  document.getElementById("btnLimpiar").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("btnLimpiar").disabled=!!state.cerrado;
   await autoCloseIfComplete();
   render();
   dbLoading=false;
 }
 function clearReal(){
-  if(state.planSaved||state.cerrado)return;
-  if(confirm("¿Limpiar todas las horas reales de este plan? Esto desbloqueará esos campos.")){state.real={};state.lockedTimes={};render();queueSave()}
+  if(state.cerrado)return;
+  if(confirm("¿Limpiar las horas reales y las referencias de Corte y Arranque de este ejercicio?")){
+    state.real={};
+    state.refArranque="";
+    state.refCorte="";
+    state.lockedTimes={};
+    state.planSaved=false;
+    localSave();
+    render();
+    queueSave();
+  }
 }
 
 document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",()=>{
@@ -725,6 +938,7 @@ document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",
   if(btn.dataset.tab==="eventos"){refreshPlanAnalysisOptions();refreshEventAnalysisOptions();updateAnalysisControls();buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");}
 }));
 document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;loadDay()});
+document.getElementById("inpLinea").addEventListener("change",e=>{setLine(e.target.value)});
 document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refArranque=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refCorte=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("btnGuardar").addEventListener("click",saveDay);
@@ -752,9 +966,9 @@ async function exportExcel(){
   if(typeof XLSX==="undefined"){status.textContent="No se pudo cargar el módulo Excel. Verifica tu conexión a internet y vuelve a intentar.";return;}
   const resumen=[],detalle=[],checklistData=[],analysisMap={};
   plans.forEach(p=>{
-    resumen.push({Fecha:p.fecha,"Ref. Corte":p.refCorte||"","Ref. Arranque":p.refArranque||"","Equipos registrados":Object.keys(p.real||{}).length,"Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length});
+    resumen.push({Fecha:p.fecha,Línea:p.linea||"L3","Ref. Corte":p.refCorte||"","Ref. Arranque":p.refArranque||"","Equipos registrados":Object.keys(p.real||{}).length,"Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length});
     const refC=timeToMin(p.refCorte),refA=timeToMin(p.refArranque);
-    EQUIPOS.forEach(eq=>{
+    const planEquipos=(LINEAS[p.linea||"L3"]||LINEAS.L3).equipos; planEquipos.forEach(eq=>{
       const real=(p.real||{})[eq.id]||{};
       const progC=refC!==null?minToTime(refC+eq.tCorte):"",progA=refA!==null?minToTime(refA+eq.tArr):"";
       const dc=(timeToMin(real.corte)!==null&&refC!==null)?shortestDiff(timeToMin(real.corte),refC+eq.tCorte):null;
@@ -763,9 +977,9 @@ async function exportExcel(){
       const causaCorte=real.causaCorte||"",causaArranque=real.causaArranque||"";
       if(dc!==null&&dc>0){const l=causeLabel(causaCorte||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"T-MINUS"};analysisMap[l].Frecuencia++;analysisMap[l].ImpactoMin+=dc;}
       if(da!==null&&da>0){const l=causeLabel(causaArranque||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"T-MINUS"};analysisMap[l].Frecuencia++;analysisMap[l].ImpactoMin+=da;}
-      detalle.push({Fecha:p.fecha,Equipo:eq.nombre,"Offset Corte (min)":eq.tCorte,"Programado Corte":progC,"Real Corte":real.corte||"","Desviación Corte (min)":dc===null?"":dc,"Causa retraso Corte":causeLabel(causaCorte||""),"Offset Arranque (min)":eq.tArr,"Programado Arranque":progA,"Real Arranque":real.arranque||"","Desviación Arranque (min)":da===null?"":da,"Causa retraso Arranque":causeLabel(causaArranque||""),Estado:estado});
+      detalle.push({Fecha:p.fecha,Línea:p.linea||"L3",Equipo:eq.nombre,"Offset Corte (min)":eq.tCorte,"Programado Corte":progC,"Real Corte":real.corte||"","Desviación Corte (min)":dc===null?"":dc,"Causa retraso Corte":causeLabel(causaCorte||""),"Offset Arranque (min)":eq.tArr,"Programado Arranque":progA,"Real Arranque":real.arranque||"","Desviación Arranque (min)":da===null?"":da,"Causa retraso Arranque":causeLabel(causaArranque||""),Estado:estado});
     });
-    Object.entries(p.check||{}).forEach(([id,c])=>{const eq=EQUIPOS.find(x=>x.id===id);if(eq&&c&&(c.cum||c.causa||c.detalle)){checklistData.push({Fecha:p.fecha,Equipo:eq.nombre,Cumplimiento:c.cum||"",Causa:causeLabel(c.causa||""),Detalle:c.detalle||""});if(c.cum==="NO CUMPLIÓ"){const l=causeLabel(c.causa||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"Checklist"};analysisMap[l].Frecuencia++;}}});
+    Object.entries(p.check||{}).forEach(([id,c])=>{const eq=planEquipos.find(x=>x.id===id);if(eq&&c&&(c.cum||c.causa||c.detalle)){checklistData.push({Fecha:p.fecha,Línea:p.linea||"L3",Equipo:eq.nombre,Cumplimiento:c.cum||"",Causa:causeLabel(c.causa||""),Detalle:c.detalle||""});if(c.cum==="NO CUMPLIÓ"){const l=causeLabel(c.causa||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"Checklist"};analysisMap[l].Frecuencia++;}}});
   });
   const wb=XLSX.utils.book_new();
   const ws1=XLSX.utils.json_to_sheet(resumen),ws2=XLSX.utils.json_to_sheet(detalle),ws4=XLSX.utils.json_to_sheet(checklistData);
@@ -786,32 +1000,32 @@ document.getElementById("anaEvento2").addEventListener("change",()=>buildAnalyti
 document.getElementById("anaEquipo2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
 
 async function deletePlanFromHistory(p){
-  const confirmation=prompt(`ELIMINAR PLAN\n\nPara borrar ${p.fecha}, escribe exactamente:\nELIMINAR ${p.fecha}`);
-  if(confirmation!==`ELIMINAR ${p.fecha}`)return;
+  const confirmation=prompt(`ELIMINAR PLAN\n\nPara borrar ${p.fecha} · ${p.linea||"L3"}, escribe exactamente:\nELIMINAR ${p.fecha} ${p.linea||"L3"}`);
+  if(confirmation!==`ELIMINAR ${p.fecha} ${p.linea||"L3"}`)return;
   if(!confirm(`Esta acción eliminará definitivamente el plan ${p.fecha} del histórico ${centralEnabled?'central y de todos los usuarios':'local'}. ¿Continuar?`))return;
   if(centralEnabled){
-    const {error}=await sb.from(DB_TABLE).delete().eq("fecha",p.fecha);
+    const {error}=await sb.from(DB_TABLE).delete().eq("fecha",p.fecha).eq("linea",p.linea||"L3");
     if(error){alert("No se pudo eliminar el plan desde Supabase: "+error.message+"\n\nVerifica que la política DELETE esté habilitada en Supabase.");return;}
-    localStorage.removeItem("tminus_plan_"+p.fecha);
-    if(state.fecha===p.fecha){state={fecha:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};render();}
+    localStorage.removeItem("tminus_plan_"+p.fecha+"_"+(p.linea||"L3"));
+    if(state.fecha===p.fecha){state={fecha:todayStr(),linea:"",refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};render();}
     await loadHistorial();await refreshPlanAnalysisOptions();showDbStatus("Plan eliminado del histórico central ✓",true);
   }else{
-    localStorage.removeItem("tminus_plan_"+p.fecha);loadHistorial();
+    localStorage.removeItem("tminus_plan_"+p.fecha+"_"+(p.linea||"L3"));loadHistorial();
   }
 }
 
 async function loadHistorial(){
   const el=document.getElementById("historialList");
   const plans=await fetchAllPlans();
-  plans.sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));el.innerHTML="";
+  plans.sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha))||String(b.linea||"L3").localeCompare(String(a.linea||"L3")));el.innerHTML="";
   if(!plans.length){el.innerHTML='<div class="empty-state"><div class="big">No hay planes guardados</div>Guarda el primer plan para verlo aquí.</div>';return}
   plans.forEach(p=>{
     const div=document.createElement("div");div.className="hist-item";
     const count=Object.keys(p.real||{}).length;
     const previousState=state;state=p;const st=getExerciseStatus();state=previousState;
-    div.innerHTML=`<div><div class="hist-date">${p.fecha}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"} · Corte: ${p.refCorte||"—"} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
+    div.innerHTML=`<div><div class="hist-date">${p.fecha} · ${p.linea||"L3"}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"} · Corte: ${p.refCorte||"—"} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
       <div class="hist-actions"><span class="exercise-status-badge ${st.key}"><span class="exercise-status-dot"></span>${st.label}</span><button class="btn btn-ghost" data-load>Ver</button><button class="btn btn-danger" data-del>Eliminar</button></div>`;
-    div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.lockedTimes)state.lockedTimes={};ensureLocks();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.planSaved||!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
+    div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.linea)state.linea="L3";applyLine(state.linea);if(!state.lockedTimes)state.lockedTimes={};ensureLocks();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpLinea").value=state.linea||"L3";document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
     div.querySelector("[data-del]").onclick=()=>deletePlanFromHistory(p);
     el.appendChild(div);
   });
