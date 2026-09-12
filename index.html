@@ -474,9 +474,18 @@ function allHistoricalRecords(){
 }
 async function fetchAllPlans(){
   if(!centralEnabled)return allHistoricalRecords();
-  const {data,error}=await sb.from(DB_TABLE).select("*").order("fecha",{ascending:false});
-  if(error){console.error(error);showDbStatus("Error leyendo base central: "+error.message);return allHistoricalRecords();}
-  return (data||[]).map(row=>row.payload||row).filter(p=>p&&p.fecha);
+  // Leer explícitamente las columnas nuevas de la estructura multi-línea.
+  // No dependemos de que linea esté dentro del JSON para construir el histórico.
+  const {data,error}=await sb.from(DB_TABLE).select("fecha,linea,payload,updated_at").order("fecha",{ascending:false}).order("linea",{ascending:true});
+  if(error){
+    console.error(error);
+    showDbStatus("Error leyendo base central: "+error.message);
+    return allHistoricalRecords();
+  }
+  return (data||[]).map(row=>{
+    const payload=(row&&row.payload&&typeof row.payload==="object")?row.payload:{};
+    return {...payload,fecha:row.fecha||payload.fecha,linea:row.linea||payload.linea||"L3",updatedAt:payload.updatedAt||row.updated_at||""};
+  }).filter(p=>p&&p.fecha);
 }
 async function fetchDay(fecha){
   if(!centralEnabled)return localLoad();
@@ -1042,7 +1051,7 @@ async function loadHistorial(){
   plans.forEach(p=>{
     const div=document.createElement("div");div.className="hist-item";
     const count=Object.keys(p.real||{}).length;
-    const previousState=state;state=p;const st=getExerciseStatus();state=previousState;
+    const previousState=state;state={...state,...p,linea:p.linea||"L3"};applyLine(state.linea);const st=state.cerrado?{key:"completado",label:"COMPLETADO"}:getExerciseStatus();state=previousState;
     div.innerHTML=`<div><div class="hist-date">${p.fecha} · ${p.linea||"L3"}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"} · Corte: ${p.refCorte||"—"} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
       <div class="hist-actions"><span class="exercise-status-badge ${st.key}"><span class="exercise-status-dot"></span>${st.label}</span><button class="btn btn-ghost" data-load>Ver</button><button class="btn btn-danger" data-del>Eliminar</button></div>`;
     div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.linea)state.linea="L3";applyLine(state.linea);if(!state.lockedTimes)state.lockedTimes={};ensureLocks();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpLinea").value=state.linea||"L3";document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
