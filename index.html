@@ -898,16 +898,36 @@ function queueSave(){
 }
 async function loadDay(){
   dbLoading=true;
+  const linea=state.linea||"";
+  // La línea debe seleccionarse explícitamente al entrar al Plan del día.
+  if(!linea){
+    state={fecha:state.fecha,linea:"",refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+    document.getElementById("inpFecha").value=state.fecha;
+    document.getElementById("inpLinea").value="";
+    document.getElementById("inpRefArranque").value="";
+    document.getElementById("inpRefCorte").value="";
+    document.getElementById("inpRefArranque").disabled=true;
+    document.getElementById("inpRefCorte").disabled=true;
+    document.getElementById("inpFecha").disabled=false;
+    document.getElementById("btnGuardar").disabled=true;
+    document.getElementById("btnLimpiar").disabled=true;
+    applyLine("");
+    render();
+    dbLoading=false;
+    return;
+  }
   const x=await fetchDay(state.fecha);
-  if(x){state={...state,...x,fecha:state.fecha}; if(!state.linea)state.linea="L3";}
-  else{state.linea="";state.refArranque="";state.refCorte="";state.real={};state.check={};state.cerrado=false;state.lockedTimes={};state.planSaved=false;}
+  if(x){state={...x,fecha:state.fecha,linea};}
+  else{state={fecha:state.fecha,linea,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};}
+  applyLine(linea);
   if(!state.lockedTimes)state.lockedTimes={};
   if(x && !Object.prototype.hasOwnProperty.call(state,"planSaved"))state.planSaved=true;
   ensureLocks();
   localSave();
   document.getElementById("inpFecha").value=state.fecha;
-  document.getElementById("inpRefArranque").value=state.refArranque;
-  document.getElementById("inpRefCorte").value=state.refCorte;
+  document.getElementById("inpLinea").value=state.linea;
+  document.getElementById("inpRefArranque").value=state.refArranque||"";
+  document.getElementById("inpRefCorte").value=state.refCorte||"";
   document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;
@@ -937,7 +957,7 @@ document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",
   if(btn.dataset.tab==="historial")loadHistorial();
   if(btn.dataset.tab==="eventos"){refreshPlanAnalysisOptions();refreshEventAnalysisOptions();updateAnalysisControls();buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");}
 }));
-document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;loadDay()});
+document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;state.linea="";loadDay()});
 document.getElementById("inpLinea").addEventListener("change",e=>{setLine(e.target.value)});
 document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refArranque=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refCorte=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
