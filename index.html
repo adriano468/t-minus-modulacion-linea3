@@ -62,6 +62,17 @@ h1{font-family:Oswald,sans-serif;font-weight:700;font-size:28px;letter-spacing:.
 .gantt-legend{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:12px 0 0 0;font-size:11px;color:var(--muted)}
 .gantt-legend-item{display:flex;align-items:center;gap:7px}
 .legend-box{width:18px;height:18px;border-radius:4px;display:inline-block;box-sizing:border-box}.legend-box.programado{border:3px solid #91a3b9;background:transparent}.legend-box.real{background:#91a3b9;border:2px solid var(--panel)}.legend-box.ok{background:var(--green);border:2px solid var(--panel)}.legend-box.nok{background:var(--red);border:2px solid var(--panel)}
+/* Selector de hora T-MINUS: siempre 24 h, independiente de AM/PM del sistema */
+.time-picker{cursor:pointer;padding-right:34px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238798ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-size:18px 18px}
+.time-picker:disabled{cursor:not-allowed}.time-picker:focus{outline:none;border-color:var(--teal)!important}
+.time-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.58);z-index:9999;padding:18px}
+.time-modal.open{display:flex}.time-modal-card{width:min(340px,92vw);background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 18px 55px rgba(0,0,0,.45);padding:16px}
+.time-modal-title{font:600 13px Oswald,sans-serif;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px}
+.time-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.time-picker-grid label{font:10px 'JetBrains Mono',monospace;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+.time-picker-grid select{width:100%;background:var(--panel-alt);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font:700 18px 'JetBrains Mono',monospace}
+.time-picker-preview{text-align:center;font:700 27px 'JetBrains Mono',monospace;color:var(--amber);padding:13px 0}
+.time-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}.time-modal-actions button{font:600 12px Oswald,sans-serif;text-transform:uppercase;border-radius:8px;padding:9px 14px;cursor:pointer}
+.time-cancel{background:transparent;border:1px solid var(--border);color:var(--muted)}.time-confirm{background:var(--amber);border:1px solid var(--amber);color:#1a1305}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th{font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;letter-spacing:.05em;color:var(--muted);text-align:center;padding:8px 6px;border-bottom:1px solid var(--border)}
 th.left,td.left{text-align:left}
@@ -178,12 +189,12 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
     <div class="input-row">
       <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div><div class="field line-field"><label>Línea</label><select id="inpLinea" aria-label="Seleccionar línea"><option value="">Seleccionar…</option><option value="L1">Línea 1</option><option value="L3">Línea 3</option></select></div><div class="line-dependent-controls">
       <div class="field"><label>Fecha Corte</label><input type="date" id="inpFechaCorte"></div>
-      <div class="field"><label>Ref. Corte</label><input type="time" id="inpRefCorte" class="time24" lang="es-PE" step="60"></div>
+      <div class="field"><label>Ref. Corte</label><input type="text" id="inpRefCorte" class="time24 time-picker" lang="es-PE" inputmode="numeric" readonly></div>
       <div class="field"><label>Fecha Arranque</label><input type="date" id="inpFechaArranque"></div>
-      <div class="field"><label>Ref. Arranque</label><input type="time" id="inpRefArranque" class="time24" lang="es-PE" step="60"></div>
+      <div class="field"><label>Ref. Arranque</label><input type="text" id="inpRefArranque" class="time24 time-picker" lang="es-PE" inputmode="numeric" readonly></div>
       <div class="field"><label>Parada prolongada</label><input type="number" id="inpParadaMin" min="0" step="1" placeholder="min"></div>
       <div class="field" id="paradaModeField" style="display:none"><label>Tratamiento Arranque</label><select id="inpParadaModo"><option value="desplazar">Desplazar plan</option><option value="nueva">Nueva hora de reinicio</option></select></div>
-      <div class="field" id="nuevaRefField" style="display:none"><label>Nueva referencia</label><input type="time" id="inpNuevaRefArranque" class="time24" lang="es-PE" step="60"></div>
+      <div class="field" id="nuevaRefField" style="display:none"><label>Nueva referencia</label><input type="text" id="inpNuevaRefArranque" class="time24 time-picker" lang="es-PE" inputmode="numeric" readonly></div>
       <button class="btn btn-primary" id="btnGuardar">Guardar plan</button>
       <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales + referencias</button>
       <span class="save-status" id="saveStatus"></span><span class="save-status" id="dbStatus" style="display:block;width:100%;margin-top:4px"></span>
@@ -269,6 +280,17 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
 <footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.3 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
+<div id="timePickerModal" class="time-modal" aria-hidden="true">
+  <div class="time-modal-card" role="dialog" aria-modal="true" aria-label="Seleccionar hora">
+    <div class="time-modal-title">Seleccionar hora · Formato 24 h</div>
+    <div class="time-picker-preview" id="timePickerPreview">00:00</div>
+    <div class="time-picker-grid">
+      <div><label>Hora</label><select id="timePickerHour"></select></div>
+      <div><label>Minutos</label><select id="timePickerMinute"></select></div>
+    </div>
+    <div class="time-modal-actions"><button class="time-cancel" id="timePickerCancel">Cancelar</button><button class="time-confirm" id="timePickerConfirm">Usar hora</button></div>
+  </div>
+</div>
 <script>
 const LINEAS={
   L1:{id:"L1",nombre:"Línea 1",equipos:[
@@ -505,11 +527,11 @@ function render(){
     const tr=document.createElement("tr");if(eq.id==="llenadora")tr.classList.add("section-llenadora");
     tr.innerHTML=`<td class="left equipo-name">${eq.nombre}</td>
       <td class="prog-time">${progCorte??"—"}</td>
-      <td><input type="time" lang="es-PE" step="60" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""}" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
+      <td><input type="text" lang="es-PE" step="60" class="time-input time24 time-picker ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""} readonly" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
       <td>${desvClass(dc)}${dc!==null&&attrC.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span> · <span class="attribution-inherited">Heredado +${attrC.inherited}</span></span>`:dc!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span></span>`:''}</td>
       <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td class="prog-time">${progArr??"—"}</td>
-      <td><input type="time" lang="es-PE" step="60" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""}" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
+      <td><input type="text" lang="es-PE" step="60" class="time-input time24 time-picker ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""} readonly" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
       <td>${desvClass(da)}${da!==null&&attrA.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span> · <span class="attribution-inherited">Heredado +${attrA.inherited}</span></span>`:da!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span></span>`:''}</td>
       <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td><span class="badge ${estado}">${estado==="pending"?"PENDIENTE":estado.toUpperCase()}</span></td>`;
@@ -536,6 +558,7 @@ function render(){
   renderChecklist();
   renderTimelines();
   updateCloseControl();
+  refreshTimePickerBindings();
 }
 function renderChecklist(){
   const el=document.getElementById("checklistRows"); if(!el)return; el.innerHTML="";
@@ -1217,6 +1240,31 @@ async function loadHistorial(){
 
 document.getElementById("btnMigrar")?.addEventListener("click",migrateLocalHistory);
 
+
+/* Selector de hora propio: evita por completo el AM/PM del navegador/SO */
+let activeTimeInput=null;
+function initTimePicker(){
+  const modal=document.getElementById("timePickerModal");
+  const hs=document.getElementById("timePickerHour"), ms=document.getElementById("timePickerMinute"), preview=document.getElementById("timePickerPreview");
+  if(!modal||!hs||!ms)return;
+  if(!hs.options.length){for(let h=0;h<24;h++){const o=document.createElement("option");o.value=String(h).padStart(2,"0");o.textContent=String(h).padStart(2,"0");hs.appendChild(o)} for(let m=0;m<60;m++){const o=document.createElement("option");o.value=String(m).padStart(2,"0");o.textContent=String(m).padStart(2,"0");ms.appendChild(o)}}
+  const update=()=>preview.textContent=`${hs.value}:${ms.value}`;
+  hs.onchange=update; ms.onchange=update;
+  document.querySelectorAll(".time-picker").forEach(inp=>{
+    if(inp.dataset.timePickerBound)return; inp.dataset.timePickerBound="1";
+    inp.addEventListener("click",()=>{
+      if(inp.disabled)return; activeTimeInput=inp; const v=normalizeTime24(inp.value)||"00:00"; const [h,m]=v.split(":"); hs.value=h; ms.value=m; update(); modal.classList.add("open"); modal.setAttribute("aria-hidden","false");
+    });
+  });
+  const close=()=>{modal.classList.remove("open");modal.setAttribute("aria-hidden","true");activeTimeInput=null};
+  document.getElementById("timePickerCancel").onclick=close;
+  document.getElementById("timePickerConfirm").onclick=()=>{
+    if(!activeTimeInput)return; const value=`${hs.value}:${ms.value}`; const inp=activeTimeInput; close(); inp.value=value; inp.dispatchEvent(new Event("change",{bubbles:true}));
+  };
+  modal.addEventListener("click",e=>{if(e.target===modal)close()});
+}
+function refreshTimePickerBindings(){initTimePicker()}
+
 async function bootstrap(){
   const mig=document.getElementById("btnMigrar");
   if(centralEnabled){if(mig)mig.style.display="inline-flex";}else showDbStatus("Modo local: configura Supabase para compartir datos entre usuarios.");
@@ -1228,6 +1276,7 @@ async function bootstrap(){
   buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");
 }
 bootstrap();
+
 </script>
 </body>
 </html>
