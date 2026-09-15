@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Adriano Nuñez Soriano">
-<meta name="application-version" content="5.2">
+<meta name="application-version" content="5.3">
 <title>T-MINUS — Modulación</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -69,6 +69,7 @@ td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--border-soft);
 tr.section-llenadora td{background:rgba(232,163,61,.06)}.equipo-name{font-family:Inter,sans-serif;font-weight:600}
 .cause-input{background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 7px;font:11px Inter;width:150px}input.time-input{background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:13px;width:92px;text-align:center}
 input.time-input:focus{outline:none;border-color:var(--teal)}
+.time24{font-variant-numeric:tabular-nums;letter-spacing:.02em}.time24::placeholder{color:var(--muted);opacity:.8}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.03em}
 .badge.pending{background:var(--yellow-dim);color:var(--yellow)}.badge.ok{background:var(--green-dim);color:var(--green)}.badge.nok{background:var(--red-dim);color:var(--red)}
 .prog-time{color:var(--muted)}.desv{font-weight:700}.desv.pos{color:var(--red)}.desv.neg{color:var(--teal)}.desv.zero{color:var(--green)}
@@ -101,7 +102,7 @@ body:not(.line-selected) #tab-plan .line-required{display:none!important}
 </style>
 
 <style id="v52-polish">
-/* V5.2 — clean multi-line header */
+/* V5.3 — horas en formato 24 h */
 #tab-plan > .panel:first-child .input-row{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
@@ -176,12 +177,16 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
     <div class="input-row">
       <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div><div class="field line-field"><label>Línea</label><select id="inpLinea" aria-label="Seleccionar línea"><option value="">Seleccionar…</option><option value="L1">Línea 1</option><option value="L3">Línea 3</option></select></div><div class="line-dependent-controls">
       <div class="field"><label>Fecha Corte</label><input type="date" id="inpFechaCorte"></div>
-      <div class="field"><label>Ref. Corte</label><input type="time" id="inpRefCorte"></div>
+      <div class="field"><label>Ref. Corte</label><input type="text" id="inpRefCorte" class="time24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d"></div>
       <div class="field"><label>Fecha Arranque</label><input type="date" id="inpFechaArranque"></div>
-      <div class="field"><label>Ref. Arranque</label><input type="time" id="inpRefArranque"></div>
+      <div class="field"><label>Ref. Arranque</label><input type="text" id="inpRefArranque" class="time24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d"></div>
+      <div class="field"><label>Parada prolongada</label><input type="number" id="inpParadaMin" min="0" step="1" placeholder="min"></div>
+      <div class="field" id="paradaModeField" style="display:none"><label>Tratamiento Arranque</label><select id="inpParadaModo"><option value="desplazar">Desplazar plan</option><option value="nueva">Nueva hora de reinicio</option></select></div>
+      <div class="field" id="nuevaRefField" style="display:none"><label>Nueva referencia</label><input type="text" id="inpNuevaRefArranque" class="time24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d"></div>
       <button class="btn btn-primary" id="btnGuardar">Guardar plan</button>
       <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales + referencias</button>
       <span class="save-status" id="saveStatus"></span><span class="save-status" id="dbStatus" style="display:block;width:100%;margin-top:4px"></span>
+      <div class="parada-note" id="paradaNote"></div>
     </div></div>
   </div>
 
@@ -260,7 +265,7 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
   </div>
 </section>
 
-<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.2 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.3 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
 <script>
@@ -314,7 +319,7 @@ const CAUSAS=[
   ["OPERACION","Operación / Personal"],["MATERIALES","Materiales / Repuestos"],["EQUIPO","Equipo / Automatización"],
   ["SEGURIDAD","Seguridad / Permisos"],["CHECKLIST","Checklist de arranque"],["OTRO","Otro"]
 ];
-let state={fecha:todayStr(),linea:"",fechaCorte:todayStr(),fechaArranque:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+let state={fecha:todayStr(),linea:"",fechaCorte:todayStr(),fechaArranque:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false,paradaMin:0,paradaModo:"desplazar",nuevaRefArranque:""};
 function causeLabel(code){return (CAUSAS.find(x=>x[0]===code)||[code||"OTRO",code||"Otro"])[1]}
 let eventos=[];
 
@@ -348,6 +353,35 @@ function deviationFor(realTime,refDate,refTime,offset=0){
   const actual=actualDateTimeNear(realTime,scheduled);
   return actual&&scheduled?Math.round((actual-scheduled)/60000):null;
 }
+function attributionFor(mode){
+  const refDate=mode==='corte'?(state.fechaCorte||state.fecha):(state.fechaArranque||state.fecha);
+  const refTime=mode==='corte'?state.refCorte:state.refArranque;
+  const offsetKey=mode==='corte'?'tCorte':'tArr';
+  const realKey=mode==='corte'?'corte':'arranque';
+  const out={}; let inherited=0;
+  if(!refDate||!refTime)return out;
+  EQUIPOS.forEach(eq=>{
+    const r=state.real[eq.id]||{}, real=r[realKey];
+    const scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]);
+    const actual=actualDateTimeNear(real,scheduled);
+    let total=0, own=0, inh=inherited;
+    if(actual&&scheduled){
+      total=Math.max(0,Math.round((actual-scheduled)/60000));
+      own=Math.max(0,total-inherited);
+      inherited+=own;
+    }
+    out[eq.id]={total,own,inherited:inh};
+  });
+  return out;
+}
+function updateParadaUI(){
+  const min=Math.max(0,Number(document.getElementById('inpParadaMin')?.value||state.paradaMin||0));
+  const modeField=document.getElementById('paradaModeField'),newField=document.getElementById('nuevaRefField'),mode=document.getElementById('inpParadaModo')?.value||state.paradaModo||'desplazar';
+  if(modeField)modeField.style.display=min>120?'flex':'none';
+  if(newField)newField.style.display=min>120&&mode==='nueva'?'flex':'none';
+  const note=document.getElementById('paradaNote');
+  if(note)note.textContent=min>120?'Parada > 2 h: define si el Arranque se desplaza o si existe una nueva referencia oficial.':'Parada de hasta 2 h: el Arranque conserva su referencia original.';
+}
 function keyDay(){return "tminus_plan_"+state.fecha+"_"+(state.linea||"L3")}
 function keyEvents(){return "tminus_events_"+state.fecha}
 function localSave(){localStorage.setItem(keyDay(),JSON.stringify({...state}));}
@@ -378,6 +412,10 @@ async function setLine(linea){
   document.getElementById("inpFechaArranque").value=state.fechaArranque||fecha;
   document.getElementById("inpRefArranque").value=state.refArranque||"";
   document.getElementById("inpRefCorte").value=state.refCorte||"";
+  document.getElementById("inpParadaMin").value=state.paradaMin||"";
+  document.getElementById("inpParadaModo").value=state.paradaModo||"desplazar";
+  document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque||"";
+  updateParadaUI();
   document.getElementById("inpFecha").value=fecha;
   document.getElementById("inpFechaCorte").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpFechaArranque").disabled=!!state.planSaved||!!state.cerrado;
@@ -453,18 +491,20 @@ function render(){
     const pa=refArr!==null?refArr+eq.tArr:null,pc=refCorte!==null?refCorte+eq.tCorte:null;
     const da=ra!==null&&pa!==null?deviationFor(real.arranque,state.fechaArranque,state.refArranque,eq.tArr):null;
     const dc=rc!==null&&pc!==null?deviationFor(real.corte,state.fechaCorte,state.refCorte,eq.tCorte):null;
+    const attrC=attributionFor('corte')[eq.id]||{own:0,inherited:0};
+    const attrA=attributionFor('arranque')[eq.id]||{own:0,inherited:0};
     let estado="pending";
     if(da!==null||dc!==null){estado=(da!==null&&Math.abs(da)>UMBRAL_MIN)||(dc!==null&&Math.abs(dc)>UMBRAL_MIN)?"nok":"ok"}
     if(estado==="ok")ok++;if(estado==="nok")nok++;
     const tr=document.createElement("tr");if(eq.id==="llenadora")tr.classList.add("section-llenadora");
     tr.innerHTML=`<td class="left equipo-name">${eq.nombre}</td>
       <td class="prog-time">${progCorte??"—"}</td>
-      <td><input type="time" class="time-input ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""}" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
-      <td>${desvClass(dc)}</td>
+      <td><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""}" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
+      <td>${desvClass(dc)}${dc!==null&&attrC.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span> · <span class="attribution-inherited">Heredado +${attrC.inherited}</span></span>`:dc!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span></span>`:''}</td>
       <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td class="prog-time">${progArr??"—"}</td>
-      <td><input type="time" class="time-input ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""}" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
-      <td>${desvClass(da)}</td>
+      <td><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""}" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
+      <td>${desvClass(da)}${da!==null&&attrA.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span> · <span class="attribution-inherited">Heredado +${attrA.inherited}</span></span>`:da!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span></span>`:''}</td>
       <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td><span class="badge ${estado}">${estado==="pending"?"PENDIENTE":estado.toUpperCase()}</span></td>`;
     tbody.appendChild(tr);
@@ -475,6 +515,11 @@ function render(){
     if(state.cerrado)return;
     const id=e.target.dataset.eq,f=e.target.dataset.field;
     if(e.target.classList.contains("time-input") && state.lockedTimes?.[id]?.[f])return;
+    if(e.target.classList.contains("time24")){
+      const normalized=normalizeTime24(e.target.value);
+      if(e.target.value && !normalized){alert("Ingresa la hora en formato 24 h: HH:MM (00:00–23:59).");e.target.value=state.real?.[id]?.[f]||"";return;}
+      e.target.value=normalized||"";
+    }
     if(!state.real[id])state.real[id]={};state.real[id][f]=e.target.value;
     if(e.target.classList.contains("time-input") && e.target.value){
       if(!state.lockedTimes[id])state.lockedTimes[id]={};
@@ -611,6 +656,13 @@ async function updateAnalysisControls(){
   else if(mode==='single_event'){refreshEventAnalysisOptions();note.style.display='block';note.innerHTML='<strong>Análisis individual de evento:</strong> selecciona un retraso T-Minus o un incumplimiento del checklist para ver su impacto y contexto.';}
   else{note.style.display='none';note.textContent='';}
 }
+function attributionForPlan(p,mode,equipos){
+  const refDate=mode==='corte'?(p.fechaCorte||p.fecha):(p.fechaArranque||p.fecha);
+  const refTime=mode==='corte'?p.refCorte:p.refArranque;
+  const offsetKey=mode==='corte'?'tCorte':'tArr', realKey=mode==='corte'?'corte':'arranque';
+  const out={};let inherited=0;if(!refDate||!refTime)return out;
+  equipos.forEach(eq=>{const r=(p.real||{})[eq.id]||{},scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]),actual=actualDateTimeNear(r[realKey],scheduled);let total=0,own=0,inh=inherited;if(actual&&scheduled){total=Math.max(0,Math.round((actual-scheduled)/60000));own=Math.max(0,total-inherited);inherited+=own;}out[eq.id]={total,own,inherited:inh};});return out;
+}
 async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipmentId='anaEquipo'){
   const el=document.getElementById(targetId);if(!el)return;
   const periodEl=document.getElementById(periodId),equipEl=document.getElementById(equipmentId);
@@ -681,8 +733,12 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
         if(skind==='check')return;
       }
       const r=(p.real||{})[eq.id]||{},rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
-      const corteDelay=rc!==null&&pc!==null?Math.max(0,deviationFor(r.corte,p.fechaCorte||p.fecha,p.refCorte,eq.tCorte)||0):0;
-      const arranqueDelay=ra!==null&&pa!==null?Math.max(0,deviationFor(r.arranque,p.fechaArranque||p.fecha,p.refArranque,eq.tArr)||0):0;
+      const corteTotal=rc!==null&&pc!==null?Math.max(0,deviationFor(r.corte,p.fechaCorte||p.fecha,p.refCorte,eq.tCorte)||0):0;
+      const arranqueTotal=ra!==null&&pa!==null?Math.max(0,deviationFor(r.arranque,p.fechaArranque||p.fecha,p.refArranque,eq.tArr)||0):0;
+      const corteAttr=attributionForPlan(p,'corte',planEquipos)[eq.id]||{own:corteTotal,inherited:0};
+      const arranqueAttr=attributionForPlan(p,'arranque',planEquipos)[eq.id]||{own:arranqueTotal,inherited:0};
+      const corteDelay=corteAttr.own;
+      const arranqueDelay=arranqueAttr.own;
       if(arranqueDelay>UMBRAL_MIN){
         const rec=arranqueByEquipment[eq.nombre]||(arranqueByEquipment[eq.nombre]={events:0,min:0});
         rec.events++;rec.min+=arranqueDelay;
@@ -770,7 +826,7 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
     <div class="kpi"><div class="kpi-label">Top offender · Arranque</div><div class="kpi-value" style="font-size:16px">${topArranqueEq?topArranqueEq[0]:'—'}</div><div class="kpi-sub">${topArranqueEq?topArranqueEq[1].min+' min · '+topArranqueEq[1].events+' evento'+(topArranqueEq[1].events===1?'':'s'):'sin datos'}</div></div>
     <div class="kpi"><div class="kpi-label">Incumplimientos checklist</div><div class="kpi-value amber">${totalFailures}</div><div class="kpi-sub">fuente independiente del retraso</div></div>
   </div>
-  <div class="analysis-note"><strong>Regla de lectura:</strong> los dos KPI principales miden el retraso real <strong>en la Llenadora (t=0)</strong>: Corte y Arranque por separado. El análisis por máquinas se usa para identificar dónde se concentra el retraso de Arranque. Para Pareto y matriz se mantiene la regla de máximo <strong>1 evento analítico por equipo y día</strong>, tomando el mayor desvío entre Corte y Arranque. El Checklist se analiza por separado.</div>
+  <div class="analysis-note"><strong>Atribución:</strong> una desviación heredada no se penaliza como retraso propio. Cada equipo se compara primero contra su <strong>hora esperada ajustada</strong>; solo el excedente se atribuye al equipo. Los minutos heredados se muestran como propagación y no se suman al Pareto de responsabilidad. <br><br><strong>Regla de lectura:</strong> los dos KPI principales miden el retraso real <strong>en la Llenadora (t=0)</strong>: Corte y Arranque por separado. El análisis por máquinas se usa para identificar dónde se concentra el retraso de Arranque. Para Pareto y matriz se mantiene la regla de máximo <strong>1 evento analítico por equipo y día</strong>, tomando el mayor desvío entre Corte y Arranque. El Checklist se analiza por separado.</div>
   <div class="chart-card">
     <div class="chart-title">Arranque — retraso acumulado por máquina · Top offender</div>
     ${arranqueBars}
@@ -950,7 +1006,7 @@ async function loadDay(){
   const linea=state.linea||"";
   // La línea debe seleccionarse explícitamente al entrar al Plan del día.
   if(!linea){
-    state={fecha:state.fecha,linea:"",fechaCorte:state.fecha,fechaArranque:state.fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+    state={fecha:state.fecha,linea:"",fechaCorte:state.fecha,fechaArranque:state.fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false,paradaMin:0,paradaModo:"desplazar",nuevaRefArranque:""};
     document.getElementById("inpFecha").value=state.fecha;
     document.getElementById("inpLinea").value="";
     document.getElementById("inpRefArranque").value="";
@@ -967,7 +1023,7 @@ async function loadDay(){
   }
   const x=await fetchDay(state.fecha);
   if(x){state={...x,fecha:state.fecha,linea};}
-  else{state={fecha:state.fecha,linea,fechaCorte:state.fecha,fechaArranque:state.fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};}
+  else{state={fecha:state.fecha,linea,fechaCorte:state.fecha,fechaArranque:state.fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false,paradaMin:0,paradaModo:"desplazar",nuevaRefArranque:""};}
   applyLine(linea);
   if(!state.lockedTimes)state.lockedTimes={};
   if(x && !Object.prototype.hasOwnProperty.call(state,"planSaved"))state.planSaved=true;
@@ -980,6 +1036,10 @@ async function loadDay(){
   document.getElementById("inpFechaArranque").value=state.fechaArranque||state.fecha;
   document.getElementById("inpRefArranque").value=state.refArranque||"";
   document.getElementById("inpRefCorte").value=state.refCorte||"";
+  document.getElementById("inpParadaMin").value=state.paradaMin||"";
+  document.getElementById("inpParadaModo").value=state.paradaModo||"desplazar";
+  document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque||"";
+  updateParadaUI();
   document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;
@@ -997,6 +1057,7 @@ function clearReal(){
     state.refCorte="";
     state.fechaCorte=state.fecha;
     state.fechaArranque=state.fecha;
+    state.paradaMin=0;state.paradaModo="desplazar";state.nuevaRefArranque="";
     state.lockedTimes={};
     state.planSaved=false;
     localSave();
@@ -1014,9 +1075,50 @@ document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",
 document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;state.linea="";loadDay()});
 document.getElementById("inpLinea").addEventListener("change",e=>{setLine(e.target.value)});
 document.getElementById("inpFechaCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.fechaCorte=e.target.value||state.fecha;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
-document.getElementById("inpFechaArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.fechaArranque=e.target.value||state.fecha;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
-document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refArranque=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
-document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refCorte=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
+document.getElementById("inpFechaArranque").addEventListener("change",async e=>{
+  if(state.planSaved||state.cerrado)return;
+  const oldDate=state.fechaArranque||state.fecha;
+  const newDate=e.target.value||state.fecha;
+  state.fechaArranque=newDate;
+  const corteDT=dateTimeFor(state.fechaCorte||state.fecha,state.refCorte,0);
+  const arrDT=dateTimeFor(state.fechaArranque,state.refArranque,0);
+  if(corteDT&&arrDT){
+    const stopMin=Math.round((arrDT-corteDT)/60000);
+    if(stopMin>120 && !state._longStopAskedFor){
+      state.paradaMin=stopMin;
+      state._longStopAskedFor=`${state.fechaCorte||state.fecha}|${state.refCorte}|${state.fechaArranque}|${state.refArranque}`;
+      const shift=confirm(`PARADA PROLONGADA\n\nSe detectó una parada de ${Math.floor(stopMin/60)} h ${stopMin%60} min entre Corte y Arranque.\n\n¿Quieres que el Arranque se desplace automáticamente por este tiempo?\n\nAceptar = Desplazar plan\nCancelar = Establecer una nueva hora de reinicio`);
+      if(shift){
+        const base=dateTimeFor(oldDate,state.refArranque,0);
+        if(base){
+          base.setMinutes(base.getMinutes()+stopMin);
+          state.fechaArranque=base.toISOString().slice(0,10);
+          state.refArranque=minToTime(base.getHours()*60+base.getMinutes());
+          state.paradaModo="desplazar";
+        }
+      }else{
+        state.paradaModo="nueva";
+        const nueva=prompt("Ingresa la nueva hora oficial de reinicio en formato 24 h (HH:MM).\n\nLa fecha actual de Arranque se mantendrá.",state.refArranque||"");
+        if(nueva && /^([01]\d|2[0-3]):[0-5]\d$/.test(nueva)){
+          state.nuevaRefArranque=nueva;
+          state.refArranque=nueva;
+        }
+      }
+      document.getElementById("inpFechaArranque").value=state.fechaArranque;
+      document.getElementById("inpRefArranque").value=state.refArranque;
+      document.getElementById("inpParadaMin").value=state.paradaMin||"";
+      document.getElementById("inpParadaModo").value=state.paradaModo||"desplazar";
+      updateParadaUI();
+    }
+  }
+  render();queueSave();
+  if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}
+});
+document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.refArranque||"";return;}e.target.value=t||"";state.refArranque=t||"";render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
+document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.refCorte||"";return;}e.target.value=t||"";state.refCorte=t||"";render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
+document.getElementById("inpParadaMin").addEventListener("input",()=>{if(state.planSaved||state.cerrado)return;state.paradaMin=Math.max(0,Number(document.getElementById("inpParadaMin").value||0));updateParadaUI();queueSave();});
+document.getElementById("inpParadaModo").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.paradaModo=e.target.value;updateParadaUI();if(state.paradaMin>120&&state.paradaModo==='desplazar'&&state.refArranque){const base=dateTimeFor(state.fechaArranque||state.fecha,state.refArranque,0);if(base){base.setMinutes(base.getMinutes()+state.paradaMin);state.refArranque=minToTime(base.getHours()*60+base.getMinutes());state.nuevaRefArranque="";document.getElementById("inpRefArranque").value=state.refArranque;render();}}else if(state.paradaMin>120&&state.paradaModo==='nueva'&&state.nuevaRefArranque){state.refArranque=state.nuevaRefArranque;document.getElementById("inpRefArranque").value=state.refArranque;render();}queueSave();});
+document.getElementById("inpNuevaRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.nuevaRefArranque||"";return;}e.target.value=t||"";state.nuevaRefArranque=t||""; if(state.paradaMin>120&&state.paradaModo==='nueva'&&state.nuevaRefArranque){state.refArranque=state.nuevaRefArranque;document.getElementById("inpRefArranque").value=state.refArranque;render();}queueSave();});
 document.getElementById("btnGuardar").addEventListener("click",saveDay);
 document.getElementById("btnLimpiar").addEventListener("click",clearReal);
 
@@ -1101,7 +1203,7 @@ async function loadHistorial(){
     const previousState=state;state={...state,...p,linea:p.linea||"L3"};applyLine(state.linea);const st=state.cerrado?{key:"completado",label:"COMPLETADO"}:getExerciseStatus();state=previousState;
     div.innerHTML=`<div><div class="hist-date">${p.fecha} · ${p.linea||"L3"}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"}${p.fechaArranque&&p.fechaArranque!==p.fecha?` (${dFmt(p.fechaArranque)})`:""} · Corte: ${p.refCorte||"—"}${p.fechaCorte&&p.fechaCorte!==p.fecha?` (${dFmt(p.fechaCorte)})`:""} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
       <div class="hist-actions"><span class="exercise-status-badge ${st.key}"><span class="exercise-status-dot"></span>${st.label}</span><button class="btn btn-ghost" data-load>Ver</button><button class="btn btn-danger" data-del>Eliminar</button></div>`;
-    div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.linea)state.linea="L3";applyLine(state.linea);if(!state.lockedTimes)state.lockedTimes={};ensureLocks();normalizeRefDates();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpLinea").value=state.linea||"L3";document.getElementById("inpFechaCorte").value=state.fechaCorte||state.fecha;document.getElementById("inpFechaArranque").value=state.fechaArranque||state.fecha;document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpFechaCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFechaArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
+    div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.linea)state.linea="L3";applyLine(state.linea);if(!state.lockedTimes)state.lockedTimes={};ensureLocks();normalizeRefDates();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpLinea").value=state.linea||"L3";document.getElementById("inpFechaCorte").value=state.fechaCorte||state.fecha;document.getElementById("inpFechaArranque").value=state.fechaArranque||state.fecha;document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpParadaMin").value=state.paradaMin||"";document.getElementById("inpParadaModo").value=state.paradaModo||"desplazar";document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque||"";updateParadaUI();document.getElementById("inpFechaCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFechaArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
     div.querySelector("[data-del]").onclick=()=>deletePlanFromHistory(p);
     el.appendChild(div);
   });
