@@ -69,7 +69,8 @@ td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--border-soft);
 tr.section-llenadora td{background:rgba(232,163,61,.06)}.equipo-name{font-family:Inter,sans-serif;font-weight:600}
 .cause-input{background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 7px;font:11px Inter;width:150px}input.time-input{background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:13px;width:92px;text-align:center}
 input.time-input:focus{outline:none;border-color:var(--teal)}
-.time24{font-variant-numeric:tabular-nums;letter-spacing:.02em}.time24::placeholder{color:var(--muted);opacity:.8}
+input.time-input::-webkit-calendar-picker-indicator,.time24::-webkit-calendar-picker-indicator{opacity:.85;cursor:pointer;filter:none}.time24{font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.time24::placeholder{color:var(--muted);opacity:.8}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.03em}
 .badge.pending{background:var(--yellow-dim);color:var(--yellow)}.badge.ok{background:var(--green-dim);color:var(--green)}.badge.nok{background:var(--red-dim);color:var(--red)}
 .prog-time{color:var(--muted)}.desv{font-weight:700}.desv.pos{color:var(--red)}.desv.neg{color:var(--teal)}.desv.zero{color:var(--green)}
@@ -177,12 +178,12 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
     <div class="input-row">
       <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div><div class="field line-field"><label>Línea</label><select id="inpLinea" aria-label="Seleccionar línea"><option value="">Seleccionar…</option><option value="L1">Línea 1</option><option value="L3">Línea 3</option></select></div><div class="line-dependent-controls">
       <div class="field"><label>Fecha Corte</label><input type="date" id="inpFechaCorte"></div>
-      <div class="field"><label>Ref. Corte</label><input type="text" id="inpRefCorte" class="time24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d"></div>
+      <div class="field"><label>Ref. Corte</label><input type="time" id="inpRefCorte" class="time24" lang="es-PE" step="60"></div>
       <div class="field"><label>Fecha Arranque</label><input type="date" id="inpFechaArranque"></div>
-      <div class="field"><label>Ref. Arranque</label><input type="text" id="inpRefArranque" class="time24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d"></div>
+      <div class="field"><label>Ref. Arranque</label><input type="time" id="inpRefArranque" class="time24" lang="es-PE" step="60"></div>
       <div class="field"><label>Parada prolongada</label><input type="number" id="inpParadaMin" min="0" step="1" placeholder="min"></div>
       <div class="field" id="paradaModeField" style="display:none"><label>Tratamiento Arranque</label><select id="inpParadaModo"><option value="desplazar">Desplazar plan</option><option value="nueva">Nueva hora de reinicio</option></select></div>
-      <div class="field" id="nuevaRefField" style="display:none"><label>Nueva referencia</label><input type="text" id="inpNuevaRefArranque" class="time24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d"></div>
+      <div class="field" id="nuevaRefField" style="display:none"><label>Nueva referencia</label><input type="time" id="inpNuevaRefArranque" class="time24" lang="es-PE" step="60"></div>
       <button class="btn btn-primary" id="btnGuardar">Guardar plan</button>
       <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales + referencias</button>
       <span class="save-status" id="saveStatus"></span><span class="save-status" id="dbStatus" style="display:block;width:100%;margin-top:4px"></span>
@@ -326,6 +327,11 @@ let eventos=[];
 function todayStr(){return new Date().toISOString().slice(0,10)}
 function timeToMin(t){if(!t)return null;const [h,m]=t.split(":").map(Number);return h*60+m}
 function minToTime(min){min=((min%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,"0")+":"+String(min%60).padStart(2,"0")}
+function normalizeTime24(t){
+  if(!t)return "";
+  const m=String(t).match(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
+  return m?t:"";
+}
 function shortestDiff(a,b){let d=a-b;while(d>720)d-=1440;while(d<-720)d+=1440;return d}
 function normalizeRefDates(){
   if(!state.fechaCorte)state.fechaCorte=state.fecha||todayStr();
@@ -499,11 +505,11 @@ function render(){
     const tr=document.createElement("tr");if(eq.id==="llenadora")tr.classList.add("section-llenadora");
     tr.innerHTML=`<td class="left equipo-name">${eq.nombre}</td>
       <td class="prog-time">${progCorte??"—"}</td>
-      <td><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""}" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
+      <td><input type="time" lang="es-PE" step="60" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""}" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
       <td>${desvClass(dc)}${dc!==null&&attrC.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span> · <span class="attribution-inherited">Heredado +${attrC.inherited}</span></span>`:dc!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span></span>`:''}</td>
       <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td class="prog-time">${progArr??"—"}</td>
-      <td><input type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="HH:MM" pattern="(?:[01]\d|2[0-3]):[0-5]\d" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""}" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
+      <td><input type="time" lang="es-PE" step="60" class="time-input time24 ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""}" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
       <td>${desvClass(da)}${da!==null&&attrA.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span> · <span class="attribution-inherited">Heredado +${attrA.inherited}</span></span>`:da!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span></span>`:''}</td>
       <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque" ${state.cerrado?"disabled":""}>${CAUSAS.map(x=>`<option value="${x[0]}" ${real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td><span class="badge ${estado}">${estado==="pending"?"PENDIENTE":estado.toUpperCase()}</span></td>`;
