@@ -112,13 +112,15 @@ body:not(.line-selected) #tab-plan .line-required{display:none!important}
 #tab-plan > .panel:first-child .line-dependent-controls{
   grid-column:1 / -1;
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:12px;
   align-items:end;
 }
 #tab-plan > .panel:first-child .line-dependent-controls .btn{
   min-height:46px;
 }
+#tab-plan > .panel:first-child .line-dependent-controls #btnGuardar{grid-column:1 / span 2}
+#tab-plan > .panel:first-child .line-dependent-controls #btnLimpiar{grid-column:3 / span 2}
 #tab-plan > .panel:first-child .line-dependent-controls .save-status{
   grid-column:1 / -1;
 }
@@ -173,7 +175,9 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
     <p class="panel-title"><span class="dot"></span>Hora de referencia — Llenadora</p>
     <div class="input-row">
       <div class="field"><label>Fecha</label><input type="date" id="inpFecha"></div><div class="field line-field"><label>Línea</label><select id="inpLinea" aria-label="Seleccionar línea"><option value="">Seleccionar…</option><option value="L1">Línea 1</option><option value="L3">Línea 3</option></select></div><div class="line-dependent-controls">
+      <div class="field"><label>Fecha Corte</label><input type="date" id="inpFechaCorte"></div>
       <div class="field"><label>Ref. Corte</label><input type="time" id="inpRefCorte"></div>
+      <div class="field"><label>Fecha Arranque</label><input type="date" id="inpFechaArranque"></div>
       <div class="field"><label>Ref. Arranque</label><input type="time" id="inpRefArranque"></div>
       <button class="btn btn-primary" id="btnGuardar">Guardar plan</button>
       <button class="btn btn-ghost" id="btnLimpiar">Limpiar reales + referencias</button>
@@ -310,7 +314,7 @@ const CAUSAS=[
   ["OPERACION","Operación / Personal"],["MATERIALES","Materiales / Repuestos"],["EQUIPO","Equipo / Automatización"],
   ["SEGURIDAD","Seguridad / Permisos"],["CHECKLIST","Checklist de arranque"],["OTRO","Otro"]
 ];
-let state={fecha:todayStr(),linea:"",refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+let state={fecha:todayStr(),linea:"",fechaCorte:todayStr(),fechaArranque:todayStr(),refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
 function causeLabel(code){return (CAUSAS.find(x=>x[0]===code)||[code||"OTRO",code||"Otro"])[1]}
 let eventos=[];
 
@@ -318,6 +322,32 @@ function todayStr(){return new Date().toISOString().slice(0,10)}
 function timeToMin(t){if(!t)return null;const [h,m]=t.split(":").map(Number);return h*60+m}
 function minToTime(min){min=((min%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,"0")+":"+String(min%60).padStart(2,"0")}
 function shortestDiff(a,b){let d=a-b;while(d>720)d-=1440;while(d<-720)d+=1440;return d}
+function normalizeRefDates(){
+  if(!state.fechaCorte)state.fechaCorte=state.fecha||todayStr();
+  if(!state.fechaArranque)state.fechaArranque=state.fecha||todayStr();
+}
+function dateTimeFor(date,time,offset=0){
+  if(!date||!time)return null;
+  const d=new Date(`${date}T${time}:00`);
+  if(Number.isNaN(d.getTime()))return null;
+  d.setMinutes(d.getMinutes()+offset);
+  return d;
+}
+function actualDateTimeNear(realTime,scheduled){
+  if(!realTime||!scheduled)return null;
+  const base=new Date(scheduled);
+  if(Number.isNaN(base.getTime()))return null;
+  const [h,m]=realTime.split(":").map(Number);
+  if(!Number.isFinite(h)||!Number.isFinite(m))return null;
+  const candidates=[-1,0,1].map(day=>{const d=new Date(base);d.setDate(d.getDate()+day);d.setHours(h,m,0,0);return d;});
+  candidates.sort((a,b)=>Math.abs(a-base)-Math.abs(b-base));
+  return candidates[0];
+}
+function deviationFor(realTime,refDate,refTime,offset=0){
+  const scheduled=dateTimeFor(refDate,refTime,offset);
+  const actual=actualDateTimeNear(realTime,scheduled);
+  return actual&&scheduled?Math.round((actual-scheduled)/60000):null;
+}
 function keyDay(){return "tminus_plan_"+state.fecha+"_"+(state.linea||"L3")}
 function keyEvents(){return "tminus_events_"+state.fecha}
 function localSave(){localStorage.setItem(keyDay(),JSON.stringify({...state}));}
@@ -339,13 +369,20 @@ async function setLine(linea){
   if(x && (x.linea||linea)===linea){
     state={...x,fecha,linea};
   }else{
-    state={fecha,linea,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+    state={fecha,linea,fechaCorte:fecha,fechaArranque:fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
   }
   applyLine(linea);
+  normalizeRefDates();
   syncLineUI();
+  document.getElementById("inpFechaCorte").value=state.fechaCorte||fecha;
+  document.getElementById("inpFechaArranque").value=state.fechaArranque||fecha;
   document.getElementById("inpRefArranque").value=state.refArranque||"";
   document.getElementById("inpRefCorte").value=state.refCorte||"";
   document.getElementById("inpFecha").value=fecha;
+  document.getElementById("inpFechaCorte").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("inpFechaArranque").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("inpFechaCorte").disabled=!!state.planSaved||!!state.cerrado;
+  document.getElementById("inpFechaArranque").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;
   document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;
@@ -402,6 +439,7 @@ function render(){
   syncLineUI();
   const be=document.querySelector(".brand-eyebrow"); if(be)be.textContent=hasLine()?"Packaging · "+LINEAS[state.linea].nombre:"Packaging · Multi-Línea";
   renderExerciseStatus();
+  normalizeRefDates();
   const refArr=timeToMin(state.refArranque),refCorte=timeToMin(state.refCorte);
   document.getElementById("kpiArr").textContent=state.refArranque||"—";
   document.getElementById("kpiCor").textContent=state.refCorte||"—";
@@ -413,8 +451,8 @@ function render(){
     const progCorte=refCorte!==null?minToTime(refCorte+eq.tCorte):null;
     const ra=timeToMin(real.arranque),rc=timeToMin(real.corte);
     const pa=refArr!==null?refArr+eq.tArr:null,pc=refCorte!==null?refCorte+eq.tCorte:null;
-    const da=ra!==null&&pa!==null?shortestDiff(ra,pa):null;
-    const dc=rc!==null&&pc!==null?shortestDiff(rc,pc):null;
+    const da=ra!==null&&pa!==null?deviationFor(real.arranque,state.fechaArranque,state.refArranque,eq.tArr):null;
+    const dc=rc!==null&&pc!==null?deviationFor(real.corte,state.fechaCorte,state.refCorte,eq.tCorte):null;
     let estado="pending";
     if(da!==null||dc!==null){estado=(da!==null&&Math.abs(da)>UMBRAL_MIN)||(dc!==null&&Math.abs(dc)>UMBRAL_MIN)?"nok":"ok"}
     if(estado==="ok")ok++;if(estado==="nok")nok++;
@@ -611,7 +649,8 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
         selectedEventData={fecha:f,eq:eq.nombre,tipo:'Checklist',prog:'—',real:'—',desv:0,cause:causeLabel(c.causa||'OTRO'),detail:c.detalle||'Incumplimiento registrado en el checklist. No se contabiliza como minutos de retraso.'};
       }else{
         const ref=kind==='corte'?timeToMin(p.refCorte):timeToMin(p.refArranque),off=kind==='corte'?eq.tCorte:eq.tArr;
-        const real=kind==='corte'?r.corte:r.arranque,rm=timeToMin(real),d=(ref!==null&&rm!==null)?Math.max(0,shortestDiff(rm,ref+off)):0;
+        const real=kind==='corte'?r.corte:r.arranque;
+        const d=kind==='corte'?Math.max(0,deviationFor(real,p.fechaCorte||p.fecha,p.refCorte,off)||0):Math.max(0,deviationFor(real,p.fechaArranque||p.fecha,p.refArranque,off)||0);
         const cause=kind==='corte'?r.causaCorte:r.causaArranque;
         selectedEventData={fecha:f,eq:eq.nombre,tipo:kind==='corte'?'Corte':'Arranque',prog:ref!==null?minToTime(ref+off):'—',real:real||'—',desv:d,cause:causeLabel(cause||'OTRO'),detail:`Evento T-MINUS. Umbral analítico: > ${UMBRAL_MIN} min.`};
       }
@@ -626,8 +665,8 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
     const fr=(p.real||{}).llenadora||{};
     const fpc=timeToMin(p.refCorte),fpa=timeToMin(p.refArranque);
     const frc=timeToMin(fr.corte),fra=timeToMin(fr.arranque);
-    const fdc=fpc!==null&&frc!==null?Math.max(0,shortestDiff(frc,fpc)):0;
-    const fda=fpa!==null&&fra!==null?Math.max(0,shortestDiff(fra,fpa)):0;
+    const fdc=fpc!==null&&frc!==null?Math.max(0,deviationFor(fr.corte,p.fechaCorte||p.fecha,p.refCorte,0)||0):0;
+    const fda=fpa!==null&&fra!==null?Math.max(0,deviationFor(fr.arranque,p.fechaArranque||p.fecha,p.refArranque,0)||0):0;
     fillerCorteTotal+=fdc;fillerArranqueTotal+=fda;
     if(fdc>0)fillerCorteEvents++;
     if(fda>0)fillerArranqueEvents++;
@@ -642,8 +681,8 @@ async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipme
         if(skind==='check')return;
       }
       const r=(p.real||{})[eq.id]||{},rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.refArranque);
-      const corteDelay=rc!==null&&pc!==null?Math.max(0,shortestDiff(rc,pc+eq.tCorte)):0;
-      const arranqueDelay=ra!==null&&pa!==null?Math.max(0,shortestDiff(ra,pa+eq.tArr)):0;
+      const corteDelay=rc!==null&&pc!==null?Math.max(0,deviationFor(r.corte,p.fechaCorte||p.fecha,p.refCorte,eq.tCorte)||0):0;
+      const arranqueDelay=ra!==null&&pa!==null?Math.max(0,deviationFor(r.arranque,p.fechaArranque||p.fecha,p.refArranque,eq.tArr)||0):0;
       if(arranqueDelay>UMBRAL_MIN){
         const rec=arranqueByEquipment[eq.nombre]||(arranqueByEquipment[eq.nombre]={events:0,min:0});
         rec.events++;rec.min+=arranqueDelay;
@@ -880,6 +919,7 @@ function persistDay(){
 async function saveDay(){
   if(state.cerrado)return;
   if(!hasLine()){alert("Selecciona Línea 1 o Línea 3 antes de guardar.");return;}
+  normalizeRefDates();
   ensureLocks();
   state.planSaved=true;
   state.updatedAt=new Date().toISOString();
@@ -910,7 +950,7 @@ async function loadDay(){
   const linea=state.linea||"";
   // La línea debe seleccionarse explícitamente al entrar al Plan del día.
   if(!linea){
-    state={fecha:state.fecha,linea:"",refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
+    state={fecha:state.fecha,linea:"",fechaCorte:state.fecha,fechaArranque:state.fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};
     document.getElementById("inpFecha").value=state.fecha;
     document.getElementById("inpLinea").value="";
     document.getElementById("inpRefArranque").value="";
@@ -927,14 +967,17 @@ async function loadDay(){
   }
   const x=await fetchDay(state.fecha);
   if(x){state={...x,fecha:state.fecha,linea};}
-  else{state={fecha:state.fecha,linea,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};}
+  else{state={fecha:state.fecha,linea,fechaCorte:state.fecha,fechaArranque:state.fecha,refArranque:"",refCorte:"",real:{},check:{},cerrado:false,lockedTimes:{},planSaved:false};}
   applyLine(linea);
   if(!state.lockedTimes)state.lockedTimes={};
   if(x && !Object.prototype.hasOwnProperty.call(state,"planSaved"))state.planSaved=true;
   ensureLocks();
   localSave();
+  normalizeRefDates();
   document.getElementById("inpFecha").value=state.fecha;
   document.getElementById("inpLinea").value=state.linea;
+  document.getElementById("inpFechaCorte").value=state.fechaCorte||state.fecha;
+  document.getElementById("inpFechaArranque").value=state.fechaArranque||state.fecha;
   document.getElementById("inpRefArranque").value=state.refArranque||"";
   document.getElementById("inpRefCorte").value=state.refCorte||"";
   document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;
@@ -952,6 +995,8 @@ function clearReal(){
     state.real={};
     state.refArranque="";
     state.refCorte="";
+    state.fechaCorte=state.fecha;
+    state.fechaArranque=state.fecha;
     state.lockedTimes={};
     state.planSaved=false;
     localSave();
@@ -968,6 +1013,8 @@ document.querySelectorAll(".tab-btn").forEach(btn=>btn.addEventListener("click",
 }));
 document.getElementById("inpFecha").addEventListener("change",e=>{state.fecha=e.target.value;state.linea="";loadDay()});
 document.getElementById("inpLinea").addEventListener("change",e=>{setLine(e.target.value)});
+document.getElementById("inpFechaCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.fechaCorte=e.target.value||state.fecha;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
+document.getElementById("inpFechaArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.fechaArranque=e.target.value||state.fecha;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refArranque=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.refCorte=e.target.value;render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("btnGuardar").addEventListener("click",saveDay);
@@ -995,18 +1042,18 @@ async function exportExcel(){
   if(typeof XLSX==="undefined"){status.textContent="No se pudo cargar el módulo Excel. Verifica tu conexión a internet y vuelve a intentar.";return;}
   const resumen=[],detalle=[],checklistData=[],analysisMap={};
   plans.forEach(p=>{
-    resumen.push({Fecha:p.fecha,Línea:p.linea||"L3","Ref. Corte":p.refCorte||"","Ref. Arranque":p.refArranque||"","Equipos registrados":Object.keys(p.real||{}).length,"Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length});
+    resumen.push({Fecha:p.fecha,Línea:p.linea||"L3","Fecha Corte":p.fechaCorte||p.fecha,"Ref. Corte":p.refCorte||"","Fecha Arranque":p.fechaArranque||p.fecha,"Ref. Arranque":p.refArranque||"","Equipos registrados":Object.keys(p.real||{}).length,"Incumplimientos checklist":Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length});
     const refC=timeToMin(p.refCorte),refA=timeToMin(p.refArranque);
     const planEquipos=(LINEAS[p.linea||"L3"]||LINEAS.L3).equipos; planEquipos.forEach(eq=>{
       const real=(p.real||{})[eq.id]||{};
       const progC=refC!==null?minToTime(refC+eq.tCorte):"",progA=refA!==null?minToTime(refA+eq.tArr):"";
-      const dc=(timeToMin(real.corte)!==null&&refC!==null)?shortestDiff(timeToMin(real.corte),refC+eq.tCorte):null;
-      const da=(timeToMin(real.arranque)!==null&&refA!==null)?shortestDiff(timeToMin(real.arranque),refA+eq.tArr):null;
+      const dc=(timeToMin(real.corte)!==null&&refC!==null)?deviationFor(real.corte,p.fechaCorte||p.fecha,p.refCorte,eq.tCorte):null;
+      const da=(timeToMin(real.arranque)!==null&&refA!==null)?deviationFor(real.arranque,p.fechaArranque||p.fecha,p.refArranque,eq.tArr):null;
       let estado="PENDIENTE";if(dc!==null||da!==null)estado=((dc!==null&&Math.abs(dc)>UMBRAL_MIN)||(da!==null&&Math.abs(da)>UMBRAL_MIN))?"NOK":"OK";
       const causaCorte=real.causaCorte||"",causaArranque=real.causaArranque||"";
       if(dc!==null&&dc>0){const l=causeLabel(causaCorte||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"T-MINUS"};analysisMap[l].Frecuencia++;analysisMap[l].ImpactoMin+=dc;}
       if(da!==null&&da>0){const l=causeLabel(causaArranque||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"T-MINUS"};analysisMap[l].Frecuencia++;analysisMap[l].ImpactoMin+=da;}
-      detalle.push({Fecha:p.fecha,Línea:p.linea||"L3",Equipo:eq.nombre,"Offset Corte (min)":eq.tCorte,"Programado Corte":progC,"Real Corte":real.corte||"","Desviación Corte (min)":dc===null?"":dc,"Causa retraso Corte":causeLabel(causaCorte||""),"Offset Arranque (min)":eq.tArr,"Programado Arranque":progA,"Real Arranque":real.arranque||"","Desviación Arranque (min)":da===null?"":da,"Causa retraso Arranque":causeLabel(causaArranque||""),Estado:estado});
+      detalle.push({Fecha:p.fecha,Línea:p.linea||"L3","Fecha Corte":p.fechaCorte||p.fecha,Equipo:eq.nombre,"Offset Corte (min)":eq.tCorte,"Programado Corte":progC,"Real Corte":real.corte||"","Desviación Corte (min)":dc===null?"":dc,"Causa retraso Corte":causeLabel(causaCorte||""),"Fecha Arranque":p.fechaArranque||p.fecha,"Offset Arranque (min)":eq.tArr,"Programado Arranque":progA,"Real Arranque":real.arranque||"","Desviación Arranque (min)":da===null?"":da,"Causa retraso Arranque":causeLabel(causaArranque||""),Estado:estado});
     });
     Object.entries(p.check||{}).forEach(([id,c])=>{const eq=planEquipos.find(x=>x.id===id);if(eq&&c&&(c.cum||c.causa||c.detalle)){checklistData.push({Fecha:p.fecha,Línea:p.linea||"L3",Equipo:eq.nombre,Cumplimiento:c.cum||"",Causa:causeLabel(c.causa||""),Detalle:c.detalle||""});if(c.cum==="NO CUMPLIÓ"){const l=causeLabel(c.causa||"OTRO");analysisMap[l]??={Frecuencia:0,ImpactoMin:0,Origen:"Checklist"};analysisMap[l].Frecuencia++;}}});
   });
@@ -1052,9 +1099,9 @@ async function loadHistorial(){
     const div=document.createElement("div");div.className="hist-item";
     const count=Object.keys(p.real||{}).length;
     const previousState=state;state={...state,...p,linea:p.linea||"L3"};applyLine(state.linea);const st=state.cerrado?{key:"completado",label:"COMPLETADO"}:getExerciseStatus();state=previousState;
-    div.innerHTML=`<div><div class="hist-date">${p.fecha} · ${p.linea||"L3"}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"} · Corte: ${p.refCorte||"—"} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
+    div.innerHTML=`<div><div class="hist-date">${p.fecha} · ${p.linea||"L3"}</div><div class="hist-meta">Arranque: ${p.refArranque||"—"}${p.fechaArranque&&p.fechaArranque!==p.fecha?` (${dFmt(p.fechaArranque)})`:""} · Corte: ${p.refCorte||"—"}${p.fechaCorte&&p.fechaCorte!==p.fecha?` (${dFmt(p.fechaCorte)})`:""} · Reales: ${count} · Checklist: ${Object.values(p.check||{}).filter(c=>c&&c.cum==="NO CUMPLIÓ").length} incumpl.</div></div>
       <div class="hist-actions"><span class="exercise-status-badge ${st.key}"><span class="exercise-status-dot"></span>${st.label}</span><button class="btn btn-ghost" data-load>Ver</button><button class="btn btn-danger" data-del>Eliminar</button></div>`;
-    div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.linea)state.linea="L3";applyLine(state.linea);if(!state.lockedTimes)state.lockedTimes={};ensureLocks();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpLinea").value=state.linea||"L3";document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
+    div.querySelector("[data-load]").onclick=async()=>{state={...state,...p,fecha:p.fecha};if(!state.linea)state.linea="L3";applyLine(state.linea);if(!state.lockedTimes)state.lockedTimes={};ensureLocks();normalizeRefDates();document.getElementById("inpFecha").value=state.fecha;document.getElementById("inpLinea").value=state.linea||"L3";document.getElementById("inpFechaCorte").value=state.fechaCorte||state.fecha;document.getElementById("inpFechaArranque").value=state.fechaArranque||state.fecha;document.getElementById("inpRefArranque").value=state.refArranque;document.getElementById("inpRefCorte").value=state.refCorte;document.getElementById("inpFechaCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFechaArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefArranque").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpRefCorte").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("inpFecha").disabled=!!state.planSaved||!!state.cerrado;document.getElementById("btnLimpiar").disabled=!!state.cerrado;localSave();document.querySelector('[data-tab="plan"]').click();render();};
     div.querySelector("[data-del]").onclick=()=>deletePlanFromHistory(p);
     el.appendChild(div);
   });
