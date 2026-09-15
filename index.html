@@ -549,6 +549,55 @@ function render(){
       e.target.value=normalized||"";
     }
     if(!state.real[id])state.real[id]={};state.real[id][f]=e.target.value;
+
+    // PARADA PROLONGADA: el punto de origen es la primera máquina (Depaletizadora),
+    // no la Llenadora. Si la Depaletizadora se retrasa >2 h, ese retraso
+    // automáticamente desplaza la cadena de Arranque. Primero se pregunta
+    // cómo debe tratarse el nuevo reinicio antes de registrar la cascada.
+    const firstEq=EQUIPOS[0];
+    if(firstEq && id===firstEq.id && f==="corte" && e.target.value && state.refCorte && state.refArranque && !state._restartAskedFor){
+      const scheduled=dateTimeFor(state.fechaCorte||state.fecha,state.refCorte,firstEq.tCorte);
+      const actual=actualDateTimeNear(e.target.value,scheduled);
+      if(scheduled&&actual){
+        const rootDelay=Math.max(0,Math.round((actual-scheduled)/60000));
+        if(rootDelay>120){
+          const marker=`${state.fechaCorte||state.fecha}|${state.refCorte}|${e.target.value}|${state.refArranque}`;
+          state._restartAskedFor=marker;
+          state.paradaMin=rootDelay;
+          const shift=confirm(`PARADA PROLONGADA\n\nLa ${firstEq.nombre} presenta un retraso propio de ${Math.floor(rootDelay/60)} h ${rootDelay%60} min.\n\nEste retraso se propagará automáticamente hasta la Llenadora.\n\n¿Quieres DESPLAZAR el plan de Arranque por ${Math.floor(rootDelay/60)} h ${rootDelay%60} min?\n\nAceptar = Desplazar plan\nCancelar = Establecer una nueva hora oficial de reinicio`);
+          if(shift){
+            const base=dateTimeFor(state.fechaArranque||state.fecha,state.refArranque,0);
+            if(base){
+              base.setMinutes(base.getMinutes()+rootDelay);
+              state.fechaArranque=base.toISOString().slice(0,10);
+              state.refArranque=minToTime(base.getHours()*60+base.getMinutes());
+              state.paradaModo="desplazar";
+              state.nuevaRefArranque="";
+            }
+          }else{
+            state.paradaModo="nueva";
+            const nueva=prompt(`Nueva hora oficial de reinicio de la Llenadora (formato 24 h HH:MM).\n\nReferencia actual: ${state.refArranque}`,state.refArranque||"");
+            const t=normalizeTime24(nueva||"");
+            if(t){
+              state.nuevaRefArranque=t;
+              state.refArranque=t;
+            }else{
+              state.paradaModo="desplazar";
+            }
+          }
+          const refInput=document.getElementById("inpRefArranque");
+          if(refInput)refInput.value=state.refArranque||"";
+          const fechaArrInput=document.getElementById("inpFechaArranque");
+          if(fechaArrInput)fechaArrInput.value=state.fechaArranque||state.fecha;
+          const paradaInput=document.getElementById("inpParadaMin");
+          if(paradaInput)paradaInput.value=state.paradaMin||"";
+          const modoInput=document.getElementById("inpParadaModo");
+          if(modoInput)modoInput.value=state.paradaModo||"desplazar";
+          updateParadaUI();
+        }
+      }
+    }
+
     if(e.target.classList.contains("time-input") && e.target.value){
       if(!state.lockedTimes[id])state.lockedTimes[id]={};
       state.lockedTimes[id][f]=true;
@@ -1086,7 +1135,7 @@ function clearReal(){
     state.refCorte="";
     state.fechaCorte=state.fecha;
     state.fechaArranque=state.fecha;
-    state.paradaMin=0;state.paradaModo="desplazar";state.nuevaRefArranque="";
+    state.paradaMin=0;state.paradaModo="desplazar";state.nuevaRefArranque="";state._restartAskedFor="";
     state.lockedTimes={};
     state.planSaved=false;
     localSave();
