@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Adriano Nuñez Soriano">
-<meta name="application-version" content="5.3">
+<meta name="application-version" content="5.4">
 <title>T-MINUS — Modulación</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -114,7 +114,7 @@ body:not(.line-selected) #tab-plan .line-required{display:none!important}
 </style>
 
 <style id="v52-polish">
-/* V5.3 — horas en formato 24 h */
+/* V5.4 — horas en formato 24 h + cruce de medianoche */
 #tab-plan > .panel:first-child .input-row{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
@@ -277,7 +277,7 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
   </div>
 </section>
 
-<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.3 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.4 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
 <div id="timePickerModal" class="time-modal" aria-hidden="true">
@@ -379,10 +379,64 @@ function actualDateTimeNear(realTime,scheduled){
   candidates.sort((a,b)=>Math.abs(a-base)-Math.abs(b-base));
   return candidates[0];
 }
-function deviationFor(realTime,refDate,refTime,offset=0){
+function realDateField(mode){return mode==='corte'?'fechaCorte':'fechaArranque'}
+function realTimeField(mode){return mode==='corte'?'corte':'arranque'}
+function resolvedRealDateTime(eqId,mode,scheduled){
+  const r=state.real?.[eqId]||{};
+  const t=r[realTimeField(mode)];
+  if(!t)return null;
+  const storedDate=r[realDateField(mode)];
+  if(storedDate){const dt=dateTimeFor(storedDate,t,0);if(dt)return dt;}
+  return actualDateTimeNear(t,scheduled);
+}
+function resolvedPlanRealDateTime(p,eqId,mode,scheduled){
+  const r=(p.real||{})[eqId]||{};
+  const t=r[realTimeField(mode)];
+  if(!t)return null;
+  const storedDate=r[realDateField(mode)];
+  if(storedDate){const dt=dateTimeFor(storedDate,t,0);if(dt)return dt;}
+  return actualDateTimeNear(t,scheduled);
+}
+function deviationFor(realTime,refDate,refTime,offset=0,explicitDate=''){
   const scheduled=dateTimeFor(refDate,refTime,offset);
-  const actual=actualDateTimeNear(realTime,scheduled);
+  const actual=explicitDate&&realTime?dateTimeFor(explicitDate,realTime,0):actualDateTimeNear(realTime,scheduled);
   return actual&&scheduled?Math.round((actual-scheduled)/60000):null;
+}
+function previousRegisteredDateTime(eqIndex,mode){
+  const key=realTimeField(mode);
+  for(let i=eqIndex-1;i>=0;i--){
+    const eq=EQUIPOS[i],r=state.real?.[eq.id]||{};
+    if(!r[key])continue;
+    const refDate=mode==='corte'?(state.fechaCorte||state.fecha):(state.fechaArranque||state.fecha);
+    const refTime=mode==='corte'?state.refCorte:effectiveRefArranque();
+    const scheduled=refTime?dateTimeFor(refDate,refTime,eq[mode==='corte'?'tCorte':'tArr']):null;
+    const dt=resolvedRealDateTime(eq.id,mode,scheduled);
+    if(dt)return dt;
+  }
+  return null;
+}
+function inferAndConfirmRealDate(eqId,mode,time){
+  if(!time)return;
+  const idx=EQUIPOS.findIndex(x=>x.id===eqId);
+  const refDate=mode==='corte'?(state.fechaCorte||state.fecha):(state.fechaArranque||state.fecha);
+  const refTime=mode==='corte'?state.refCorte:effectiveRefArranque();
+  const eq=EQUIPOS[idx];
+  const scheduled=eq&&refTime?dateTimeFor(refDate,refTime,eq[mode==='corte'?'tCorte':'tArr']):dateTimeFor(refDate,time,0);
+  const previous=previousRegisteredDateTime(idx,mode);
+  let inferred=scheduled?scheduled.toISOString().slice(0,10):refDate;
+  if(previous){
+    const sameDay=dateTimeFor(previous.toISOString().slice(0,10),time,0);
+    if(sameDay && sameDay<previous){
+      const next=new Date(sameDay);next.setDate(next.getDate()+1);
+      const nextDate=next.toISOString().slice(0,10);
+      const yes=confirm(`CRUCE DE MEDIANOCHE\n\nLa hora registrada ${time} es anterior a la última hora registrada (${String(previous.getHours()).padStart(2,'0')}:${String(previous.getMinutes()).padStart(2,'0')}).\n\n¿Corresponde al día siguiente?\n\nSí = ${nextDate}\nNo = mantener ${previous.toISOString().slice(0,10)}`);
+      inferred=yes?nextDate:previous.toISOString().slice(0,10);
+    }else{
+      inferred=previous.toISOString().slice(0,10);
+    }
+  }
+  if(state.real?.[eqId])state.real[eqId][realDateField(mode)]=inferred;
+  return inferred;
 }
 function attributionFor(mode){
   const refDate=mode==='corte'?(state.fechaCorte||state.fecha):(state.fechaArranque||state.fecha);
@@ -394,7 +448,7 @@ function attributionFor(mode){
   EQUIPOS.forEach(eq=>{
     const r=state.real[eq.id]||{}, real=r[realKey];
     const scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]);
-    const actual=actualDateTimeNear(real,scheduled);
+    const actual=resolvedRealDateTime(eq.id,mode,scheduled);
     let total=0, own=0, inh=inherited;
     if(actual&&scheduled){
       total=Math.max(0,Math.round((actual-scheduled)/60000));
@@ -520,8 +574,8 @@ function render(){
     const progCorte=refCorte!==null?minToTime(refCorte+eq.tCorte):null;
     const ra=timeToMin(real.arranque),rc=timeToMin(real.corte);
     const pa=refArr!==null?refArr+eq.tArr:null,pc=refCorte!==null?refCorte+eq.tCorte:null;
-    const da=ra!==null&&pa!==null?deviationFor(real.arranque,state.fechaArranque,effectiveRefArranque(),eq.tArr):null;
-    const dc=rc!==null&&pc!==null?deviationFor(real.corte,state.fechaCorte,state.refCorte,eq.tCorte):null;
+    const da=ra!==null&&pa!==null?deviationFor(real.arranque,state.fechaArranque,effectiveRefArranque(),eq.tArr,real.fechaArranque||""):null;
+    const dc=rc!==null&&pc!==null?deviationFor(real.corte,state.fechaCorte,state.refCorte,eq.tCorte,real.fechaCorte||""):null;
     const attrC=attributionFor('corte')[eq.id]||{own:0,inherited:0};
     const attrA=attributionFor('arranque')[eq.id]||{own:0,inherited:0};
     // Una causa solo corresponde cuando existe retraso propio.
@@ -555,6 +609,11 @@ function render(){
       e.target.value=normalized||"";
     }
     if(!state.real[id])state.real[id]={};state.real[id][f]=e.target.value;
+    if(e.target.classList.contains("time-input") && e.target.value){
+      const mode=f==="corte"?"corte":"arranque";
+      const eventDate=inferAndConfirmRealDate(id,mode,e.target.value);
+      state.real[id][realDateField(mode)]=eventDate||state.real[id][realDateField(mode)]||((mode==="corte"?state.fechaCorte:state.fechaArranque)||state.fecha);
+    }
 
     // PARADA PROLONGADA: el punto de origen es la primera máquina (Depaletizadora),
     // no la Llenadora. Si la Depaletizadora se retrasa >2 h, ese retraso
@@ -563,7 +622,7 @@ function render(){
     const firstEq=EQUIPOS[0];
     if(firstEq && id===firstEq.id && f==="corte" && e.target.value && state.refCorte && state.refArranque && !state._restartAskedFor){
       const scheduled=dateTimeFor(state.fechaCorte||state.fecha,state.refCorte,firstEq.tCorte);
-      const actual=actualDateTimeNear(e.target.value,scheduled);
+      const actual=resolvedRealDateTime(id,"corte",scheduled);
       if(scheduled&&actual){
         const rootDelay=Math.max(0,Math.round((actual-scheduled)/60000));
         if(rootDelay>120){
@@ -745,7 +804,7 @@ function attributionForPlan(p,mode,equipos){
   const refTime=mode==='corte'?p.refCorte:(p.nuevaRefArranque||p.refArranque);
   const offsetKey=mode==='corte'?'tCorte':'tArr', realKey=mode==='corte'?'corte':'arranque';
   const out={};let inherited=0;if(!refDate||!refTime)return out;
-  equipos.forEach(eq=>{const r=(p.real||{})[eq.id]||{},scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]),actual=actualDateTimeNear(r[realKey],scheduled);let total=0,own=0,inh=inherited;if(actual&&scheduled){total=Math.max(0,Math.round((actual-scheduled)/60000));own=Math.max(0,total-inherited);inherited+=own;}out[eq.id]={total,own,inherited:inh};});return out;
+  equipos.forEach(eq=>{const r=(p.real||{})[eq.id]||{},scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]),actual=resolvedPlanRealDateTime(p,eq.id,mode,scheduled);let total=0,own=0,inh=inherited;if(actual&&scheduled){total=Math.max(0,Math.round((actual-scheduled)/60000));own=Math.max(0,total-inherited);inherited+=own;}out[eq.id]={total,own,inherited:inh};});return out;
 }
 async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipmentId='anaEquipo'){
   const el=document.getElementById(targetId);if(!el)return;
