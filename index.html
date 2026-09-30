@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Adriano Nuñez Soriano">
-<meta name="application-version" content="5.4">
+<meta name="application-version" content="5.5">
 <title>T-MINUS — Modulación</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -104,6 +104,11 @@ input.time-input::-webkit-calendar-picker-indicator,.time24::-webkit-calendar-pi
 .analytics-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.chart-card{background:var(--panel-alt);border:1px solid var(--border);border-radius:10px;padding:12px}.chart-title{font:12px Oswald;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}.bar-row{display:grid;grid-template-columns:145px 1fr 58px;gap:8px;align-items:center;margin:8px 0;font-size:11px}.bar-bg{height:13px;background:#111923;border-radius:4px;overflow:hidden}.bar{height:100%;background:var(--amber);border-radius:4px}.bar.red{background:var(--red)}.bar.teal{background:var(--teal)}.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar-value{text-align:right;font:10px 'JetBrains Mono';color:var(--muted)}.trend-wrap{height:210px;position:relative}.trend-svg{width:100%;height:100%}.matrix{width:100%;border-collapse:collapse;font-size:10px}.matrix th,.matrix td{padding:6px 5px;border:1px solid var(--border-soft);text-align:center}.matrix th{font-size:9px}.heat1{background:rgba(232,163,61,.18)}.heat2{background:rgba(232,163,61,.38)}.heat3{background:rgba(240,82,92,.55)}.insight{border-left:3px solid var(--amber);padding:10px 12px;background:rgba(232,163,61,.05);border-radius:7px;margin-top:10px;font-size:12px}.evt-form{grid-template-columns:1.15fr .8fr .8fr 1.1fr 1.6fr .7fr auto}.analytics-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.analytics-filters select{background:var(--panel-alt);border:1px solid var(--border);color:var(--text);padding:7px 9px;border-radius:7px;font-size:11px}.analysis-note{padding:10px 12px;margin-bottom:12px;border-left:3px solid var(--teal);background:rgba(79,209,197,.05);border-radius:7px;color:var(--muted);font-size:12px;line-height:1.45}.kpi-sub{font:9px 'JetBrains Mono',monospace;color:var(--muted);margin-top:4px;line-height:1.3}.trend-caption{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.4}.analysis-warning{color:var(--yellow);display:inline-block;margin-left:6px}.impact-table td,.impact-table th{padding:7px 6px}
 @media(max-width:800px){.summary{grid-template-columns:1fr 1fr}.evt-form{grid-template-columns:1fr 1fr}.evt-row{grid-template-columns:1fr 1fr;row-gap:4px}}
 @media(max-width:520px){.summary{grid-template-columns:1fr}.wrap{padding:18px 10px}.panel{padding:14px}.timeline,.gantt-wrap{min-width:900px}.gantt-header,.gantt-row{grid-template-columns:190px 1fr}.gantt-label{font-size:12px}}
+
+/* V5.5 — Power BI style analysis dashboard */
+.analysis-dashboard-panel{padding:16px}.analysis-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}.analysis-subtitle{font-size:10px;color:var(--muted);letter-spacing:.04em}.analysis-live{font:10px 'JetBrains Mono',monospace;color:var(--green);border:1px solid rgba(80,210,150,.25);padding:6px 9px;border-radius:999px}.analysis-live span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px;box-shadow:0 0 8px rgba(80,210,150,.7)}.pbi-toolbar{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:10px;margin-bottom:12px}.pbi-filter{display:flex;flex-direction:column;gap:4px}.pbi-filter span{font:8px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.08em}.pbi-filter select,.pbi-filter input{height:32px;background:var(--panel-alt);border:1px solid var(--border);color:var(--text);padding:0 9px;border-radius:6px;font-size:11px;min-width:115px}.pbi-filter input{color-scheme:dark}.pbi-reset{height:32px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:0 10px;cursor:pointer}.pbi-reset:hover{color:var(--text);border-color:var(--teal)}.analysis-source-strip{font-size:10px;color:var(--muted);padding:8px 10px;border-left:3px solid var(--teal);background:rgba(79,209,197,.045);border-radius:5px;margin-bottom:12px}.pbi-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}.pbi-kpi{background:linear-gradient(145deg,var(--panel-alt),rgba(255,255,255,.018));border:1px solid var(--border);border-radius:9px;padding:11px;min-height:82px;position:relative;overflow:hidden}.pbi-kpi:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;background:var(--teal);opacity:.55}.pbi-kpi.red:after{background:var(--red)}.pbi-kpi.amber:after{background:var(--amber)}.pbi-kpi-label{font:8px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}.pbi-kpi-value{font:22px 'JetBrains Mono',monospace;font-weight:700;margin-top:8px;line-height:1}.pbi-kpi-meta{font-size:9px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pbi-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:10px;margin-top:10px}.pbi-card{background:var(--panel-alt);border:1px solid var(--border);border-radius:9px;padding:11px;min-width:0}.pbi-card.full{grid-column:1/-1}.pbi-card-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.pbi-card-title b{font:11px Oswald;text-transform:uppercase;letter-spacing:.05em}.pbi-card-title span{font:9px 'JetBrains Mono',monospace;color:var(--muted)}.pbi-svg{width:100%;height:235px;display:block}.pbi-legend{display:flex;gap:14px;font-size:9px;color:var(--muted);margin-top:4px}.pbi-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}.pbi-bars{display:flex;flex-direction:column;gap:7px}.pbi-bar-row{display:grid;grid-template-columns:128px 1fr 48px;gap:7px;align-items:center;font-size:10px;cursor:pointer}.pbi-bar-row:hover .pbi-bar-bg{outline:1px solid var(--teal)}.pbi-bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pbi-bar-bg{height:16px;background:#111923;border-radius:4px;overflow:hidden}.pbi-bar-fill{height:100%;border-radius:4px;background:var(--teal);transition:width .25s}.pbi-bar-fill.amber{background:var(--amber)}.pbi-bar-fill.red{background:var(--red)}.pbi-bar-value{text-align:right;font:9px 'JetBrains Mono',monospace;color:var(--muted)}.pbi-drill{font-size:9px;color:var(--teal);margin-top:7px}.pbi-donut-wrap{display:flex;align-items:center;gap:15px;min-height:210px}.pbi-donut{width:170px;height:170px;flex:none}.pbi-cause-list{display:flex;flex-direction:column;gap:7px;min-width:0}.pbi-cause-item{display:flex;align-items:center;gap:6px;font-size:9px;cursor:pointer}.pbi-cause-dot{width:8px;height:8px;border-radius:2px;flex:none}.pbi-cause-item b{margin-left:auto;font:9px 'JetBrains Mono',monospace}.pbi-table{width:100%;border-collapse:collapse;font-size:9px}.pbi-table th,.pbi-table td{border-bottom:1px solid var(--border-soft);padding:7px 5px;text-align:right}.pbi-table th{color:var(--muted);font-size:8px;text-transform:uppercase}.pbi-table th:first-child,.pbi-table td:first-child{text-align:left}.pbi-heat{width:100%;border-collapse:collapse;font-size:8px}.pbi-heat th,.pbi-heat td{border:1px solid var(--border-soft);padding:5px 4px;text-align:center}.pbi-heat th{color:var(--muted);font-weight:500}.pbi-heat td{cursor:pointer}.pbi-heat td:hover{outline:1px solid var(--teal);outline-offset:-1px}.pbi-empty{padding:35px 10px;text-align:center;color:var(--muted);font-size:10px;border:1px dashed var(--border);border-radius:7px}.pbi-footnote{font-size:9px;color:var(--muted);margin-top:8px;line-height:1.4}.pbi-single-event{border:1px solid rgba(79,209,197,.3);background:rgba(79,209,197,.04);border-radius:8px;padding:10px;font-size:10px;line-height:1.6;margin-bottom:10px}.pbi-tooltip{position:fixed;z-index:9999;pointer-events:none;background:#0c141e;border:1px solid var(--border);box-shadow:0 8px 25px rgba(0,0,0,.35);padding:7px 9px;border-radius:6px;font:9px 'JetBrains Mono',monospace;color:var(--text);display:none;max-width:240px}.pbi-clickable{cursor:pointer}.pbi-clickable:hover{filter:brightness(1.15)}
+@media(max-width:1100px){.pbi-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.pbi-grid{grid-template-columns:1fr}.pbi-card.full{grid-column:auto}.pbi-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.pbi-donut-wrap{flex-direction:column}.pbi-toolbar{align-items:stretch}.pbi-filter{flex:1}.pbi-filter select,.pbi-filter input{width:100%}}
 </style>
 <style id="multiline-v52-ui">
 .line-field select{min-width:150px}
@@ -245,22 +250,24 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
 </section>
 
 <section id="tab-eventos" style="display:none">
-  <div class="panel">
-    <p class="panel-title"><span class="dot"></span>Análisis histórico de retrasos</p>
-    <div class="analytics-filters">
-      <select id="anaPeriodo2" title="Periodo de análisis">
-        <option value="all">Todo el histórico</option>
-        <option value="30">Últimos 30 días</option>
-        <option value="7">Últimos 7 días</option>
-        <option value="single_plan">Un solo plan</option>
-        <option value="single_event">Un solo evento</option>
-      </select>
-      <select id="anaPlan2" title="Seleccionar plan" style="display:none;min-width:210px"></select>
-      <select id="anaEvento2" title="Seleccionar evento individual" style="display:none;min-width:260px"></select>
-      <select id="anaEquipo2"><option value="all">Todos los equipos</option></select>
+  <div class="panel analysis-dashboard-panel">
+    <div class="analysis-hero">
+      <div><p class="panel-title" style="margin-bottom:3px"><span class="dot"></span>ANÁLISIS · T-MINUS PERFORMANCE</p><div class="analysis-subtitle">Vista ejecutiva interactiva · retraso, responsabilidad, recurrencia y checklist</div></div>
+      <div class="analysis-live"><span></span> DATOS EN VIVO</div>
+    </div>
+    <div class="pbi-toolbar">
+      <div class="pbi-filter"><span>LÍNEA</span><select id="anaLinea"><option value="all">Todas</option><option value="L1">Línea 1</option><option value="L3">Línea 3</option></select></div>
+      <div class="pbi-filter"><span>PERIODO</span><select id="anaPeriodo2"><option value="all">Todo el histórico</option><option value="30">Últimos 30 días</option><option value="7">Últimos 7 días</option><option value="single_plan">Un solo plan</option><option value="single_event">Un solo evento</option></select></div>
+      <div class="pbi-filter date-filter"><span>DESDE</span><input id="anaDesde" type="date"></div>
+      <div class="pbi-filter date-filter"><span>HASTA</span><input id="anaHasta" type="date"></div>
+      <div class="pbi-filter"><span>EQUIPO</span><select id="anaEquipo2"><option value="all">Todos</option></select></div>
+      <div class="pbi-filter"><span>CAUSA</span><select id="anaCausa"><option value="all">Todas</option></select></div>
+      <button class="pbi-reset" id="anaReset" type="button">↺ Restablecer</button>
+      <select id="anaPlan2" title="Seleccionar plan" style="display:none"></select>
+      <select id="anaEvento2" title="Seleccionar evento individual" style="display:none"></select>
     </div>
     <div id="anaSelectionNote" class="analysis-note" style="display:none"></div>
-    <div class="analysis-note">Fuente única: <strong>Checklist de arranque + T-Minus</strong>. Elimina el doble registro y permite analizar frecuencia, impacto y equipos recurrentes.</div>
+    <div class="analysis-source-strip"><b>Modelo:</b> T-MINUS y Checklist se analizan por separado. El retraso heredado se muestra como propagación; solo el retraso propio alimenta responsabilidad y Pareto.</div>
     <div id="analytics2"></div>
   </div>
 </section>
@@ -277,7 +284,7 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
   </div>
 </section>
 
-<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.4 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.5 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
 <div id="timePickerModal" class="time-modal" aria-hidden="true">
@@ -769,8 +776,10 @@ function subscribeRealtime(){
 function populateAnalysisFilters(){
   const equipEl=document.getElementById("anaEquipo2");
   if(equipEl){
-    equipEl.innerHTML='<option value="all">Todos los equipos</option>'+EQUIPOS.map(e=>`<option value="${e.id}">${e.nombre}</option>`).join('');
+    const ids=new Map();Object.values(LINEAS).forEach(l=>(l.equipos||[]).forEach(e=>ids.set(e.id,e.nombre)));
+    equipEl.innerHTML='<option value="all">Todos</option>'+[...ids.entries()].map(([id,n])=>`<option value="${id}">${n}</option>`).join('');
   }
+  const lineEl=document.getElementById('anaLinea');if(lineEl&&!lineEl.options.length)lineEl.innerHTML='<option value="all">Todas</option>'+Object.entries(LINEAS).map(([id,l])=>`<option value="${id}">${l.nombre}</option>`).join('');
   refreshPlanAnalysisOptions();
 }
 async function refreshPlanAnalysisOptions(){
@@ -809,184 +818,112 @@ function attributionForPlan(p,mode,equipos){
 async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipmentId='anaEquipo'){
   const el=document.getElementById(targetId);if(!el)return;
   const periodEl=document.getElementById(periodId),equipEl=document.getElementById(equipmentId);
+  const lineEl=document.getElementById('anaLinea'),fromEl=document.getElementById('anaDesde'),toEl=document.getElementById('anaHasta'),causeEl=document.getElementById('anaCausa');
   const planEl=document.getElementById('anaPlan2'),eventEl=document.getElementById('anaEvento2');
-  const period=periodEl?periodEl.value:'all',selectedEq=equipEl?equipEl.value:'all',selectedPlan=planEl?planEl.value:'',selectedEvent=eventEl?eventEl.value:'';
-  const cutoff=(period==='all'||period==='single_plan'||period==='single_event')?null:new Date(Date.now()-Number(period)*86400000);
+  const period=periodEl?.value||'all',selectedEq=equipEl?.value||'all',selectedLine=lineEl?.value||'all',selectedCause=causeEl?.value||'all',selectedPlan=planEl?.value||'',selectedEvent=eventEl?.value||'';
   let plans=await fetchAllPlans();
+  if(selectedLine!=='all')plans=plans.filter(p=>(p.linea||'L3')===selectedLine);
   if(period==='single_plan'){
-    if(selectedPlan){const [sf,sl]=String(selectedPlan).split('|');plans=plans.filter(p=>p.fecha===sf && (p.linea||'L3')===(sl||'L3'));}else plans=[];
+    if(selectedPlan){const [sf,sl]=String(selectedPlan).split('|');plans=plans.filter(p=>p.fecha===sf&&(p.linea||'L3')===(sl||'L3'));}else plans=[];
   }else if(period==='single_event'){
-    const parts=selectedEvent.split('|');plans=parts.length>=3?plans.filter(p=>p.fecha===parts[0]):[];
-  }else if(cutoff){
-    plans=plans.filter(p=>new Date(p.fecha+'T23:59:59')>=cutoff);
+    const parts=selectedEvent.split('|');plans=parts.length>=3?plans.filter(p=>p.fecha===parts[0]&&(p.linea||'L3')===((parts[3]||p.linea||'L3'))):[];
+  }else if(period!=='all'){
+    const cutoff=new Date(Date.now()-Number(period)*86400000);plans=plans.filter(p=>new Date(p.fecha+'T23:59:59')>=cutoff);
   }
+  if(fromEl?.value)plans=plans.filter(p=>p.fecha>=fromEl.value);
+  if(toEl?.value)plans=plans.filter(p=>p.fecha<=toEl.value);
 
-  /*
-   * Regla analítica V5.2:
-   * - Retraso y checklist son fuentes distintas y NUNCA se mezclan.
-   * - Para evitar doble conteo, un equipo aporta como máximo 1 evento de retraso por día:
-   *   se toma el mayor desvío entre Corte y Arranque y se conserva su causa/tipo.
-   * - El checklist se analiza aparte como cumplimiento, no como minutos perdidos.
-   */
-  const delayByCause={},delayByEquipment={},delayMatrix={},checkByEquipment={},checkByCause={};
-  const arranqueByEquipment={};
-  const dailyDelay={},dailyFillerCorte={},dailyFillerArranque={};
-  let totalDelay=0,totalDelayEvents=0,totalFailures=0;
-  let fillerCorteTotal=0,fillerArranqueTotal=0;
-  let fillerCorteEvents=0,fillerArranqueEvents=0;
+  const delayByCause={},delayByEquipment={},delayMatrix={},checkByEquipment={},checkByCause={},arranqueByEquipment={};
+  const daily={},dailyCorte={},dailyArranque={},dailyEvents={},dailyChecks={};
+  let totalDelay=0,totalEvents=0,totalFailures=0,fillerCorte=0,fillerArranque=0,fillerCorteEvents=0,fillerArranqueEvents=0;
+  const allCauses=new Set();
   let selectedEventData=null;
 
-  if(period==='single_event'&&selectedEvent&&plans.length){
-    const [f,id,kind]=selectedEvent.split('|'),p=plans[0],eq=EQUIPOS.find(x=>x.id===id),r=(p.real||{})[id]||{};
-    if(eq){
-      if(kind==='check'){
-        const c=(p.check||{})[id]||{};
-        selectedEventData={fecha:f,eq:eq.nombre,tipo:'Checklist',prog:'—',real:'—',desv:0,cause:causeLabel(c.causa||'OTRO'),detail:c.detalle||'Incumplimiento registrado en el checklist. No se contabiliza como minutos de retraso.'};
-      }else{
-        const ref=kind==='corte'?timeToMin(p.refCorte):timeToMin(p.nuevaRefArranque||p.refArranque),off=kind==='corte'?eq.tCorte:eq.tArr;
-        const real=kind==='corte'?r.corte:r.arranque;
-        const d=kind==='corte'?Math.max(0,deviationFor(real,p.fechaCorte||p.fecha,p.refCorte,off)||0):Math.max(0,deviationFor(real,p.fechaArranque||p.fecha,(p.nuevaRefArranque||p.refArranque),off)||0);
-        const cause=kind==='corte'?r.causaCorte:r.causaArranque;
-        selectedEventData={fecha:f,eq:eq.nombre,tipo:kind==='corte'?'Corte':'Arranque',prog:ref!==null?minToTime(ref+off):'—',real:real||'—',desv:d,cause:causeLabel(cause||'OTRO'),detail:`Evento T-MINUS. Umbral analítico: > ${UMBRAL_MIN} min.`};
-      }
-    }
-  }
-
   plans.forEach(p=>{
-    // Indicadores principales: el tiempo global se mide en la Llenadora (t=0),
-    // no sumando los desvíos de todas las máquinas. Se conserva el valor real,
-    // incluso si es menor o igual al umbral analítico de 5 min.
-    const planEquipos=(LINEAS[p.linea||"L3"]||LINEAS.L3).equipos; const filler=planEquipos.find(x=>x.id==='llenadora');
-    const fr=(p.real||{}).llenadora||{};
-    const fpc=timeToMin(p.refCorte),fpa=timeToMin(p.nuevaRefArranque||p.refArranque);
-    const frc=timeToMin(fr.corte),fra=timeToMin(fr.arranque);
-    const fdc=fpc!==null&&frc!==null?Math.max(0,deviationFor(fr.corte,p.fechaCorte||p.fecha,p.refCorte,0)||0):0;
-    const fda=fpa!==null&&fra!==null?Math.max(0,deviationFor(fr.arranque,p.fechaArranque||p.fecha,(p.nuevaRefArranque||p.refArranque),0)||0):0;
-    fillerCorteTotal+=fdc;fillerArranqueTotal+=fda;
-    if(fdc>0)fillerCorteEvents++;
-    if(fda>0)fillerArranqueEvents++;
-    dailyFillerCorte[p.fecha]=(dailyFillerCorte[p.fecha]||0)+fdc;
-    dailyFillerArranque[p.fecha]=(dailyFillerArranque[p.fecha]||0)+fda;
-
-    planEquipos.forEach(eq=>{
+    const eqs=(LINEAS[p.linea||'L3']||LINEAS.L3).equipos;
+    const filler=eqs.find(x=>x.id==='llenadora'); const fr=(p.real||{}).llenadora||{};
+    const fpc=timeToMin(p.refCorte),fpa=timeToMin(p.nuevaRefArranque||p.refArranque),frc=timeToMin(fr.corte),fra=timeToMin(fr.arranque);
+    const fc=fpc!==null&&frc!==null?Math.max(0,deviationFor(fr.corte,p.fechaCorte||p.fecha,p.refCorte,0)||0):0;
+    const fa=fpa!==null&&fra!==null?Math.max(0,deviationFor(fr.arranque,p.fechaArranque||p.fecha,(p.nuevaRefArranque||p.refArranque),0)||0):0;
+    fillerCorte+=fc;fillerArranque+=fa;if(fc>0)fillerCorteEvents++;if(fa>0)fillerArranqueEvents++;
+    dailyCorte[p.fecha]=(dailyCorte[p.fecha]||0)+fc;dailyArranque[p.fecha]=(dailyArranque[p.fecha]||0)+fa;
+    let dayEvents=0;
+    eqs.forEach(eq=>{
       if(selectedEq!=='all'&&eq.id!==selectedEq)return;
-      if(period==='single_event'&&selectedEventData){
-        const [sf,sid,skind]=selectedEvent.split('|');
-        if(sf!==p.fecha||sid!==eq.id)return;
-        if(skind==='check')return;
-      }
-      const r=(p.real||{})[eq.id]||{},rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.nuevaRefArranque||p.refArranque);
-      const corteTotal=rc!==null&&pc!==null?Math.max(0,deviationFor(r.corte,p.fechaCorte||p.fecha,p.refCorte,eq.tCorte)||0):0;
-      const arranqueTotal=ra!==null&&pa!==null?Math.max(0,deviationFor(r.arranque,p.fechaArranque||p.fecha,(p.nuevaRefArranque||p.refArranque),eq.tArr)||0):0;
-      const corteAttr=attributionForPlan(p,'corte',planEquipos)[eq.id]||{own:corteTotal,inherited:0};
-      const arranqueAttr=attributionForPlan(p,'arranque',planEquipos)[eq.id]||{own:arranqueTotal,inherited:0};
-      const corteDelay=corteAttr.own;
-      const arranqueDelay=arranqueAttr.own;
-      if(arranqueDelay>UMBRAL_MIN){
-        const rec=arranqueByEquipment[eq.nombre]||(arranqueByEquipment[eq.nombre]={events:0,min:0});
-        rec.events++;rec.min+=arranqueDelay;
-      }
-      let chosen=corteDelay>=arranqueDelay?{delay:corteDelay,type:'Corte',cause:r.causaCorte}:{delay:arranqueDelay,type:'Arranque',cause:r.causaArranque};
-      if(period==='single_event'&&selectedEventData){
-        const [sf,sid,skind]=selectedEvent.split('|');
-        if(skind==='corte')chosen={delay:corteDelay,type:'Corte',cause:r.causaCorte};
-        if(skind==='arranque')chosen={delay:arranqueDelay,type:'Arranque',cause:r.causaArranque};
-      }
+      const r=(p.real||{})[eq.id]||{};
+      const rc=timeToMin(r.corte),ra=timeToMin(r.arranque),pc=timeToMin(p.refCorte),pa=timeToMin(p.nuevaRefArranque||p.refArranque);
+      const ct=rc!==null&&pc!==null?Math.max(0,deviationFor(r.corte,p.fechaCorte||p.fecha,p.refCorte,eq.tCorte)||0):0;
+      const at=ra!==null&&pa!==null?Math.max(0,deviationFor(r.arranque,p.fechaArranque||p.fecha,(p.nuevaRefArranque||p.refArranque),eq.tArr)||0):0;
+      const ca=attributionForPlan(p,'corte',eqs)[eq.id]||{own:ct};
+      const aa=attributionForPlan(p,'arranque',eqs)[eq.id]||{own:at};
+      const cd=ca.own||0,ad=aa.own||0;
+      if(ad>UMBRAL_MIN){const z=arranqueByEquipment[eq.nombre]||(arranqueByEquipment[eq.nombre]={events:0,min:0});z.events++;z.min+=ad;}
+      let chosen=cd>=ad?{delay:cd,type:'Corte',cause:r.causaCorte}:{delay:ad,type:'Arranque',cause:r.causaArranque};
+      if(selectedCause!=='all'&&causeLabel(chosen.cause||'OTRO')!==selectedCause)return;
       if(chosen.delay>UMBRAL_MIN){
-        const label=causeLabel(chosen.cause||'OTRO');
-        totalDelay+=chosen.delay;totalDelayEvents++;
-        delayByCause[label]=(delayByCause[label]||{events:0,min:0}) ;delayByCause[label].events++;delayByCause[label].min+=chosen.delay;
+        const label=causeLabel(chosen.cause||'OTRO');allCauses.add(label);totalDelay+=chosen.delay;totalEvents++;dayEvents++;
+        delayByCause[label]??={events:0,min:0};delayByCause[label].events++;delayByCause[label].min+=chosen.delay;
         delayByEquipment[eq.nombre]=(delayByEquipment[eq.nombre]||0)+chosen.delay;
         delayMatrix[eq.nombre]??={};delayMatrix[eq.nombre][label]=(delayMatrix[eq.nombre][label]||0)+1;
-        dailyDelay[p.fecha]=(dailyDelay[p.fecha]||0)+chosen.delay;
       }
     });
-
+    dailyEvents[p.fecha]=(dailyEvents[p.fecha]||0)+dayEvents;
     Object.entries(p.check||{}).forEach(([id,c])=>{
-      if(c?.cum!=='NO CUMPLIÓ')return;
-      if(period==='single_event'&&selectedEvent!==`${p.fecha}|${id}|check`)return;
-      if(selectedEq!=='all'&&id!==selectedEq)return;
-      const eq=planEquipos.find(x=>x.id===id),eqName=eq?eq.nombre:id,label=causeLabel(c.causa||'OTRO');
-      totalFailures++;
-      checkByEquipment[eqName]=(checkByEquipment[eqName]||0)+1;
-      checkByCause[label]=(checkByCause[label]||0)+1;
+      if(c?.cum!=='NO CUMPLIÓ'||(selectedEq!=='all'&&id!==selectedEq))return;
+      const eq=eqs.find(x=>x.id===id);const name=eq?.nombre||id,label=causeLabel(c.causa||'OTRO');if(selectedCause!=='all'&&label!==selectedCause)return;
+      totalFailures++;checkByEquipment[name]=(checkByEquipment[name]||0)+1;checkByCause[label]=(checkByCause[label]||0)+1;allCauses.add(label);dailyChecks[p.fecha]=(dailyChecks[p.fecha]||0)+1;
     });
   });
 
-  const delayCauseEntries=Object.entries(delayByCause).sort((a,b)=>b[1].min-a[1].min);
-  const delayFreqEntries=Object.entries(delayByCause).sort((a,b)=>b[1].events-a[1].events);
-  const maxDelayCause=Math.max(1,...delayCauseEntries.map(x=>x[1].min));
-  const maxDelayFreq=Math.max(1,...delayFreqEntries.map(x=>x[1].events));
-  const maxCheckEq=Math.max(1,...Object.values(checkByEquipment));
-  const topCause=delayCauseEntries[0];
-  const eqEntries=Object.entries(delayByEquipment).sort((a,b)=>b[1]-a[1]);
-  const topEq=eqEntries[0]?.[0]||'';
-  const arranqueEqEntries=Object.entries(arranqueByEquipment).sort((a,b)=>b[1].min-a[1].min);
-  const topArranqueEq=arranqueEqEntries[0];
-  const maxArranqueEq=Math.max(1,...arranqueEqEntries.map(x=>x[1].min));
-  const avgImpact=totalDelayEvents?totalDelay/totalDelayEvents:0;
+  if(causeEl){const current=causeEl.value;causeEl.innerHTML='<option value="all">Todas</option>'+[...allCauses].sort().map(c=>`<option value="${c}" ${c===current?'selected':''}>${c}</option>`).join('');if(![...causeEl.options].some(o=>o.value===current))causeEl.value='all';}
+  const plansCount=plans.length,avgDelay=totalEvents?totalDelay/totalEvents:0,compliance=plansCount?Math.max(0,100-(totalFailures/(Math.max(1,plansCount*((LINEAS.L3.equipos||EQUIPOS).length)))*100)):0;
+  const arrEntries=Object.entries(arranqueByEquipment).sort((a,b)=>b[1].min-a[1].min),topArr=arrEntries[0],eqEntries=Object.entries(delayByEquipment).sort((a,b)=>b[1]-a[1]),causeEntries=Object.entries(delayByCause).sort((a,b)=>b[1].min-a[1].min),causeFreq=Object.entries(delayByCause).sort((a,b)=>b[1].events-a[1].events);
 
-  const bars=(arr,max,cls,suffix,getVal=x=>x[1])=>arr.slice(0,8).map(x=>{
-    const v=getVal(x);return `<div class="bar-row"><div class="bar-label">${x[0]}</div><div class="bar-bg"><div class="bar ${cls||''}" style="width:${v/max*100}%"></div></div><div class="bar-value">${v}${suffix||''}</div></div>`;
-  }).join('')||'<div class="empty-state">Sin datos suficientes.</div>';
+  const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const empty=t=>`<div class="pbi-empty">${t}</div>`;
+  const fmtMin=v=>`${Math.round(v||0).toLocaleString('es-PE')} min`;
+  const bars=(arr,cls='')=>{const max=Math.max(1,...arr.map(x=>typeof x[1]==='object'?x[1].min:x[1]));return arr.slice(0,10).map(([name,v])=>{const n=typeof v==='object'?v.min:v;return `<div class="pbi-bar-row pbi-clickable" data-drill-eq="${esc(name)}" title="Click para filtrar por ${esc(name)}"><div class="pbi-bar-label">${esc(name)}</div><div class="pbi-bar-bg"><div class="pbi-bar-fill ${cls}" style="width:${Math.max(2,n/max*100)}%"></div></div><div class="pbi-bar-value">${Math.round(n)} min</div></div>`}).join('')||empty('Sin datos para los filtros seleccionados.');};
 
-  const labels=delayCauseEntries.slice(0,7).map(x=>x[0]);
-  const matrixEqs=Object.keys(delayMatrix).sort((a,b)=>Object.values(delayMatrix[b]).reduce((x,y)=>x+y,0)-Object.values(delayMatrix[a]).reduce((x,y)=>x+y,0)).slice(0,9);
-  const matrixHtml=labels.length?`<table class="matrix"><thead><tr><th>Equipo</th>${labels.map(x=>`<th title="${x}">${x.slice(0,12)}</th>`).join('')}</tr></thead><tbody>${matrixEqs.map(eq=>`<tr><td class="left">${eq}</td>${labels.map(c=>{const v=(delayMatrix[eq]||{})[c]||0;return `<td class="${v>=3?'heat3':v===2?'heat2':v===1?'heat1':''}">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin eventos de retraso con causa en el periodo.</div>';
+  const dates=[...new Set(plans.map(p=>p.fecha).filter(Boolean))].sort();
+  const maxD=Math.max(5,...dates.flatMap(d=>[dailyCorte[d]||0,dailyArranque[d]||0]));
+  const w=1000,h=270,L=48,R=18,T=22,B=45,pw=w-L-R,ph=h-T-B,xx=i=>dates.length<2?L+pw/2:L+i/(dates.length-1)*pw,yy=v=>T+ph-(v/maxD)*ph;
+  const grid=[0,.25,.5,.75,1].map(q=>{const v=Math.round(maxD*q),y=yy(v);return `<line x1="${L}" y1="${y}" x2="${w-R}" y2="${y}" stroke="#2a3a4f" stroke-width="1"/><text x="${L-8}" y="${y+3}" text-anchor="end" fill="#7f91a6" font-size="10">${v}</text>`}).join('');
+  const path=(vals)=>vals.map((v,i)=>`${i?'L':'M'} ${xx(i)} ${yy(v)}`).join(' ');
+  const lineSvg=dates.length?`<svg class="pbi-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${grid}<line x1="${L}" y1="${T+ph}" x2="${w-R}" y2="${T+ph}" stroke="#3a4a5e"/> <path d="${path(dates.map(d=>dailyCorte[d]||0))}" fill="none" stroke="#f5b942" stroke-width="3"/> <path d="${path(dates.map(d=>dailyArranque[d]||0))}" fill="none" stroke="#4fd1c5" stroke-width="3"/>${dates.map((d,i)=>`<circle class="pbi-clickable" cx="${xx(i)}" cy="${yy(dailyArranque[d]||0)}" r="5" fill="#4fd1c5"><title>${dFmt(d)} · Arranque: ${dailyArranque[d]||0} min · ${dailyEvents[d]||0} eventos</title></circle><circle class="pbi-clickable" cx="${xx(i)}" cy="${yy(dailyCorte[d]||0)}" r="4" fill="#f5b942"><title>${dFmt(d)} · Corte: ${dailyCorte[d]||0} min · ${dailyEvents[d]||0} eventos</title></circle>`).join('')}${dates.map((d,i)=>{const show=dates.length<=12||i===0||i===dates.length-1||i%Math.ceil(dates.length/8)===0;return show?`<text x="${xx(i)}" y="${h-12}" text-anchor="middle" fill="#7f91a6" font-size="10">${d.slice(5)}</text>`:''}).join('')}</svg>`:empty('No hay planes en el periodo seleccionado.');
 
-  const checkEqEntries=Object.entries(checkByEquipment).sort((a,b)=>b[1]-a[1]);
-  const checkBars=checkEqEntries.length?bars(checkEqEntries,maxCheckEq,'amber',''): '<div class="empty-state">Sin incumplimientos de checklist en el periodo.</div>';
+  const causeColors=['#4fd1c5','#f5b942','#f05c68','#8ea2ff','#c084fc','#7dd3fc','#fb923c','#a3e635'];
+  let donut='';let acc=0;const totalCause=Math.max(1,causeEntries.reduce((a,[,v])=>a+v.min,0));causeEntries.slice(0,8).forEach(([c,v],i)=>{const frac=v.min/totalCause,a=acc*2*Math.PI,b=(acc+frac)*2*Math.PI,x1=85+70*Math.cos(a-Math.PI/2),y1=85+70*Math.sin(a-Math.PI/2),x2=85+70*Math.cos(b-Math.PI/2),y2=85+70*Math.sin(b-Math.PI/2),large=frac>.5?1:0;donut+=`<path d="M85 85 L${x1} ${y1} A70 70 0 ${large} 1 ${x2} ${y2} Z" fill="${causeColors[i%causeColors.length]}" opacity=".9"><title>${esc(c)} · ${Math.round(v.min)} min</title></path>`;acc+=frac;});
+  const donutSvg=causeEntries.length?`<svg class="pbi-donut" viewBox="0 0 170 170"><circle cx="85" cy="85" r="70" fill="#111923"/>${donut}<circle cx="85" cy="85" r="38" fill="#18222d"/><text x="85" y="82" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">${Math.round(totalCause)}</text><text x="85" y="98" text-anchor="middle" fill="#8191a5" font-size="9">MIN</text></svg>`:empty('Sin causas');
+  const causeList=causeEntries.slice(0,8).map(([c,v],i)=>`<div class="pbi-cause-item" data-drill-cause="${esc(c)}"><i class="pbi-cause-dot" style="background:${causeColors[i%causeColors.length]}"></i><span>${esc(c)}</span><b>${Math.round(v.min)} min</b></div>`).join('');
 
-  /* Tendencia principal: retraso en Llenadora, separado en Corte y Arranque. */
-  let trendDates=[...new Set(plans.map(p=>p.fecha).filter(Boolean))].sort();
-  const trendLimit=period==='all'?Math.min(60,trendDates.length):Math.min(31,trendDates.length);
-  if(trendDates.length>trendLimit)trendDates=trendDates.slice(-trendLimit);
-  const trendCorte=trendDates.map(d=>dailyFillerCorte[d]||0);
-  const trendArranque=trendDates.map(d=>dailyFillerArranque[d]||0);
-  const maxT=Math.max(5,...trendCorte,...trendArranque);
-  const svgW=100,svgH=100,left=10,right=98,top=8,bottom=78,plotW=right-left,plotH=bottom-top;
-  const tx=i=>trendDates.length===1?left+plotW/2:left+(i/(trendDates.length-1))*plotW;
-  const ty=v=>bottom-(v/maxT)*plotH;
-  const pointsC=trendCorte.map((v,i)=>`${tx(i)},${ty(v)}`).join(' ');
-  const pointsA=trendArranque.map((v,i)=>`${tx(i)},${ty(v)}`).join(' ');
-  const gridTicks=5;
-  const yGrid=Array.from({length:gridTicks+1},(_,i)=>{const v=Math.round((maxT/gridTicks)*i);const y=ty(v);return `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}" stroke="#2a3a4f" stroke-width="0.35"/><text x="1" y="${y+1.3}" fill="#8798ad" font-size="3.1">${v}</text>`}).join('');
-  const xLabels=trendDates.map((d,i)=>{const show=trendDates.length<=12||i===0||i===trendDates.length-1||i%Math.ceil(trendDates.length/8)===0;return show?`<text x="${tx(i)}" y="94" text-anchor="middle" fill="#8798ad" font-size="2.8">${d.slice(5)}</text>`:''}).join('');
-  const circlesC=trendCorte.map((v,i)=>`<circle cx="${tx(i)}" cy="${ty(v)}" r="1.25" fill="#f5b942"><title>${dFmt(trendDates[i])} → Corte Llenadora: ${v} min</title></circle>`).join('');
-  const circlesA=trendArranque.map((v,i)=>`<circle cx="${tx(i)}" cy="${ty(v)}" r="1.25" fill="#4fd1c5"><title>${dFmt(trendDates[i])} → Arranque Llenadora: ${v} min</title></circle>`).join('');
-  const trendSvg=trendDates.length?`<svg class="trend-svg" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Retraso diario en llenadora, Corte y Arranque">${yGrid}<line x1="${left}" y1="${bottom}" x2="${right}" y2="${bottom}" stroke="#2a3a4f" stroke-width="0.6"/><polyline points="${pointsC}" fill="none" stroke="#f5b942" stroke-width="1.2" vector-effect="non-scaling-stroke"/><polyline points="${pointsA}" fill="none" stroke="#4fd1c5" stroke-width="1.2" vector-effect="non-scaling-stroke"/>${circlesC}${circlesA}${xLabels}</svg>`:'<div class="empty-state">Todavía no hay planes para construir la tendencia.</div>';
+  const heatCauses=[...new Set(causeEntries.slice(0,6).map(x=>x[0]))];const heatEqs=Object.keys(delayMatrix).sort((a,b)=>Object.values(delayMatrix[b]).reduce((x,y)=>x+y,0)-Object.values(delayMatrix[a]).reduce((x,y)=>x+y,0)).slice(0,10);
+  const heat=heatCauses.length?`<table class="pbi-heat"><thead><tr><th>Equipo</th>${heatCauses.map(c=>`<th>${esc(c).slice(0,13)}</th>`).join('')}</tr></thead><tbody>${heatEqs.map(e=>`<tr><th>${esc(e)}</th>${heatCauses.map(c=>{const v=(delayMatrix[e]||{})[c]||0;const op=v?Math.min(.78,.12+v*.16):0;return `<td data-drill-eq="${esc(e)}" title="${esc(e)} · ${esc(c)} · ${v} eventos" style="background:rgba(79,209,197,${op})">${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table>`:empty('Sin eventos con responsabilidad propia.');
 
-  const noDelay=fillerCorteTotal===0&&fillerArranqueTotal===0?' <span style="color:var(--green)">Sin retraso registrado en Llenadora.</span>':'';
-  const trendNote=trendDates.length>12?`Mostrando las últimas ${trendDates.length} fechas con plan; las fechas sin retraso aparecen como 0 min.`:'Cada fecha con plan aparece, incluso cuando el retraso es 0 min.';
-  const dataSufficiency=trendDates.length<4?`<span class="analysis-warning">Historial todavía corto (${trendDates.length} fechas); la lectura de tendencia es descriptiva, no concluyente.</span>`:'';
-  const arranqueBars=arranqueEqEntries.length?bars(arranqueEqEntries,maxArranqueEq,'teal',' min',x=>x[1].min):'<div class="empty-state">No hay retrasos de arranque mayores a 5 min en el periodo.</div>';
-  const selectedHtml=selectedEventData?`<div class="chart-card" style="margin-bottom:14px"><div class="chart-title">Evento seleccionado</div><div class="insight"><b>${selectedEventData.fecha}</b> · ${selectedEventData.eq} · ${selectedEventData.tipo}<br>Programado: <b>${selectedEventData.prog}</b> · Real: <b>${selectedEventData.real}</b> · Desviación: <b>${selectedEventData.desv>0?'+':''}${selectedEventData.desv} min</b><br>Causa/categoría: <b>${selectedEventData.cause}</b><br>${selectedEventData.detail||''}</div></div>`:'';
-  const causeTable=delayCauseEntries.length?`<table class="matrix impact-table"><thead><tr><th class="left">Causa</th><th>Eventos</th><th>Minutos</th><th>Prom./evento</th></tr></thead><tbody>${delayCauseEntries.slice(0,8).map(([c,v])=>`<tr><td class="left">${c}</td><td>${v.events}</td><td>${v.min}</td><td>${(v.min/v.events).toFixed(1)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state">Sin retrasos con causa registrada.</div>';
-
-  el.innerHTML=selectedHtml+`<div class="summary">
-    <div class="kpi"><div class="kpi-label">Retraso Corte · Llenadora</div><div class="kpi-value red">${fillerCorteTotal}</div><div class="kpi-sub">min acumulados · ${fillerCorteEvents} día${fillerCorteEvents===1?'':'s'} con retraso</div></div>
-    <div class="kpi"><div class="kpi-label">Retraso Arranque · Llenadora</div><div class="kpi-value amber">${fillerArranqueTotal}</div><div class="kpi-sub">min acumulados · ${fillerArranqueEvents} día${fillerArranqueEvents===1?'':'s'} con retraso</div></div>
-    <div class="kpi"><div class="kpi-label">Top offender · Arranque</div><div class="kpi-value" style="font-size:16px">${topArranqueEq?topArranqueEq[0]:'—'}</div><div class="kpi-sub">${topArranqueEq?topArranqueEq[1].min+' min · '+topArranqueEq[1].events+' evento'+(topArranqueEq[1].events===1?'':'s'):'sin datos'}</div></div>
-    <div class="kpi"><div class="kpi-label">Incumplimientos checklist</div><div class="kpi-value amber">${totalFailures}</div><div class="kpi-sub">fuente independiente del retraso</div></div>
+  const selectedInfo=period==='single_event'&&selectedEvent?`<div class="pbi-single-event"><b>Evento seleccionado:</b> ${esc(selectedEvent.replace(/\|/g,' · '))}<br>Usa los filtros para aislar el contexto y comparar con el resto del histórico.</div>`:'';
+  const table=causeEntries.length?`<table class="pbi-table"><thead><tr><th>Causa</th><th>Eventos</th><th>Minutos</th><th>Min/evento</th></tr></thead><tbody>${causeEntries.slice(0,10).map(([c,v])=>`<tr><td>${esc(c)}</td><td>${v.events}</td><td>${Math.round(v.min)}</td><td>${(v.min/v.events).toFixed(1)}</td></tr>`).join('')}</tbody></table>`:empty('Sin retrasos atribuibles en el periodo.');
+  const complianceTxt=plansCount?`${Math.round(compliance)}% referencia global`:'sin planes';
+  el.innerHTML=`${selectedInfo}<div class="pbi-kpis">
+    <div class="pbi-kpi red"><div class="pbi-kpi-label">Retraso · Corte Llenadora</div><div class="pbi-kpi-value">${Math.round(fillerCorte)}</div><div class="pbi-kpi-meta">${fillerCorteEvents} día(s) con desviación</div></div>
+    <div class="pbi-kpi amber"><div class="pbi-kpi-label">Retraso · Arranque Llenadora</div><div class="pbi-kpi-value">${Math.round(fillerArranque)}</div><div class="pbi-kpi-meta">${fillerArranqueEvents} día(s) con desviación</div></div>
+    <div class="pbi-kpi"><div class="pbi-kpi-label">Retraso atribuible</div><div class="pbi-kpi-value">${Math.round(totalDelay)}</div><div class="pbi-kpi-meta">${totalEvents} eventos > ${UMBRAL_MIN} min</div></div>
+    <div class="pbi-kpi"><div class="pbi-kpi-label">Promedio / evento</div><div class="pbi-kpi-value">${Math.round(avgDelay)}</div><div class="pbi-kpi-meta">minutos por evento analítico</div></div>
+    <div class="pbi-kpi amber"><div class="pbi-kpi-label">Checklist · No cumplió</div><div class="pbi-kpi-value">${totalFailures}</div><div class="pbi-kpi-meta">${complianceTxt}</div></div>
+    <div class="pbi-kpi"><div class="pbi-kpi-label">Planes analizados</div><div class="pbi-kpi-value">${plansCount}</div><div class="pbi-kpi-meta">${selectedLine==='all'?'L1 + L3':esc(selectedLine)}</div></div>
   </div>
-  <div class="analysis-note"><strong>Atribución:</strong> una desviación heredada no se penaliza como retraso propio. Cada equipo se compara primero contra su <strong>hora esperada ajustada</strong>; solo el excedente se atribuye al equipo. Los minutos heredados se muestran como propagación y no se suman al Pareto de responsabilidad. <br><br><strong>Regla de lectura:</strong> los dos KPI principales miden el retraso real <strong>en la Llenadora (t=0)</strong>: Corte y Arranque por separado. El análisis por máquinas se usa para identificar dónde se concentra el retraso de Arranque. Para Pareto y matriz se mantiene la regla de máximo <strong>1 evento analítico por equipo y día</strong>, tomando el mayor desvío entre Corte y Arranque. El Checklist se analiza por separado.</div>
-  <div class="chart-card">
-    <div class="chart-title">Arranque — retraso acumulado por máquina · Top offender</div>
-    ${arranqueBars}
-    ${topArranqueEq?`<div class="trend-caption"><strong>Top offender:</strong> ${topArranqueEq[0]} · ${topArranqueEq[1].min} min acumulados · ${topArranqueEq[1].events} evento${topArranqueEq[1].events===1?'':'s'} (&gt; ${UMBRAL_MIN} min).</div>`:''}
+  <div class="pbi-grid">
+    <div class="pbi-card full"><div class="pbi-card-title"><b>Tendencia · impacto en Llenadora</b><span>${dates.length} fechas</span></div>${lineSvg}<div class="pbi-legend"><span><i style="background:#f5b942"></i>Corte</span><span><i style="background:#4fd1c5"></i>Arranque</span><span>Los días sin retraso aparecen como 0</span></div></div>
+    <div class="pbi-card"><div class="pbi-card-title"><b>Arranque · responsabilidad por equipo</b><span>click = filtrar</span></div><div class="pbi-bars">${bars(arrEntries,'')}</div><div class="pbi-drill">El retraso heredado no se suma al equipo.</div></div>
+    <div class="pbi-card"><div class="pbi-card-title"><b>Causas · impacto</b><span>minutos</span></div><div class="pbi-donut-wrap"><div>${donutSvg}</div><div class="pbi-cause-list">${causeList||empty('Sin causas')}</div></div></div>
+    <div class="pbi-card"><div class="pbi-card-title"><b>Pareto · frecuencia</b><span>eventos</span></div><div class="pbi-bars">${bars(causeFreq,'amber').replaceAll('min','evt')}</div></div>
+    <div class="pbi-card"><div class="pbi-card-title"><b>Impacto y severidad por causa</b><span>promedio</span></div>${table}</div>
+    <div class="pbi-card full"><div class="pbi-card-title"><b>Mapa de recurrencia · equipo × causa</b><span>click en equipo = drill down</span></div>${heat}</div>
+    <div class="pbi-card"><div class="pbi-card-title"><b>Checklist · incumplimientos por equipo</b><span>eventos</span></div><div class="pbi-bars">${bars(Object.entries(checkByEquipment).sort((a,b)=>b[1]-a[1]),'red').replaceAll('min','')}</div></div>
+    <div class="pbi-card"><div class="pbi-card-title"><b>Checklist · causas</b><span>eventos</span></div><div class="pbi-bars">${bars(Object.entries(checkByCause).sort((a,b)=>b[1]-a[1]),'amber').replaceAll('min','')}</div></div>
   </div>
-  <div class="analytics-grid" style="margin-top:14px">
-    <div class="chart-card"><div class="chart-title">Pareto — frecuencia de causas de retraso</div>${bars(delayFreqEntries,maxDelayFreq,'',' eventos')}</div>
-    <div class="chart-card"><div class="chart-title">Pareto — impacto de retraso por causa</div>${bars(delayCauseEntries,maxDelayCause,'red',' min',x=>x[1].min)}</div>
-  </div>
-  <div class="chart-card" style="margin-top:14px"><div class="chart-title">Causas de retraso — impacto y severidad</div>${causeTable}</div>
-  <div class="chart-card" style="margin-top:14px"><div class="chart-title">Tendencia — retraso en Llenadora · Corte vs Arranque</div><div class="trend-wrap trend-axis">${trendSvg}</div><div class="trend-caption"><span style="color:#f5b942">● Corte</span> · <span style="color:#4fd1c5">● Arranque</span> · ${trendNote} ${dataSufficiency}</div></div>
-  <div class="chart-card" style="margin-top:14px"><div class="chart-title">Dónde ocurre — equipo × causa de retraso</div>${matrixHtml}</div>
-  <div class="analytics-grid" style="margin-top:14px">
-    <div class="chart-card"><div class="chart-title">Checklist — incumplimientos por equipo</div>${checkBars}</div>
-    <div class="chart-card"><div class="chart-title">Checklist — causas registradas</div>${bars(Object.entries(checkByCause).sort((a,b)=>b[1]-a[1]),Math.max(1,...Object.values(checkByCause)),'teal','')}</div>
-  </div>
-  <div class="insight"><strong>Lectura operacional:</strong> ${topArranqueEq?`En Arranque, <b>${topArranqueEq[0]}</b> es el top offender con <b>${topArranqueEq[1].min} min</b> acumulados en ${topArranqueEq[1].events} evento${topArranqueEq[1].events===1?'':'s'}.`: 'aún no hay retrasos de Arranque mayores al umbral analítico.'} ${topCause?`La causa con mayor impacto analítico es <b>${topCause[0]}</b> (${topCause[1].min} min; ${topCause[1].events} evento${topCause[1].events===1?'':'s'}).`:''} ${topEq?`Por impacto combinado de eventos analíticos, <b>${topEq}</b> concentra ${eqEntries[0][1]} min.`:''} ${totalFailures?`El checklist registra <b>${totalFailures}</b> incumplimiento${totalFailures===1?'':'s'}, analizados aparte del tiempo perdido.`:'No hay incumplimientos de checklist en el periodo.'}${noDelay}</div>`;
+  <div class="pbi-footnote">Lectura: <b>${topArr?esc(topArr[0]):'sin datos'}</b> concentra ${topArr?Math.round(topArr[1].min):0} min de retraso propio de Arranque en el periodo. Esta vista describe los datos; no mezcla incumplimientos de checklist con minutos de T-MINUS.</div>`;
+
+  el.querySelectorAll('[data-drill-eq]').forEach(n=>n.addEventListener('click',()=>{if(equipEl){const name=n.dataset.drillEq;const eq=(LINEAS.L3.equipos||EQUIPOS).find(e=>e.nombre===name)||(LINEAS.L1?.equipos||[]).find(e=>e.nombre===name);if(eq){equipEl.value=eq.id;buildAnalytics(targetId,periodId,equipmentId);}}}));
+  el.querySelectorAll('[data-drill-cause]').forEach(n=>n.addEventListener('click',()=>{if(causeEl){causeEl.value=n.dataset.drillCause;buildAnalytics(targetId,periodId,equipmentId);}}));
 }
 function dFmt(iso){const [y,m,d]=String(iso).split('-');return d&&m?`${d}/${m}/${y}`:iso;}
 
@@ -1319,6 +1256,8 @@ document.getElementById("anaPeriodo2").addEventListener("change",()=>{
 document.getElementById("anaPlan2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
 document.getElementById("anaEvento2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
 document.getElementById("anaEquipo2").addEventListener("change",()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2"));
+['anaLinea','anaDesde','anaHasta','anaCausa'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>buildAnalytics("analytics2","anaPeriodo2","anaEquipo2")));
+document.getElementById('anaReset')?.addEventListener('click',()=>{['anaLinea','anaPeriodo2','anaEquipo2','anaCausa'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=(id==='anaLinea'||id==='anaEquipo2'||id==='anaCausa')?'all':'all'});document.getElementById('anaDesde').value='';document.getElementById('anaHasta').value='';updateAnalysisControls();buildAnalytics("analytics2","anaPeriodo2","anaEquipo2");});
 
 async function deletePlanFromHistory(p){
   const confirmation=prompt(`ELIMINAR PLAN\n\nPara borrar ${p.fecha} · ${p.linea||"L3"}, escribe exactamente:\nELIMINAR ${p.fecha} ${p.linea||"L3"}`);
