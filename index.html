@@ -512,6 +512,8 @@ function attributionFor(mode){
   const realKey=mode==='corte'?'corte':'arranque';
   const out={}; let inherited=0;
   if(!refDate||!refTime)return out;
+  const parallelIds=new Set(['etiquetadora30','etiquetadora31']);
+
   EQUIPOS.forEach(eq=>{
     const r=state.real[eq.id]||{}, real=r[realKey];
     const scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]);
@@ -520,9 +522,9 @@ function attributionFor(mode){
     if(actual&&scheduled){
       total=Math.max(0,Math.round((actual-scheduled)/60000));
       own=Math.max(0,total-inherited);
-      inherited+=own;
     }
     out[eq.id]={total,own,inherited:inh};
+    if(!parallelIds.has(eq.id) && own>0) inherited+=own;
   });
   return out;
 }
@@ -872,8 +874,21 @@ function attributionForPlan(p,mode,equipos){
   const refDate=mode==='corte'?(p.fechaCorte||p.fecha):(p.fechaArranque||p.fecha);
   const refTime=mode==='corte'?p.refCorte:(p.nuevaRefArranque||p.refArranque);
   const offsetKey=mode==='corte'?'tCorte':'tArr', realKey=mode==='corte'?'corte':'arranque';
-  const out={};let inherited=0;if(!refDate||!refTime)return out;
-  equipos.forEach(eq=>{const r=(p.real||{})[eq.id]||{},scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]),actual=resolvedPlanRealDateTime(p,eq.id,mode,scheduled);let total=0,own=0,inh=inherited;if(actual&&scheduled){total=Math.max(0,Math.round((actual-scheduled)/60000));own=Math.max(0,total-inherited);inherited+=own;}out[eq.id]={total,own,inherited:inh};});return out;
+  const out={};let inherited=0;
+  if(!refDate||!refTime)return out;
+  const parallelIds=new Set(['etiquetadora30','etiquetadora31']);
+
+  equipos.forEach(eq=>{
+    const r=(p.real||{})[eq.id]||{},scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]),actual=resolvedPlanRealDateTime(p,eq.id,mode,scheduled);
+    let total=0,own=0,inh=inherited;
+    if(actual&&scheduled){
+      total=Math.max(0,Math.round((actual-scheduled)/60000));
+      own=Math.max(0,total-inherited);
+    }
+    out[eq.id]={total,own,inherited:inh};
+    if(!parallelIds.has(eq.id) && own>0) inherited+=own;
+  });
+  return out;
 }
 async function buildAnalytics(targetId='analytics',periodId='anaPeriodo',equipmentId='anaEquipo'){
   const el=document.getElementById(targetId);if(!el)return;
