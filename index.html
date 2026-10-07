@@ -393,8 +393,51 @@ function resolvedRealDateTime(eqId,mode,scheduled){
   const t=r[realTimeField(mode)];
   if(!t)return null;
   const storedDate=r[realDateField(mode)];
-  if(storedDate){const dt=dateTimeFor(storedDate,t,0);if(dt)return dt;}
+  // Las fechas de los reales son inferidas por el algoritmo. Si la referencia
+  // cambia, una fecha inferida antigua puede quedar desplazada 24 h y generar
+  // falsos retrasos de +1440 min. Para evitarlo, solo usamos la fecha guardada
+  // cuando sigue siendo razonablemente cercana a la programación actual; de lo
+  // contrario recalculamos la fecha más cercana a la nueva referencia.
+  if(storedDate){
+    const stored=dateTimeFor(storedDate,t,0);
+    const nearest=actualDateTimeNear(t,scheduled);
+    if(stored&&nearest){
+      const diffStored=Math.abs(stored-scheduled);
+      const diffNearest=Math.abs(nearest-scheduled);
+      if(diffStored<=12*60*60*1000 || diffStored<=diffNearest+30*60*1000)return stored;
+      return nearest;
+    }
+    if(stored)return stored;
+  }
   return actualDateTimeNear(t,scheduled);
+}
+function rebaseRealDatesForReferenceChange(mode){
+  const refDate=mode==='corte'?(state.fechaCorte||state.fecha):(state.fechaArranque||state.fecha);
+  const refTime=mode==='corte'?state.refCorte:effectiveRefArranque();
+  const offsetKey=mode==='corte'?'tCorte':'tArr';
+  const timeKey=realTimeField(mode),dateKey=realDateField(mode);
+  if(!refDate||!refTime)return;
+  let previous=null;
+  EQUIPOS.forEach(eq=>{
+    const r=state.real?.[eq.id]||{};
+    const time=r[timeKey];
+    if(!time)return;
+    const scheduled=dateTimeFor(refDate,refTime,eq[offsetKey]);
+    if(!scheduled)return;
+    const candidates=[-1,0,1].map(day=>{
+      const d=new Date(scheduled);
+      d.setDate(d.getDate()+day);
+      const [h,m]=time.split(':').map(Number);
+      d.setHours(h,m,0,0);
+      return d;
+    });
+    let valid=candidates.filter(d=>!previous||d>=previous);
+    if(!valid.length)valid=candidates;
+    valid.sort((a,b)=>Math.abs(a-scheduled)-Math.abs(b-scheduled));
+    const chosen=valid[0];
+    r[dateKey]=chosen.toISOString().slice(0,10);
+    previous=chosen;
+  });
 }
 function resolvedPlanRealDateTime(p,eqId,mode,scheduled){
   const r=(p.real||{})[eqId]||{};
@@ -1194,11 +1237,11 @@ document.getElementById("inpFechaArranque").addEventListener("change",async e=>{
   render();queueSave();
   if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}
 });
-document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.refArranque||"";return;}e.target.value=t||"";state.refArranque=t||"";render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
+document.getElementById("inpRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.refArranque||"";return;}e.target.value=t||"";state.refArranque=t||"";rebaseRealDatesForReferenceChange("arranque");render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("inpRefCorte").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.refCorte||"";return;}e.target.value=t||"";state.refCorte=t||"";render();queueSave();if(isExerciseComplete()){clearTimeout(autosaveTimer);await autoCloseIfComplete();render();}});
 document.getElementById("inpParadaMin").addEventListener("input",()=>{if(state.planSaved||state.cerrado)return;state.paradaMin=Math.max(0,Number(document.getElementById("inpParadaMin").value||0));updateParadaUI();queueSave();});
 document.getElementById("inpParadaModo").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;state.paradaModo=e.target.value;updateParadaUI();if(state.paradaMin>120&&state.paradaModo==='desplazar'&&state.refArranque){const base=dateTimeFor(state.fechaArranque||state.fecha,state.refArranque,0);if(base){base.setMinutes(base.getMinutes()+state.paradaMin);state.nuevaRefArranque=minToTime(base.getHours()*60+base.getMinutes());document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque;render();}}else if(state.paradaMin>120&&state.paradaModo==='nueva'&&state.nuevaRefArranque){document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque;render();}queueSave();});
-document.getElementById("inpNuevaRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.nuevaRefArranque||"";return;}e.target.value=t||"";state.nuevaRefArranque=t||""; if(state.paradaMin>120&&state.paradaModo==='nueva'&&state.nuevaRefArranque){document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque;render();}queueSave();});
+document.getElementById("inpNuevaRefArranque").addEventListener("change",async e=>{if(state.planSaved||state.cerrado)return;const t=normalizeTime24(e.target.value);if(e.target.value&&!t){alert("Hora inválida. Usa formato 24 h HH:MM.");e.target.value=state.nuevaRefArranque||"";return;}e.target.value=t||"";state.nuevaRefArranque=t||""; if(state.paradaMin>120&&state.paradaModo==='nueva'&&state.nuevaRefArranque){document.getElementById("inpNuevaRefArranque").value=state.nuevaRefArranque;rebaseRealDatesForReferenceChange("arranque");render();}queueSave();});
 document.getElementById("btnGuardar").addEventListener("click",saveDay);
 document.getElementById("btnLimpiar").addEventListener("click",clearReal);
 
