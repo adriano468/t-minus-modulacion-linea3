@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Adriano Nuñez Soriano">
-<meta name="application-version" content="5.7">
+<meta name="application-version" content="5.10">
 <title>T-MINUS — Modulación</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -242,7 +242,7 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
     <p class="panel-title"><span class="dot"></span>Detalle por equipo</p>
     <div style="overflow-x:auto">
       <table>
-        <thead><tr><th class="left">Equipo</th><th>Prog. Corte</th><th>Real Corte</th><th>Desv.</th><th>Causa retraso corte</th><th>Prog. Arranque</th><th>Real Arranque</th><th>Desv.</th><th>Causa retraso arranque</th><th>Estado</th></tr></thead>
+        <thead><tr><th class="left">Equipo</th><th>Prog. Corte</th><th>Real Corte</th><th>Desv.</th><th>Causa retraso corte</th><th>Prog. Arranque</th><th>Real Arranque</th><th>Desv.</th><th>Causa retraso arranque</th><th>Estado corte</th><th>Estado arranque</th></tr></thead>
         <tbody id="tablaEquipos"></tbody>
       </table>
     </div>
@@ -285,7 +285,7 @@ body:not(.line-selected) #tab-plan .line-dependent-controls{
   </div>
 </section>
 
-<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.7 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
+<footer style="text-align:center;color:var(--muted);font:10px JetBrains Mono,monospace;letter-spacing:.08em;padding:4px 0 0;">T-MINUS MODULACIÓN · V5.10 CENTRAL · AUTOR: ADRIANO NUÑEZ SORIANO</footer>
 </div>
 
 <div id="timePickerModal" class="time-modal" aria-hidden="true">
@@ -315,7 +315,7 @@ const LINEAS={
   L3:{id:"L3",nombre:"Línea 3",equipos:[
     {id:"depaletizadora",nombre:"Depaletizadora",tArr:-65,tCorte:-65},
     {id:"desencajonadora",nombre:"Desencajonadora",tArr:-60,tCorte:-60},
-    {id:"lavadora",nombre:"Lavadora de Botellas",tArr:-55,tCorte:-55},
+    {id:"lavadora",nombre:"Lavadora de Botellas",tArr:-55,tCorte:-5},
     {id:"llenadora",nombre:"Llenadora",tArr:0,tCorte:0},
     {id:"pasteurizador",nombre:"Pasteurizador Túnel",tArr:10,tCorte:70},
     {id:"etiquetadora30",nombre:"Etiquetadora 30",tArr:75,tCorte:75},
@@ -628,43 +628,94 @@ function updateCloseControl(){
   renderExerciseStatus();
 }
 
+function recalculatedScheduleFor(mode){
+  const refDate=mode==='corte'?(state.fechaCorte||state.fecha):(state.fechaArranque||state.fecha);
+  const refTime=mode==='corte'?state.refCorte:effectiveRefArranque();
+  const offsetKey=mode==='corte'?'tCorte':'tArr';
+  const realKey=realTimeField(mode);
+  const result={};
+  if(!refDate||!refTime)return result;
+
+  // Las etiquetadoras de cada línea trabajan en paralelo.
+  const parallelGroups=state.linea==='L3'
+    ? [new Set(['etiquetadora30','etiquetadora31'])]
+    : [new Set(['etiquetaA','etiquetaB'])];
+
+  let inheritedDelay=0;
+  for(let i=0;i<EQUIPOS.length;){
+    const eq=EQUIPOS[i];
+    const group=parallelGroups.find(g=>g.has(eq.id));
+
+    if(group){
+      const branchResults=[];
+      while(i<EQUIPOS.length && group.has(EQUIPOS[i].id)){
+        const branch=EQUIPOS[i++];
+        const base=dateTimeFor(refDate,refTime,branch[offsetKey]);
+        const scheduled=base?new Date(base.getTime()+inheritedDelay*60000):null;
+        const actual=resolvedRealDateTime(branch.id,mode,scheduled);
+        const deviation=actual&&scheduled?Math.round((actual-scheduled)/60000):null;
+        result[branch.id]={scheduled,deviation};
+        if(deviation!==null)branchResults.push(Math.max(0,deviation));
+      }
+      // La máquina posterior espera a la rama paralela que termina más tarde.
+      if(branchResults.length)inheritedDelay+=Math.max(...branchResults);
+      continue;
+    }
+
+    i++;
+    const base=dateTimeFor(refDate,refTime,eq[offsetKey]);
+    const scheduled=base?new Date(base.getTime()+inheritedDelay*60000):null;
+    const actual=resolvedRealDateTime(eq.id,mode,scheduled);
+    const deviation=actual&&scheduled?Math.round((actual-scheduled)/60000):null;
+    result[eq.id]={scheduled,deviation};
+    if(deviation!==null)inheritedDelay+=Math.max(0,deviation);
+  }
+  return result;
+}
+
 function render(){
   syncLineUI();
   const be=document.querySelector(".brand-eyebrow"); if(be)be.textContent=hasLine()?"Packaging · "+LINEAS[state.linea].nombre:"Packaging · Multi-Línea";
   renderExerciseStatus();
   normalizeRefDates();
   const refArr=timeToMin(effectiveRefArranque()),refCorte=timeToMin(state.refCorte);
+  const recalculoCorte=recalculatedScheduleFor("corte");
+  const recalculoArranque=recalculatedScheduleFor("arranque");
   document.getElementById("kpiArr").textContent=state.refArranque||"—";
   document.getElementById("kpiCor").textContent=state.refCorte||"—";
   const tbody=document.getElementById("tablaEquipos");tbody.innerHTML="";
   let ok=0,nok=0;
   EQUIPOS.forEach(eq=>{
     const real=state.real[eq.id]||{};
-    const progArr=refArr!==null?minToTime(refArr+eq.tArr):null;
-    const progCorte=refCorte!==null?minToTime(refCorte+eq.tCorte):null;
-    const ra=timeToMin(real.arranque),rc=timeToMin(real.corte);
-    const pa=refArr!==null?refArr+eq.tArr:null,pc=refCorte!==null?refCorte+eq.tCorte:null;
-    const da=ra!==null&&pa!==null?deviationFor(real.arranque,state.fechaArranque,effectiveRefArranque(),eq.tArr,real.fechaArranque||""):null;
-    const dc=rc!==null&&pc!==null?deviationFor(real.corte,state.fechaCorte,state.refCorte,eq.tCorte,real.fechaCorte||""):null;
-    const attrC=attributionFor('corte')[eq.id]||{own:0,inherited:0};
-    const attrA=attributionFor('arranque')[eq.id]||{own:0,inherited:0};
-    // Una causa solo corresponde cuando existe retraso propio.
-    if(attrC.own<=0 && real.causaCorte) real.causaCorte="";
-    if(attrA.own<=0 && real.causaArranque) real.causaArranque="";
-    let estado="pending";
-    if(da!==null||dc!==null){estado=(da!==null&&Math.abs(da)>UMBRAL_MIN)||(dc!==null&&Math.abs(dc)>UMBRAL_MIN)?"nok":"ok"}
-    if(estado==="ok")ok++;if(estado==="nok")nok++;
+    const calcC=recalculoCorte[eq.id]||{},calcA=recalculoArranque[eq.id]||{};
+    const progArr=calcA.scheduled?minToTime(calcA.scheduled.getHours()*60+calcA.scheduled.getMinutes()):null;
+    const progCorte=calcC.scheduled?minToTime(calcC.scheduled.getHours()*60+calcC.scheduled.getMinutes()):null;
+    const da=calcA.deviation??null;
+    const dc=calcC.deviation??null;
+    // La causa se conserva solo cuando el equipo presenta retraso frente al horario recalculado.
+    if((dc===null||dc<=0) && real.causaCorte) real.causaCorte="";
+    if((da===null||da<=0) && real.causaArranque) real.causaArranque="";
+    // Estado independiente por hito: Corte de producción y Arranque.
+    // PENDIENTE si falta la hora real o la referencia programada;
+    // OK si cumple dentro del umbral configurado; NOK si lo supera.
+    const estadoCorte=dc===null?"pending":Math.abs(dc)>UMBRAL_MIN?"nok":"ok";
+    const estadoArranque=da===null?"pending":Math.abs(da)>UMBRAL_MIN?"nok":"ok";
+    // Los KPI generales conservan el criterio de equipo: OK solo si ambos hitos cumplen.
+    const estadoEquipo=(estadoCorte==="pending"||estadoArranque==="pending")?"pending":
+      (estadoCorte==="nok"||estadoArranque==="nok")?"nok":"ok";
+    if(estadoEquipo==="ok")ok++;if(estadoEquipo==="nok")nok++;
     const tr=document.createElement("tr");if(eq.id==="llenadora")tr.classList.add("section-llenadora");
     tr.innerHTML=`<td class="left equipo-name">${eq.nombre}</td>
       <td class="prog-time">${progCorte??"—"}</td>
       <td><input type="text" lang="es-PE" step="60" class="time-input time24 time-picker ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"locked-time":""} readonly" data-eq="${eq.id}" data-field="corte" value="${real.corte||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.corte?"disabled":""}></td>
-      <td>${desvClass(dc)}${dc!==null&&attrC.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span> · <span class="attribution-inherited">Heredado +${attrC.inherited}</span></span>`:dc!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrC.own}</span></span>`:''}</td>
-      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte" ${state.cerrado?"disabled":""}><option value="">—</option>${CAUSAS.map(x=>`<option value="${x[0]}" ${attrC.own>0&&real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
+      <td>${desvClass(dc)}</td>
+      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaCorte" ${state.cerrado?"disabled":""}><option value="">—</option>${CAUSAS.map(x=>`<option value="${x[0]}" ${dc!==null&&dc>0&&real.causaCorte===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
       <td class="prog-time">${progArr??"—"}</td>
       <td><input type="text" lang="es-PE" step="60" class="time-input time24 time-picker ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"locked-time":""} readonly" data-eq="${eq.id}" data-field="arranque" value="${real.arranque||""}" ${state.cerrado||state.lockedTimes?.[eq.id]?.arranque?"disabled":""}></td>
-      <td>${desvClass(da)}${da!==null&&attrA.inherited>0?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span> · <span class="attribution-inherited">Heredado +${attrA.inherited}</span></span>`:da!==null?`<span class="attribution-note"><span class="attribution-own">Propio +${attrA.own}</span></span>`:''}</td>
-      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque" ${state.cerrado?"disabled":""}><option value="">—</option>${CAUSAS.map(x=>`<option value="${x[0]}" ${attrA.own>0&&real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
-      <td><span class="badge ${estado}">${estado==="pending"?"PENDIENTE":estado.toUpperCase()}</span></td>`;
+      <td>${desvClass(da)}</td>
+      <td><select class="cause-input" data-eq="${eq.id}" data-field="causaArranque" ${state.cerrado?"disabled":""}><option value="">—</option>${CAUSAS.map(x=>`<option value="${x[0]}" ${da!==null&&da>0&&real.causaArranque===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td>
+      <td><span class="badge ${estadoCorte}">${estadoCorte==="pending"?"PENDIENTE":estadoCorte.toUpperCase()}</span></td>
+      <td><span class="badge ${estadoArranque}">${estadoArranque==="pending"?"PENDIENTE":estadoArranque.toUpperCase()}</span></td>`;
     tbody.appendChild(tr);
   });
   document.getElementById("kpiOk").textContent=ok;
